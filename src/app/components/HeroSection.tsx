@@ -159,14 +159,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-2 lg:bottom-3 left-1/2 -translate-x-1/2">
-          <div className="flex flex-col items-center gap-2 text-white/40">
-            <div className="w-px h-8 bg-white/20 relative overflow-hidden">
-              <div className="absolute top-0 w-full h-1/2 bg-white/60 animate-[scrollIndicator_2s_ease-in-out_infinite]" />
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Slide indicators */}
