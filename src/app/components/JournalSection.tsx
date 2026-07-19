@@ -46,7 +46,7 @@ export default function JournalSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="journal" className="py-24 lg:py-32 bg-background border-t border-border">
+    <section ref={sectionRef} id="journal" className="py-16 lg:py-32 bg-background border-t border-border">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
         <div className="flex flex-col lg:flex-row justify-between lg:items-end mb-16 gap-6">
           <div>
