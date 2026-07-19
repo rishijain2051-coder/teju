@@ -90,7 +90,7 @@ export default function FeaturedCollections() {
           */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Row 1: Dining (col-span-2) + Living (row-span-2) */}
-          <div className="lg:col-span-2 collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[55vw] lg:h-[480px]">
+          <div className="lg:col-span-2 collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[42vw] lg:h-[480px]">
             <AppImage
               src={collections?.[0]?.image}
               alt={collections?.[0]?.alt}
@@ -122,7 +122,7 @@ export default function FeaturedCollections() {
           </div>
 
           {/* Living — row-span-2 */}
-          <div className="lg:row-span-2 collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[55vw] lg:h-full lg:min-h-[980px]">
+          <div className="lg:row-span-2 collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[42vw] lg:h-full lg:min-h-[980px]">
             <AppImage
               src={collections?.[1]?.image}
               alt={collections?.[1]?.alt}
@@ -154,7 +154,7 @@ export default function FeaturedCollections() {
           </div>
 
           {/* Row 2: Storage */}
-          <div className="collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[55vw] lg:h-[480px]">
+          <div className="collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[42vw] lg:h-[480px]">
             <AppImage
               src={collections?.[2]?.image}
               alt={collections?.[2]?.alt}
@@ -183,7 +183,7 @@ export default function FeaturedCollections() {
           </div>
 
           {/* Row 3: Bedroom */}
-          <div className="collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[55vw] lg:h-[400px]">
+          <div className="collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[42vw] lg:h-[400px]">
             <AppImage
               src={collections?.[3]?.image}
               alt={collections?.[3]?.alt}
@@ -202,7 +202,7 @@ export default function FeaturedCollections() {
           </div>
 
           {/* Hospitality — col-span-2 */}
-          <div className="lg:col-span-2 collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[55vw] lg:h-[400px]">
+          <div className="lg:col-span-2 collection-card group relative overflow-hidden bg-secondary cursor-pointer h-[42vw] lg:h-[400px]">
             <AppImage
               src={collections?.[4]?.image}
               alt={collections?.[4]?.alt}
