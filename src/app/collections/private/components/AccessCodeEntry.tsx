@@ -6,7 +6,7 @@ import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
 
 // Valid access codes — in production, validate server-side
-const VALID_CODES = ['radheshyam', 'teju', 'ramkishore'];
+const VALID_CODES = ['A', 'B', 'C'];
 const SESSION_KEY = 'vi_private_access';
 
 type EntryState = 'idle' | 'loading' | 'error';
