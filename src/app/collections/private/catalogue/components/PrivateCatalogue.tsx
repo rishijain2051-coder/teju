@@ -158,6 +158,17 @@ export default function PrivateCatalogue() {
     router.push('/collections/private');
 };
 
+  const WHATSAPP_NUMBER = '919352187266';
+
+const handleEnquire = (product: Product) => {
+    const text = encodeURIComponent(
+      `Hi, I'm enquiring about "${product.name}" from the private catalogue.\n` +
+      `Category: ${product.category}\nMaterial: ${product.material}\nFinish: ${product.finish}\nDimensions: ${product.dimensions}`
+    );
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
+    setEnquiredId(product.id);
+};
+
   const filtered =
   activeCategory === 'All' ?
   PRIVATE_PRODUCTS :
