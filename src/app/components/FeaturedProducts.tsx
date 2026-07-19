@@ -203,7 +203,7 @@ export default function FeaturedProducts() {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {products.map((product, i) =>
+          {products.slice(0, 6).map((product, i) =>
           <div
             key={product.id}
             className="fade-up group product-card-hover cursor-pointer"
