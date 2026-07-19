@@ -264,7 +264,7 @@ const handleEnquire = (product: Product) => {
                   <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-all duration-500" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 bg-background/95">
                     <button
-                    onClick={() => setEnquiredId(product.id)}
+                    onClick={() => handleEnquire(product)}
                     className="w-full py-2.5 bg-primary text-primary-foreground text-xs font-mono tracking-widest uppercase btn-lift">
                     
                       {enquiredId === product.id ? '✓ Enquiry sent' : 'Enquire'}
