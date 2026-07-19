@@ -80,7 +80,7 @@ export default function TrustSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-primary">
+    <section ref={sectionRef} className="py-16 lg:py-32 bg-primary">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
         <div className="mb-16">
           <p className="fade-up text-xs font-mono text-primary-foreground/40 tracking-[0.2em] uppercase mb-4">
