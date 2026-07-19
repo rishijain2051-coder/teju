@@ -185,7 +185,7 @@ export default function FeaturedProducts() {
   const activeProduct = products.find((p) => p.id === quickViewId);
 
   return (
-    <section ref={sectionRef} id="products" className="py-24 lg:py-32 bg-background">
+    <section ref={sectionRef} id="products" className="py-16 lg:py-32 bg-background">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
         <div className="flex flex-col lg:flex-row justify-between lg:items-end mb-16 gap-6">
           <div>
