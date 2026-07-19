@@ -47,7 +47,7 @@ export default function TestimonialsSection() {
   const current = testimonials?.[active];
 
   return (
-    <section ref={sectionRef} className="py-24 lg:py-32 bg-secondary">
+    <section ref={sectionRef} className="py-16 lg:py-32 bg-secondary">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
         <div className="mb-16">
           <p className="fade-up text-xs font-mono text-muted-foreground tracking-[0.2em] uppercase mb-4">
