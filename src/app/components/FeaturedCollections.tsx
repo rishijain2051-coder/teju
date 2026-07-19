@@ -69,7 +69,7 @@ export default function FeaturedCollections() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="collections" className="py-24 lg:py-32 bg-background">
+    <section ref={sectionRef} id="collections" className="py-16 lg:py-32 bg-background">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
         {/* Header */}
         <div ref={headingRef} className="mb-16 lg:mb-20">
