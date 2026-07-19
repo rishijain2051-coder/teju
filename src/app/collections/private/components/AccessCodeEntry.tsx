@@ -6,7 +6,7 @@ import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
 
 // Valid access codes — in production, validate server-side
-const VALID_CODES = ['VIMPEX2024', 'TRADE2024', 'BUYER2024'];
+const VALID_CODES = ['radheshyam', 'teju', 'ramkishore'];
 const SESSION_KEY = 'vi_private_access';
 
 type EntryState = 'idle' | 'loading' | 'error';
@@ -119,7 +119,7 @@ export default function AccessCodeEntry() {
                   setCode(e.target.value);
                   if (state === 'error') setState('idle');
                 }}
-                placeholder="e.g. VIMPEX2024"
+                placeholder="e.g. Hack Karke Bata"
                 autoComplete="off"
                 autoCapitalize="characters"
                 spellCheck={false}
