@@ -1,13 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
-
-// Valid access codes — in production, validate server-side
-const VALID_CODES = ['A', 'B', 'C'];
-const SESSION_KEY = 'vi_private_access';
 
 type EntryState = 'idle' | 'loading' | 'error';
 
@@ -16,39 +12,32 @@ export default function AccessCodeEntry() {
   const [code, setCode] = useState('');
   const [state, setState] = useState<EntryState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const [checked, setChecked] = useState(false);
 
-  // If already authenticated, redirect immediately
-  useEffect(() => {
-    const session = sessionStorage.getItem(SESSION_KEY);
-    if (session === 'granted') {
-      router.replace('/collections/private/catalogue');
-    } else {
-      setChecked(true);
-    }
-  }, [router]);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!code.trim()) return;
 
     setState('loading');
     setErrorMsg('');
 
-    // Simulate async validation (replace with API call in production)
-    setTimeout(() => {
-      const normalised = code.trim().toUpperCase();
-      if (VALID_CODES.includes(normalised)) {
-        sessionStorage.setItem(SESSION_KEY, 'granted');
+    try {
+      const res = await fetch('/api/verify-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code.trim() }),
+      });
+
+      if (res.ok) {
         router.push('/collections/private/catalogue');
       } else {
         setState('error');
         setErrorMsg('This code is not recognised. Please check your email or contact us.');
       }
-    }, 800);
+    } catch {
+      setState('error');
+      setErrorMsg('Something went wrong. Please try again.');
+    }
   };
-
-  if (!checked) return null;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
