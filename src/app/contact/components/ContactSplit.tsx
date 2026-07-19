@@ -203,7 +203,7 @@ const handleSubmit = (e: React.FormEvent) => {
                 <button
                 type="submit"
                 disabled={formState === 'loading'}
-                className="w-full py-4 bg-primarytext-primary-foreground text-xs font-medium tracking-[0.12em] uppercase btn-lift disabled:opacity-60 disabled:cursor-not-allowed transition-all">
+                className="w-full py-4 bg-primary text-primary-foreground text-xs font-medium tracking-[0.12em] uppercase btn-lift disabled:opacity-60 disabled:cursor-not-allowed transition-all">
                 
                   {formState === 'loading' ? 'Sending...' : 'Send Enquiry'}
                 </button>
