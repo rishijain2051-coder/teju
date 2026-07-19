@@ -51,16 +51,16 @@ function StatCard({ stat, index }: { stat: StatItem; index: number }) {
   return (
     <div
       ref={ref}
-      className="flex flex-col justify-between p-8 lg:p-10 border-r border-primary-foreground/10 last:border-r-0 fade-up"
+      className="flex flex-col justify-between p-8 lg:p-10 border-r border-white/15 last:border-r-0 fade-up"
       style={{ transitionDelay: `${index * 100}ms` }}
     >
       <div>
-        <p className="font-serif text-5xl lg:text-6xl font-light text-primary-foreground stat-counter">
+        <p className="font-serif text-5xl lg:text-6xl font-light text-white stat-counter">
           {count.toLocaleString()}{stat.suffix}
         </p>
-        <p className="font-serif text-xl text-primary-foreground/70 mt-2">{stat.label}</p>
+        <p className="font-serif text-xl text-white/80 mt-2">{stat.label}</p>
       </div>
-      <p className="text-xs font-mono text-primary-foreground/40 tracking-widest uppercase mt-6">{stat.sub}</p>
+      <p className="text-xs font-mono text-white/60 tracking-widest uppercase mt-6">{stat.sub}</p>
     </div>
   );
 }
@@ -83,12 +83,12 @@ export default function TrustSection() {
     <section ref={sectionRef} className="py-16 lg:py-32 bg-primary">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
         <div className="mb-16">
-          <p className="fade-up text-xs font-mono text-primary-foreground/40 tracking-[0.2em] uppercase mb-4">
+          <p className="fade-up text-xs font-mono text-white/70 tracking-[0.2em] uppercase mb-4">
             By The Numbers
           </p>
-          <h2 className="fade-up font-serif text-section-xl font-light text-primary-foreground" style={{ transitionDelay: '100ms' }}>
+          <h2 className="fade-up font-serif text-section-xl font-light text-white" style={{ transitionDelay: '100ms' }}>
             Built at scale.<br />
-            <span className="italic text-primary-foreground/50">Delivered with care.</span>
+            <span className="italic text-white/75">Delivered with care.</span>
           </h2>
         </div>
 
