@@ -1,11 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
 
-const SESSION_KEY = 'vi_private_access';
 
 interface Product {
   id: number;
@@ -152,30 +151,16 @@ const CATEGORIES = ['All', 'Dining', 'Living', 'Storage', 'Bedroom', 'Hospitalit
 
 export default function PrivateCatalogue() {
   const router = useRouter();
-  const [authorised, setAuthorised] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [enquiredId, setEnquiredId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const session = sessionStorage.getItem(SESSION_KEY);
-    if (session !== 'granted') {
-      router.replace('/collections/private');
-    } else {
-      setAuthorised(true);
-    }
-  }, [router]);
-
-  const handleSignOut = () => {
-    sessionStorage.removeItem(SESSION_KEY);
-    router.push('/collections/private');
-  };
+const handleSignOut = async () => {
+  await fetch('/api/logout', { method: 'POST' });
+  router.push('/collections/private');
+};
 
   const filtered =
   activeCategory === 'All' ?
   PRIVATE_PRODUCTS :
   PRIVATE_PRODUCTS.filter((p) => p.category === activeCategory);
 
-  if (!authorised) return null;
 
   return (
     <div className="min-h-screen bg-background">
