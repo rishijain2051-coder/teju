@@ -65,7 +65,8 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10" />
 
       {/* Content */}
-      <div className="relative z-20 flex flex-col justify-center items-center min-h-screen px-6 lg:px-12 text-center">
+      <div className="relative z-20 flex flex-col min-h-screen px-6 lg:px-12 text-center">
+        <div className="flex-1 flex flex-col justify-center">
         <div className="max-w-5xl mx-auto">
           {/* Eyebrow */}
           <div
@@ -137,10 +138,11 @@ export default function HeroSection() {
             </Link>
           </div>
         </div>
+        </div>
 
         {/* Bottom stats */}
         <div
-          className={`fade-up absolute bottom-10 left-0 right-0 px-6 lg:px-12 ${titleRevealed ? 'is-revealed' : ''}`}
+          className={`fade-up pb-16 lg:pb-10 ${titleRevealed ? 'is-revealed' : ''}`}
           style={{ transitionDelay: '1300ms' }}>
           
           <div className="max-w-8xl mx-auto flex justify-between items-end">
@@ -158,9 +160,9 @@ export default function HeroSection() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+        <div className="absolute bottom-2 lg:bottom-3 left-1/2 -translate-x-1/2">
           <div className="flex flex-col items-center gap-2 text-white/40">
-            <div className="w-px h-12 bg-white/20 relative overflow-hidden">
+            <div className="w-px h-8 bg-white/20 relative overflow-hidden">
               <div className="absolute top-0 w-full h-1/2 bg-white/60 animate-[scrollIndicator_2s_ease-in-out_infinite]" />
             </div>
           </div>
