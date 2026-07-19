@@ -68,12 +68,38 @@ export default function ContactSplit() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+const WHATSAPP_NUMBER = '919352187266'; // matches +91 93521 87266 shown on this page
+
+const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormState('loading');
-    // Mock submission — backend integration point
-    setTimeout(() => setFormState('success'), 1500);
-  };
+
+    const businessTypeLabels: Record<string, string> = {
+      retailer: 'Furniture Retailer',
+      'interior-designer': 'Interior Designer / Studio',
+      hospitality: 'Hospitality Group',
+      importer: 'Importer / Distributor',
+      'private-label': 'Private Label Brand',
+      other: 'Other',
+    };
+
+    const lines = [
+      'New enquiry from vardhman-impex.com',
+      '',
+      `Company: ${form.company}`,
+      `Country: ${form.country}`,
+      `Website: ${form.website}`,
+      `Email: ${form.email}`,
+      `Business type: ${businessTypeLabels[form.businessType] || form.businessType}`,
+      '',
+      `Message: ${form.message}`,
+    ];
+
+    const text = encodeURIComponent(lines.join('\n'));
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${text}`, '_blank');
+
+    setFormState('success');
+};
 
   return (
     <section ref={sectionRef} className="py-16 lg:py-24 bg-background">
@@ -88,9 +114,9 @@ export default function ContactSplit() {
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
                 </div>
-                <h3 className="font-serif text-3xl font-light text-foreground mb-3">Message received.</h3>
+                <h3 className="font-serif text-3xl font-light text-foreground mb-3">WhatsApp opened.</h3>
                 <p className="text-muted-foreground text-sm max-w-xs">
-                  We&apos;ll review your enquiry and get back to you within 1–2 business days.
+                  Your enquiry details are ready to send in WhatsApp — just hit send there to reach us.
                 </p>
               </div> :
 
