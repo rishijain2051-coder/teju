@@ -53,7 +53,7 @@ export default function WhyBrandsSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="factory" className="py-24 lg:py-32 bg-secondary">
+    <section ref={sectionRef} id="factory" className="py-16 lg:py-32 bg-secondary">
       <div className="max-w-8xl mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left: Factory imagery */}
