@@ -67,7 +67,7 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-20 flex flex-col min-h-screen px-6 lg:px-12 text-center">
         <div className="flex-1 flex flex-col justify-center">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           {/* Eyebrow */}
           <div
             className={`reveal-mask mb-8 ${titleRevealed ? 'is-revealed' : ''}`}
