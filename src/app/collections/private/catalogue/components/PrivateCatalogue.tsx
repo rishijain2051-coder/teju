@@ -152,10 +152,10 @@ const CATEGORIES = ['All', 'Dining', 'Living', 'Storage', 'Bedroom', 'Hospitalit
 export default function PrivateCatalogue() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('All');
-const [enquiredId, setEnquiredId] = useState<number | null>(null);
-const handleSignOut = async () => {
-  await fetch('/api/logout', { method: 'POST' });
-  router.push('/collections/private');
+  const [enquiredId, setEnquiredId] = useState<number | null>(null);
+  const handleSignOut = async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    router.push('/collections/private');
 };
 
   const filtered =
