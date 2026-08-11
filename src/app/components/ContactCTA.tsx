@@ -1,71 +1,92 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
+import { useReveal } from '@/components/ui/useReveal';
+import { brand, img } from '@/lib/site';
 
 export default function ContactCTA() {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {if (e.isIntersecting) e.target.classList.add('is-revealed');});
-      },
-      { threshold: 0.2 }
-    );
-    sectionRef?.current?.querySelectorAll('.fade-up')?.forEach((el) => observer?.observe(el));
-    return () => observer?.disconnect();
-  }, []);
+  const ref = useReveal<HTMLElement>();
+  const plate = img('craft-mirror');
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-primary py-24 lg:py-40">
-      {/* Background image */}
-      <div className="absolute inset-0 opacity-20">
-        <AppImage
-          src="https://img.rocket.new/generatedImages/rocket_gen_img_129cc7bf0-1776264026770.png"
-          alt="Factory floor, dim atmospheric lighting, craftsmen at work, dark shadows"
-          fill
-          sizes="100vw"
-          className="object-cover" />
-        
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/60" />
+    <section ref={ref} className="relative bg-ink text-paper grain overflow-hidden">
+      <div className="grid lg:grid-cols-12">
+        {/* Statement */}
+        <div className="lg:col-span-7 px-gutter py-20 lg:py-32 flex flex-col justify-center">
+          <p className="text-manifest text-clay-soft rise">Start a conversation</p>
 
-      <div className="relative z-10 max-w-8xl mx-auto px-6 lg:px-12">
-        <div className="max-w-3xl">
-          <p className="fade-up text-xs font-mono text-primary-foreground/40 tracking-[0.2em] uppercase mb-6">
-            Start a Conversation
-          </p>
-          <h2 className="fade-up font-serif text-section-xl font-light text-primary-foreground mb-8" style={{ transitionDelay: '150ms' }}>
-            Let&apos;s build something<br />
-            <span className="italic text-primary-foreground/60">together.</span>
+          <h2 className="font-serif text-display font-light mt-8">
+            <span className="wipe">
+              <span className="wipe-inner">Let&apos;s build</span>
+            </span>
+            <span className="wipe">
+              <span className="wipe-inner italic" style={{ transitionDelay: '110ms' }}>
+                something lasting.
+              </span>
+            </span>
           </h2>
-          <p className="fade-up text-body-lg text-primary-foreground/60 mb-6 max-w-lg" style={{ transitionDelay: '250ms' }}>
-            Whether you&apos;re a retailer, interior designer, or hospitality buyer — we&apos;re ready to discuss your requirements.
+
+          <p className="text-lead text-paper/70 max-w-measure mt-8 rise" style={{ transitionDelay: '260ms' }}>
+            Retailer, interior designer, or hospitality buyer — send us the
+            specification and we will come back with honest lead times and a price
+            that holds.
           </p>
-          <p className="fade-up text-sm text-primary-foreground/40 mb-10 max-w-lg italic" style={{ transitionDelay: '300ms' }}>
-            Looking for our complete collection of 1,000+ designs? Verified trade buyers receive exclusive catalogue access after a quick enquiry.
-          </p>
-          <div className="fade-up flex flex-col sm:flex-row gap-4" style={{ transitionDelay: '350ms' }}>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-foreground text-xs font-medium tracking-[0.12em] uppercase btn-lift">
-              
-              Get in Touch
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+
+          <div className="flex flex-wrap gap-3 mt-10 rise" style={{ transitionDelay: '340ms' }}>
+            <Link href="/contact" className="btn btn-invert">
+              Send an enquiry
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
-            <Link
-              href="/collections"
-              className="inline-flex items-center gap-2 px-8 py-4 border border-primary-foreground/30 text-primary-foreground text-xs font-medium tracking-[0.12em] uppercase btn-lift hover:bg-primary-foreground/10 transition-colors">
-              
-              Browse Collections
+            <Link href="/collections#access" className="btn btn-invert">
+              Request catalogue access
             </Link>
           </div>
+
+          {/* Direct lines, set as a manifest block. */}
+          <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mt-14 pt-8 border-t border-line-invert rise" style={{ transitionDelay: '420ms' }}>
+            <div>
+              <dt className="text-manifest-sm text-paper/45">Email</dt>
+              <dd className="mt-1.5">
+                <a href={`mailto:${brand.email}`} className="text-body text-paper link-draw">
+                  {brand.email}
+                </a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-manifest-sm text-paper/45">Telephone</dt>
+              <dd className="mt-1.5">
+                <a href={`tel:${brand.phoneHref}`} className="text-body text-paper link-draw numeral">
+                  {brand.phone}
+                </a>
+              </dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-manifest-sm text-paper/45">Works</dt>
+              <dd className="text-body text-paper/70 mt-1.5">
+                {brand.address.line1}, {brand.address.line2}
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        {/* Plate */}
+        <div className="lg:col-span-5 relative min-h-[52vh] lg:min-h-0 order-first lg:order-last overflow-hidden">
+          <AppImage
+            src={plate.src}
+            alt={plate.alt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 42vw"
+            placeholder="blur"
+            blurDataURL={plate.blurDataURL}
+            data-parallax
+            className="object-cover scale-[1.14]"
+          />
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }

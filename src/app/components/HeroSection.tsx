@@ -1,179 +1,138 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
+import { useReveal } from '@/components/ui/useReveal';
+import { brand, img } from '@/lib/site';
+import type { CatalogueKey } from '@/lib/imagery';
 
-const slides = [
-{
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_169e3ead9-1772203363221.png",
-  alt: 'Warm-lit European dining room, dark oak table, linen chairs, afternoon sunlight streaming through tall windows'
-},
-{
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_1e37f53ab-1772064545604.png",
-  alt: 'Minimal Scandinavian living room, pale wood sideboard, soft grey sofa, floor-to-ceiling windows, overcast daylight'
-},
-{
-  src: "https://img.rocket.new/generatedImages/rocket_gen_img_177447d41-1776988137586.png",
-  alt: 'Contemporary bedroom with dark walnut bed frame, white linen, bedside tables, warm ambient lighting'
-}];
-
-
-const heroStats = [
-{ value: '18+', label: 'Years Experience' },
-{ value: '9,000', label: 'Sq.Mt. Factory' },
-{ value: 'Low', label: 'MOQ' }];
-
+/** Three portrait plates, held long enough to actually be looked at. */
+const PLATES: CatalogueKey[] = ['hero-mango-light', 'hero-starburst', 'hero-tall-chest'];
+const HOLD = 7000;
 
 export default function HeroSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [titleRevealed, setTitleRevealed] = useState(false);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const ref = useReveal<HTMLElement>({ immediate: true });
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => setTitleRevealed(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 8000);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(() => setActive((i) => (i + 1) % PLATES.length), HOLD);
+    return () => clearInterval(id);
   }, []);
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden grain-overlay">
-      {/* Carousel */}
-      {slides.map((slide, i) =>
-      <div key={i} className={`carousel-slide-item ${i === currentSlide ? 'active' : ''}`}>
-          <AppImage
-          src={slide.src}
-          alt={slide.alt}
-          fill
-          priority={i === 0}
-          sizes="100vw"
-          className={`object-cover ken-burns ${i === currentSlide ? 'active' : ''}`}
-          unoptimized={false} />
-        
-        </div>
-      )}
-
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60 z-10" />
-
-      {/* Content */}
-      <div className="relative z-20 flex flex-col min-h-screen px-6 lg:px-12 text-center">
-        <div className="flex-1 flex flex-col justify-center">
-        <div className="max-w-4xl mx-auto">
-          {/* Eyebrow */}
-          <div
-            className={`reveal-mask mb-8 ${titleRevealed ? 'is-revealed' : ''}`}
-            style={{ transitionDelay: '0ms' }}>
-            
-            <p className="text-white/60 text-xs font-mono tracking-[0.25em] uppercase">
-              Jodhpur, India · Est. 2006
+    <section ref={ref} className="relative grain">
+      <div className="grid lg:grid-cols-12 min-h-[100svh]">
+        {/* ── Type column ──────────────────────────────────────────────── */}
+        <div className="lg:col-span-7 flex flex-col justify-between pt-28 pb-10 lg:pt-40 lg:pb-12 px-gutter">
+          <div className="max-w-[46rem]">
+            <p className="text-manifest text-clay veil" style={{ transitionDelay: '80ms' }}>
+              Est. {brand.established} — {brand.origin}
             </p>
-          </div>
 
-          {/* Main headline */}
-          <h1 className="font-serif text-hero-xl font-light text-white leading-none mb-6">
-            <span className="reveal-mask block">
-              <span
-                className={`reveal-mask-inner block ${titleRevealed ? 'is-revealed' : ''}`}
-                style={{ transitionDelay: '200ms' }}>
-                
-                Timeless Furniture.
+            <h1 className="font-serif text-mega font-light mt-8 lg:mt-12">
+              <span className="wipe">
+                <span className="wipe-inner" style={{ transitionDelay: '160ms' }}>
+                  Timber
+                </span>
               </span>
-            </span>
-            <span className="reveal-mask block">
-              <span
-                className={`reveal-mask-inner block italic text-white/80 ${titleRevealed ? 'is-revealed' : ''}`}
-                style={{ transitionDelay: '400ms' }}>
-                
-                Crafted for
+              <span className="wipe">
+                <span className="wipe-inner italic text-clay" style={{ transitionDelay: '280ms' }}>
+                  that travels.
+                </span>
               </span>
-            </span>
-            <span className="reveal-mask block">
-              <span
-                className={`reveal-mask-inner block ${titleRevealed ? 'is-revealed' : ''}`}
-                style={{ transitionDelay: '600ms' }}>
-                
-                Modern Spaces.
-              </span>
-            </span>
-          </h1>
+            </h1>
 
-          {/* Sub */}
-          <div
-            className={`fade-up mb-12 ${titleRevealed ? 'is-revealed' : ''}`}
-            style={{ transitionDelay: '900ms' }}>
-            
-            <p className="text-white/60 text-sm font-mono tracking-[0.15em] uppercase">
-              Designed in India. Trusted by furniture retailers worldwide.
+            <p
+              className="text-lead text-ink-soft max-w-measure mt-8 lg:mt-12 rise"
+              style={{ transitionDelay: '520ms' }}
+            >
+              Solid mango and reclaimed hardwood, cut, carved and finished on our own
+              floor in Boranada — then packed into containers bound for nine countries.
+              Low minimums. Honest lead times. One set of hands from log to lorry.
             </p>
+
+            <div
+              className="flex flex-wrap gap-3 mt-10 lg:mt-14 rise"
+              style={{ transitionDelay: '640ms' }}
+            >
+              <Link href="/collections" className="btn btn-solid">
+                View the collections
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link href="/contact" className="btn btn-ghost">
+                Become a partner
+              </Link>
+            </div>
           </div>
 
-          {/* CTAs */}
+          {/* Plate index, set like a contact sheet. */}
           <div
-            className={`fade-up flex flex-col sm:flex-row gap-4 justify-center ${titleRevealed ? 'is-revealed' : ''}`}
-            style={{ transitionDelay: '1100ms' }}>
-            
-            <Link
-              href="/collections"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-foreground text-xs font-medium tracking-[0.12em] uppercase btn-lift">
-              
-              Explore Collection
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-8 py-4 border border-white/50 text-white text-xs font-medium tracking-[0.12em] uppercase btn-lift hover:bg-white/10 transition-colors">
-              
-              Become a Partner
-            </Link>
+            className="hidden lg:flex items-center gap-5 mt-16 rise"
+            style={{ transitionDelay: '760ms' }}
+          >
+            {PLATES.map((plate, i) => (
+              <button
+                key={plate}
+                type="button"
+                onClick={() => setActive(i)}
+                aria-label={`Show plate ${i + 1}: ${img(plate).alt}`}
+                aria-current={i === active}
+                className="group flex items-center gap-2.5 py-2"
+              >
+                <span
+                  className={`block h-px transition-all duration-base ease-out ${
+                    i === active ? 'w-14 bg-ink' : 'w-7 bg-line-strong group-hover:bg-ink'
+                  }`}
+                />
+                <span
+                  className={`text-manifest-sm numeral transition-colors duration-base ${
+                    i === active ? 'text-ink' : 'text-muted group-hover:text-ink'
+                  }`}
+                >
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
-        </div>
 
-        {/* Bottom stats */}
-        <div
-          className={`fade-up pb-16 lg:pb-10 ${titleRevealed ? 'is-revealed' : ''}`}
-          style={{ transitionDelay: '1300ms' }}>
-          
-          <div className="max-w-8xl mx-auto flex justify-between items-end">
-            {heroStats.map((stat, i) =>
-            <div key={i} className="text-center flex-1">
-                <p className="font-serif text-3xl lg:text-4xl font-light text-white stat-counter">
-                  {stat.value}
-                </p>
-                <p className="text-white/50 text-xs font-mono tracking-widest uppercase mt-1">
-                  {stat.label}
-                </p>
+        {/* ── Plate column — bleeds to the right edge ───────────────────── */}
+        <div className="lg:col-span-5 relative min-h-[62vh] lg:min-h-0 bg-paper-deep overflow-hidden">
+          {PLATES.map((plate, i) => {
+            const plateImg = img(plate);
+            return (
+              <div
+                key={plate}
+                aria-hidden={i !== active}
+                className="absolute inset-0 transition-opacity duration-[1400ms] ease-out-soft"
+                style={{ opacity: i === active ? 1 : 0 }}
+              >
+                <AppImage
+                  src={plateImg.src}
+                  alt={plateImg.alt}
+                  fill
+                  priority={i === 0}
+                  sizes="(max-width: 1024px) 100vw, 42vw"
+                  placeholder="blur"
+                  blurDataURL={plateImg.blurDataURL}
+                  className={`object-cover drift ${i === active ? 'shown' : ''}`}
+                />
               </div>
-            )}
+            );
+          })}
+
+          {/* Caption sits on the plate, bottom-left, like a printed credit. */}
+          <div className="absolute inset-x-0 bottom-0 p-6 lg:p-8 scrim-soft pt-24">
+            <p className="text-manifest-sm text-paper/75 numeral">
+              Plate {String(active + 1).padStart(2, '0')} / {String(PLATES.length).padStart(2, '0')}
+            </p>
           </div>
         </div>
-
       </div>
-
-      {/* Slide indicators */}
-      <div className="absolute bottom-8 right-8 z-20 flex gap-2">
-        {slides.map((_, i) =>
-        <button
-          key={i}
-          onClick={() => setCurrentSlide(i)}
-          aria-label={`Go to slide ${i + 1}`}
-          className={`h-px transition-all duration-500 ${
-          i === currentSlide ? 'w-8 bg-white' : 'w-4 bg-white/30'}`
-          } />
-
-        )}
-      </div>
-    </section>);
-
+    </section>
+  );
 }

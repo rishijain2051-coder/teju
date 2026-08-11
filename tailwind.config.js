@@ -1,16 +1,41 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
-  content: [
-    './src/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     container: {
       center: true,
-      padding: '1rem',
+      padding: '1.5rem',
     },
     extend: {
       colors: {
+        // Material palette, drawn from the catalogue photography.
+        paper: {
+          DEFAULT: 'var(--paper)',
+          deep: 'var(--paper-deep)',
+          warm: 'var(--paper-warm)',
+        },
+        ink: {
+          DEFAULT: 'var(--ink)',
+          soft: 'var(--ink-soft)',
+        },
+        clay: {
+          DEFAULT: 'var(--clay)',
+          soft: 'var(--clay-soft)',
+        },
+        teal: {
+          DEFAULT: 'var(--teal)',
+          soft: 'var(--teal-soft)',
+        },
+        timber: 'var(--timber)',
+        sand: 'var(--sand)',
+        line: {
+          DEFAULT: 'var(--line)',
+          strong: 'var(--line-strong)',
+          invert: 'var(--line-invert)',
+        },
+
+        // Semantic aliases.
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         primary: {
@@ -37,39 +62,55 @@ module.exports = {
         input: 'var(--input)',
         ring: 'var(--ring)',
       },
+
+      // Editorial work is square. Radius exists only where a control needs it.
       borderRadius: {
-        sm: 'calc(var(--radius) - 2px)',
-        DEFAULT: 'var(--radius)',
-        md: 'calc(var(--radius) + 2px)',
-        lg: 'calc(var(--radius) + 4px)',
+        none: '0px',
+        DEFAULT: '0px',
+        sm: '0px',
+        md: '0px',
+        lg: '0px',
+        full: '9999px',
       },
+
       fontFamily: {
-        sans: ['var(--font-sans)', 'sans-serif'],
-        serif: ['var(--font-serif)', 'serif'],
+        sans: ['var(--font-sans)'],
+        serif: ['var(--font-serif)'],
+        mono: ['var(--font-mono)'],
       },
+
       maxWidth: {
+        shell: 'var(--shell)',
+        measure: '68ch',
         '8xl': '1600px',
       },
+
+      spacing: {
+        gutter: 'var(--gutter)',
+      },
+
       transitionTimingFunction: {
-        'luxury': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        out: 'var(--ease-out)',
+        'out-soft': 'var(--ease-out-soft)',
+        inout: 'var(--ease-inout)',
       },
+
+      transitionDuration: {
+        fast: '180ms',
+        base: '320ms',
+        slow: '640ms',
+        reveal: '1000ms',
+      },
+
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(2rem)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
+        marquee: {
+          '0%': { transform: 'translate3d(0, 0, 0)' },
+          '100%': { transform: 'translate3d(-50%, 0, 0)' },
         },
       },
+
       animation: {
-        'fade-in': 'fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-        'slide-up': 'slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        marquee: 'marquee 48s linear infinite',
       },
     },
   },

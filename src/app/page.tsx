@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import HeroSection from '@/app/components/HeroSection';
+import ManifestStrip from '@/app/components/ManifestStrip';
 import FeaturedCollections from '@/app/components/FeaturedCollections';
 import WhyBrandsSection from '@/app/components/WhyBrandsSection';
 import FeaturedProducts from '@/app/components/FeaturedProducts';
@@ -12,17 +13,20 @@ import ContactCTA from '@/app/components/ContactCTA';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-background">
-      <Header transparent={true} />
-      <HeroSection />
-      <FeaturedCollections />
-      <WhyBrandsSection />
-      <FeaturedProducts />
-      <TrustSection />
-      <TestimonialsSection />
-      <JournalSection />
-      <ContactCTA />
+    <>
+      <Header />
+      <main id="main">
+        <HeroSection />
+        <ManifestStrip />
+        <FeaturedCollections />
+        <WhyBrandsSection />
+        <FeaturedProducts />
+        <TrustSection />
+        <TestimonialsSection />
+        <JournalSection />
+        <ContactCTA />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

@@ -2,156 +2,161 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import AppLogo from '@/components/ui/AppLogo';
+import { lockScroll } from '@/components/motion/scroll';
+import { brand, nav } from '@/lib/site';
 
-interface HeaderProps {
-  transparent?: boolean;
-}
-
-export default function Header({ transparent = false }: HeaderProps) {
+export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 80);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navLinks = [
-    { label: 'Collections', href: '/collections' },
-    { label: 'About', href: '/#about' },
-    { label: 'Factory', href: '/#factory' },
-    { label: 'Journal', href: '/#journal' },
-    { label: 'Contact', href: '/contact' },
-  ];
+  // Close on route change, and lock the page behind the open overlay.
+  useEffect(() => setMenuOpen(false), [pathname]);
 
-  const isTransparent = transparent && !scrolled;
+  useEffect(() => {
+    // Lenis drives scrolling itself, so overflow alone will not hold the page.
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    lockScroll(menuOpen);
+    return () => {
+      document.body.style.overflow = '';
+      lockScroll(false);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
 
   return (
     <>
+      {/* Opaque, not translucent: the masthead crosses a teal section and a
+          near-black one, and a see-through bar made the nav unreadable on both. */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
-          isTransparent ? 'nav-transparent' : 'nav-solid'
+        className={`fixed inset-x-0 top-0 z-50 bg-paper transition-[border-color] duration-base ${
+          scrolled ? 'border-b border-line' : 'border-b border-transparent'
         }`}
       >
-        <div className="max-w-8xl mx-auto px-6 lg:px-12">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 flex-shrink-0">
-              <AppLogo
-                size={32}
-                className={isTransparent ? 'brightness-0 invert' : ''}
-              />
-              <span
-                className={`font-sans font-semibold text-sm tracking-[0.15em] uppercase transition-colors duration-500 ${
-                  isTransparent ? 'text-white' : 'text-foreground'
-                }`}
-              >
-                Vardhman Impex
-              </span>
-            </Link>
+        <div className="shell-wide flex items-center justify-between h-16 lg:h-20">
+          {/* Masthead */}
+          <Link href="/" className="flex items-center gap-3 shrink-0 group">
+            <AppLogo size={30} />
+            <span className="font-serif text-[1.15rem] lg:text-[1.35rem] leading-none tracking-tight">
+              Vardhman <span className="italic">Impex</span>
+            </span>
+          </Link>
 
-            {/* Desktop Nav — center */}
-            <nav className="hidden lg:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
-              {navLinks.map((link) => (
+          {/* Nav */}
+          <nav className="hidden lg:flex items-center gap-9" aria-label="Primary">
+            {nav.map((link) => {
+              const active =
+                link.href === '/collections'
+                  ? pathname.startsWith('/collections')
+                  : pathname === link.href;
+              return (
                 <Link
                   key={link.label}
                   href={link.href}
-                  className={`text-xs font-medium tracking-[0.12em] uppercase transition-colors duration-300 ${
-                    isTransparent
-                      ? 'text-white/80 hover:text-white' :'text-muted-foreground hover:text-foreground'
+                  aria-current={active ? 'page' : undefined}
+                  className={`text-manifest link-draw transition-colors duration-base ${
+                    active ? 'text-clay' : 'text-ink-soft hover:text-ink'
                   }`}
                 >
                   {link.label}
                 </Link>
-              ))}
-            </nav>
+              );
+            })}
+          </nav>
 
-            {/* Right actions */}
-            <div className="flex items-center gap-4">
-              <button
-                aria-label="Search"
-                className={`hidden lg:flex items-center justify-center w-9 h-9 transition-colors ${
-                  isTransparent ? 'text-white/70 hover:text-white' : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
-              </button>
-
-              <Link
-                href="/contact"
-                className={`hidden lg:inline-flex items-center gap-2 px-5 py-2.5 text-xs font-medium tracking-[0.1em] uppercase btn-lift transition-all duration-300 ${
-                  isTransparent
-                    ? 'bg-white text-foreground hover:bg-secondary'
-                    : 'bg-primary text-primary-foreground hover:bg-accent'
-                }`}
-              >
+          <div className="flex items-center gap-5">
+            <a
+              href={`tel:${brand.phoneHref}`}
+              className="hidden xl:block text-manifest-sm text-muted hover:text-ink transition-colors duration-base numeral"
+            >
+              {brand.phone}
+            </a>
+            {/* Wrapped rather than given `hidden` directly: `.btn` sets its own
+                display, which lands in the same cascade layer as Tailwind's
+                `hidden` and would win. */}
+            <span className="hidden lg:block">
+              <Link href="/contact" className="btn btn-solid !py-3 !px-6">
                 Enquire
               </Link>
+            </span>
 
-              {/* Mobile hamburger */}
-              <button
-                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                onClick={() => setMenuOpen(!menuOpen)}
-                className={`lg:hidden flex flex-col gap-1.5 w-8 h-8 items-center justify-center transition-colors ${
-                  isTransparent ? 'text-white' : 'text-foreground'
+            <button
+              type="button"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+              className="lg:hidden flex flex-col justify-center gap-[5px] w-10 h-10 items-center -mr-2"
+            >
+              <span
+                className={`block w-6 h-px bg-ink transition-transform duration-base ease-out ${
+                  menuOpen ? 'translate-y-[3px] rotate-45' : ''
                 }`}
-              >
-                <span
-                  className={`block w-5 h-px transition-all duration-300 bg-current ${
-                    menuOpen ? 'rotate-45 translate-y-[5px]' : ''
-                  }`}
-                />
-                <span
-                  className={`block w-5 h-px transition-all duration-300 bg-current ${
-                    menuOpen ? 'opacity-0' : ''
-                  }`}
-                />
-                <span
-                  className={`block w-5 h-px transition-all duration-300 bg-current ${
-                    menuOpen ? '-rotate-45 -translate-y-[5px]' : ''
-                  }`}
-                />
-              </button>
-            </div>
+              />
+              <span
+                className={`block w-6 h-px bg-ink transition-transform duration-base ease-out ${
+                  menuOpen ? '-translate-y-[3px] -rotate-45' : ''
+                }`}
+              />
+            </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-background transition-all duration-500 lg:hidden ${
-          menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        id="mobile-menu"
+        hidden={!menuOpen}
+        className={`fixed inset-0 z-40 bg-paper lg:hidden transition-opacity duration-base ease-out ${
+          menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <div className="flex flex-col h-full pt-24 pb-12 px-8">
-          <nav className="flex flex-col gap-8 mt-8">
-            {navLinks.map((link, i) => (
+        <div className="flex flex-col h-full pt-24 pb-10 px-gutter">
+          <nav className="flex flex-col" aria-label="Mobile">
+            {nav.map((link, i) => (
               <Link
                 key={link.label}
                 href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="font-serif text-section-xl font-light text-foreground hover:text-accent transition-colors"
-                style={{ transitionDelay: `${i * 60}ms` }}
+                className="group flex items-baseline gap-5 py-5 border-b border-line"
               >
-                {link.label}
+                <span className="text-manifest-sm text-muted numeral">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="font-serif text-display-sm font-light group-hover:text-clay transition-colors duration-base">
+                  {link.label}
+                </span>
               </Link>
             ))}
           </nav>
-          <div className="mt-auto">
-            <Link
-              href="/contact"
-              onClick={() => setMenuOpen(false)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground text-sm font-medium tracking-widest uppercase btn-lift"
-            >
-              Enquire Now
+
+          <div className="mt-auto pt-10">
+            <Link href="/contact" className="btn btn-solid w-full justify-center">
+              Enquire now
             </Link>
+            <div className="mt-8 flex flex-col gap-1.5">
+              <a href={`tel:${brand.phoneHref}`} className="text-manifest-sm text-muted numeral">
+                {brand.phone}
+              </a>
+              <a href={`mailto:${brand.email}`} className="text-manifest-sm text-muted">
+                {brand.email}
+              </a>
+            </div>
           </div>
         </div>
       </div>

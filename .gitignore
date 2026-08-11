@@ -33,5 +33,8 @@ jest-test-results.json
 .vscode/
 .idea/
 
+# Claude Code — machine-local permission grants
+.claude/settings.local.json
+
 # Optional: if using TurboRepo or monorepo
 turbo/

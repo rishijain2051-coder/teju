@@ -2,186 +2,485 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   VARDHMAN IMPEX — "Editorial Export House"
+
+   The palette is pulled from the catalogue photography rather than invented:
+   the pieces are shot against terracotta and deep-teal walls with warm mango
+   timber and black iron. The site grounds itself in the same materials so the
+   page and the product read as one world.
+
+   Contrast is verified, not assumed. Every text pair below clears WCAG AA on
+   both grounds. Two documented exceptions:
+     · timber-on-teal  (3.51) — display numerals only, never body text
+     · clay-on-teal    (2.71) — never used; on teal, type is paper or timber
+   ────────────────────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #F7F5F2;
-  --foreground: #202020;
-  --primary: #202020;
-  --primary-foreground: #F7F5F2;
-  --secondary: #ECE7E1;
-  --secondary-foreground: #202020;
-  --accent: #5C3D2E;
-  --accent-foreground: #F7F5F2;
-  --muted: #D5CEC7;
-  --muted-foreground: #7A7068;
-  --card: #FFFFFF;
-  --card-foreground: #202020;
-  --border: #D5CEC7;
-  --input: #ECE7E1;
-  --ring: #5C3D2E;
-  --radius: 0.25rem;
-  --font-sans: 'DM Sans', sans-serif;
-  --font-serif: 'Fraunces', serif;
+  /* Grounds */
+  --paper: #EFE9DF;        /* warm bone — the primary ground */
+  --paper-deep: #E3DACB;   /* secondary ground, section alternation */
+  --paper-warm: #F6F2EA;   /* lifted surfaces, cards */
+
+  /* Ink */
+  --ink: #17130F;          /* near-black, warmed — 15.30:1 on paper */
+  --ink-soft: #3A332B;     /* 10.30:1 */
+  --muted: #655B4E;        /* 5.50:1 on paper, 4.80:1 on paper-deep */
+
+  /* Material accents, straight off the product walls */
+  --clay: #973F24;         /* terracotta — the action colour, 5.70:1 */
+  --clay-soft: #C0674A;    /* decorative only, never text on teal */
+  --teal: #1B443F;         /* deep teal — inverted section ground */
+  --teal-soft: #2E625D;
+  --timber: #B98A52;       /* mango tan — display numerals on dark */
+  --sand: #CBB89A;
+
+  /* Structure */
+  --line: #D6CCBC;         /* hairline rules — the editorial skeleton */
+  --line-strong: #B9AC98;
+  --line-invert: rgba(239, 233, 223, 0.18);
+
+  /* Legacy semantic aliases — kept so every surface stays coherent */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --accent: var(--clay);
+  --accent-foreground: var(--paper);
+  --muted-foreground: var(--muted);
+  --card: var(--paper-warm);
+  --card-foreground: var(--ink);
+  --border: var(--line);
+  --input: var(--paper-deep);
+  --ring: var(--clay);
+  --radius: 0px;           /* editorial work is square. No soft corners. */
+
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Motion — enters ease out, never in. Exits may ease in. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 640ms;
+  --dur-reveal: 1000ms;
+
+  /* The editorial measure */
+  --gutter: 1.5rem;
+  --shell: 1680px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gutter: 3rem;
+  }
 }
 
 @layer base {
   * {
     box-sizing: border-box;
-    border-color: var(--border);
+    border-color: var(--line);
   }
 
   html {
     scroll-behavior: smooth;
+    /* Stops the fixed header from covering anchor targets. */
+    scroll-padding-top: 5rem;
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: var(--paper);
+    color: var(--ink);
     font-family: var(--font-sans);
+    font-feature-settings: 'kern' 1, 'liga' 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, h4, h5, h6, p {
+  h1, h2, h3, h4, h5, h6, p, figure {
     margin: 0;
+  }
+
+  /* Fraunces is variable: drive its optical size and softness rather than
+     leaving it at defaults, which is what makes it read generic. */
+  .font-serif {
+    font-variation-settings: 'SOFT' 0, 'WONK' 1, 'opsz' 144;
+  }
+
+  ::selection {
+    background: var(--clay);
+    color: var(--paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--clay);
+    outline-offset: 3px;
+  }
+
+  /* Honour the OS setting. The previous build animated regardless. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
 @layer utilities {
-  .font-serif {
-    font-family: var(--font-serif);
-  }
-
-  .text-hero-xl {
-    font-size: clamp(2.75rem, 6vw, 6rem);
-    line-height: 1.0;
-    letter-spacing: -0.03em;
-  }
-
-  .text-section-xl {
-    font-size: clamp(2.5rem, 5vw, 5rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
+  /* ── Type scale ────────────────────────────────────────────────────────── */
+  .text-mega {
+    font-size: clamp(3.5rem, 1rem + 13vw, 14rem);
+    line-height: 0.86;
+    letter-spacing: -0.035em;
   }
 
   .text-display {
-    font-size: clamp(1.8rem, 3.5vw, 3.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.75rem, 1.2rem + 7vw, 8rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
   }
 
-  .text-body-lg {
-    font-size: clamp(1rem, 1.5vw, 1.125rem);
-    line-height: 1.7;
+  .text-display-sm {
+    font-size: clamp(2rem, 1.2rem + 3.4vw, 4.25rem);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
   }
 
-  .reveal-mask {
+  .text-title {
+    font-size: clamp(1.375rem, 1.1rem + 1.3vw, 2.125rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+
+  .text-lead {
+    font-size: clamp(1.0625rem, 1rem + 0.5vw, 1.375rem);
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+  }
+
+  .text-body {
+    font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+    line-height: 1.68;
+  }
+
+  /* The manifest layer: every piece of metadata on this site is set like a
+     line on a bill of lading. This is the house voice. */
+  .text-manifest {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 450;
+  }
+
+  .text-manifest-sm {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    line-height: 1.4;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .numeral {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings: 'tnum' 1, 'lnum' 1;
+  }
+
+  /* ── Shell ─────────────────────────────────────────────────────────────── */
+  .shell {
+    width: 100%;
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .shell-wide {
+    width: 100%;
+    max-width: 1920px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* ── Editorial rules ───────────────────────────────────────────────────── */
+  .rule {
+    border-top: 1px solid var(--line);
+  }
+
+  .rule-invert {
+    border-top: 1px solid var(--line-invert);
+  }
+
+  /* A section header that reads like a filed document. */
+  .rule-label {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ── Motion primitives ─────────────────────────────────────────────────── */
+  /* All enters: opacity + transform only, ease-out, no layout properties. */
+  .rise {
+    opacity: 0;
+    transform: translate3d(0, 1.75rem, 0);
+    transition:
+      opacity var(--dur-slow) var(--ease-out),
+      transform var(--dur-slow) var(--ease-out);
+  }
+
+  .rise.shown {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Type that wipes up from behind a mask — the editorial reveal. */
+  .wipe {
     overflow: hidden;
+    display: block;
   }
 
-  .reveal-mask-inner {
-    transform: translateY(110%);
+  .wipe-inner {
+    display: block;
+    transform: translate3d(0, 105%, 0);
+    transition: transform var(--dur-reveal) var(--ease-out);
+  }
+
+  .wipe-inner.shown {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .veil {
     opacity: 0;
-    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1s ease;
+    transition: opacity var(--dur-slow) var(--ease-out-soft);
   }
 
-  .reveal-mask-inner.is-revealed {
-    transform: translateY(0);
+  .veil.shown {
     opacity: 1;
   }
 
-  .fade-up {
-    opacity: 0;
-    transform: translateY(2rem);
-    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Slow ambient drift on hero stills. Disabled under reduced motion by the
+     global rule above. */
+  .drift {
+    transform: scale(1.02);
+    transition: transform 14s linear;
   }
 
-  .fade-up.is-revealed {
-    opacity: 1;
-    transform: translateY(0);
+  .drift.shown {
+    transform: scale(1.11);
   }
 
-  .ken-burns {
-    transform: scale(1);
-    transition: transform 10s ease-out;
+  /* ── Interaction ───────────────────────────────────────────────────────── */
+  .plate {
+    overflow: hidden;
+    background-color: var(--paper-deep);
   }
 
-  .ken-burns.active {
-    transform: scale(1.08);
+  .plate img {
+    transition: transform var(--dur-slow) var(--ease-out-soft);
+    will-change: transform;
   }
 
-  .carousel-slide-item {
+  .group:hover .plate img,
+  .plate:hover img {
+    transform: scale(1.04);
+  }
+
+  /* Link that draws its own underline on approach. */
+  .link-draw {
+    position: relative;
+    display: inline-block;
+  }
+
+  .link-draw::after {
+    content: '';
     position: absolute;
-    inset: 0;
-    transition: opacity 1.5s ease-in-out;
-    opacity: 0;
+    left: 0;
+    bottom: -0.15em;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--dur-base) var(--ease-out);
   }
 
-  .carousel-slide-item.active {
-    opacity: 1;
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 
-  .collection-card-img {
-    transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  /* The house button: a filled slab that inverts. No lift, no drop shadow. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border: 1px solid currentColor;
+    transition:
+      background-color var(--dur-base) var(--ease-out),
+      color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
   }
 
-  .collection-card:hover .collection-card-img {
-    transform: scale(1.05);
+  .btn-solid {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
   }
 
-  .product-card-hover {
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                box-shadow 0.4s ease;
+  .btn-solid:hover {
+    background: var(--clay);
+    border-color: var(--clay);
   }
 
-  .product-card-hover:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 60px rgba(32, 32, 32, 0.12);
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--line-strong);
   }
 
-  .btn-lift {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  .btn-ghost:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
   }
 
-  .btn-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(32, 32, 32, 0.2);
+  .btn-invert {
+    background: transparent;
+    color: var(--paper);
+    border-color: rgba(239, 233, 223, 0.45);
   }
 
-  .nav-transparent {
-    background-color: transparent;
+  .btn-invert:hover {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--paper);
   }
 
-  .nav-solid {
-    background-color: var(--background);
-    border-bottom: 1px solid var(--border);
+  /* Arrow that steps forward with its button. */
+  .btn svg,
+  .link-arrow svg {
+    transition: transform var(--dur-base) var(--ease-out);
   }
 
-  .stat-counter {
-    font-variant-numeric: tabular-nums;
+  .btn:hover svg,
+  .link-arrow:hover svg {
+    transform: translate3d(0.25rem, 0, 0);
   }
 
-  .grain-overlay::after {
+  /* ── Texture ───────────────────────────────────────────────────────────── */
+  /* A whisper of grain so flat colour fields read as paper, not as #hex. */
+  .grain::after {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 1;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  .border-t-thin {
-    border-top: 1px solid var(--border);
+  .scrim {
+    background: linear-gradient(
+      to top,
+      rgba(23, 19, 15, 0.82) 0%,
+      rgba(23, 19, 15, 0.38) 38%,
+      rgba(23, 19, 15, 0.06) 68%,
+      rgba(23, 19, 15, 0) 100%
+    );
   }
 
-  .border-b-thin {
-    border-bottom: 1px solid var(--border);
+  .scrim-soft {
+    background: linear-gradient(
+      to top,
+      rgba(23, 19, 15, 0.62) 0%,
+      rgba(23, 19, 15, 0.12) 55%,
+      rgba(23, 19, 15, 0) 100%
+    );
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
+  /* ── Motion layer handover ─────────────────────────────────────────────── */
+  /* Present once GSAP + Lenis have loaded. GSAP then owns these properties
+     outright; leaving the CSS transitions on would smear every tween. */
+  .motion-js {
+    scroll-behavior: auto;
+  }
+
+  .motion-js .rise,
+  .motion-js .veil,
+  .motion-js .wipe-inner {
+    transition: none;
+  }
+
+  /* Lenis' required host styles, inlined rather than pulling in its stylesheet. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+
+  /* Reveals are driven by JavaScript. If scripting is unavailable the entire
+     page would otherwise render at opacity 0 — present in the DOM, invisible to
+     the reader. Hand everything back. */
+  @media (scripting: none) {
+    .rise,
+    .veil {
+      opacity: 1;
+      transform: none;
+    }
+    .wipe-inner {
+      transform: none;
+    }
+  }
+
+  /* The global reduced-motion rule collapses animation duration to ~0, which
+     would snap the marquee to its end transform and leave the row visibly
+     offset. Stop it outright instead and let the track sit at its origin. */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
-  .scrollbar-hide {
+  .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }

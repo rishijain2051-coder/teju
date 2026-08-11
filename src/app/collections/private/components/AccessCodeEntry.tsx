@@ -1,14 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import AppImage from '@/components/ui/AppImage';
 import AppLogo from '@/components/ui/AppLogo';
+import { useReveal } from '@/components/ui/useReveal';
+import { brand, facts, img } from '@/lib/site';
 
 type EntryState = 'idle' | 'loading' | 'error';
 
 export default function AccessCodeEntry() {
   const router = useRouter();
+  const ref = useReveal<HTMLDivElement>({ immediate: true });
   const [code, setCode] = useState('');
   const [state, setState] = useState<EntryState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -24,149 +28,132 @@ export default function AccessCodeEntry() {
       const res = await fetch('/api/verify-access', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code.trim() }),
+        body: JSON.stringify({ code }),
       });
 
       if (res.ok) {
         router.push('/collections/private/catalogue');
-      } else {
-        setState('error');
-        setErrorMsg('This code is not recognised. Please check your email or contact us.');
+        return;
       }
+
+      setState('error');
+      setErrorMsg('That code was not recognised. Check it and try again.');
     } catch {
       setState('error');
-      setErrorMsg('Something went wrong. Please try again.');
+      setErrorMsg('Could not reach the server. Check your connection and try again.');
     }
   };
 
+  const plate = img('hero-starburst');
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Minimal top bar */}
-      <header className="flex items-center justify-between px-6 lg:px-12 h-16 lg:h-20 border-b border-border">
-        <Link href="/" className="flex items-center gap-3">
-          <AppLogo size={28} />
-          <span className="font-sans font-semibold text-xs tracking-[0.15em] uppercase text-foreground">
-            Vardhman Impex
+    <div ref={ref} className="min-h-screen grid lg:grid-cols-12">
+      {/* Gate */}
+      <div className="lg:col-span-7 flex flex-col justify-between px-gutter py-10 lg:py-14">
+        <Link href="/" className="inline-flex items-center gap-3 self-start">
+          <AppLogo size={30} />
+          <span className="font-serif text-[1.35rem] leading-none tracking-tight">
+            Vardhman <span className="italic">Impex</span>
           </span>
         </Link>
-        <Link
-          href="/collections"
-          className="text-xs font-mono text-muted-foreground tracking-widest uppercase hover:text-foreground transition-colors"
-        >
-          ← Public Collection
-        </Link>
-      </header>
 
-      {/* Main content */}
-      <main className="flex-1 flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-md">
-          {/* Lock icon */}
-          <div className="flex justify-center mb-10">
-            <div className="w-16 h-16 border border-border flex items-center justify-center">
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-                className="text-accent"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-            </div>
-          </div>
+        <div className="max-w-[34rem] py-16">
+          <p className="text-manifest text-clay veil">Private catalogue</p>
 
-          {/* Heading */}
-          <div className="text-center mb-10">
-            <p className="text-xs font-mono text-muted-foreground tracking-[0.2em] uppercase mb-3">
-              Private Catalogue
-            </p>
-            <h1 className="font-serif text-display font-light text-foreground mb-4">
-              Enter your access code
-            </h1>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              This catalogue is reserved for verified trade buyers. If you have received an access code, enter it below to unlock 1,000+ designs.
-            </p>
-          </div>
+          <h1 className="font-serif text-display font-light mt-6">
+            <span className="wipe">
+              <span className="wipe-inner" style={{ transitionDelay: '90ms' }}>
+                By invitation.
+              </span>
+            </span>
+          </h1>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label
-                htmlFor="access-code"
-                className="block text-xs font-mono text-muted-foreground tracking-widest uppercase mb-2"
-              >
-                Access Code
-              </label>
-              <input
-                id="access-code"
-                type="text"
-                value={code}
-                onChange={(e) => {
-                  setCode(e.target.value);
-                  if (state === 'error') setState('idle');
-                }}
-                placeholder="e.g. Hack Karke Bata"
-                autoComplete="off"
-                autoCapitalize="characters"
-                spellCheck={false}
-                required
-                className={`w-full px-4 py-4 bg-background border text-foreground text-sm font-mono tracking-widest placeholder:text-muted-foreground/40 placeholder:tracking-normal focus:outline-none transition-colors ${
-                  state === 'error' ?'border-red-400 focus:border-red-400' :'border-border focus:border-foreground'
-                }`}
-              />
-              {state === 'error' && (
-                <p className="mt-2 text-xs text-red-500">{errorMsg}</p>
-              )}
-            </div>
+          <p className="text-lead text-ink-soft mt-6 rise" style={{ transitionDelay: '260ms' }}>
+            The full range of {facts.designs}+ designs is held for verified trade
+            buyers. Enter the code we issued you.
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-10 rise" style={{ transitionDelay: '340ms' }}>
+            <label htmlFor="code" className="text-manifest-sm text-muted">
+              Access code
+            </label>
+            <input
+              id="code"
+              name="code"
+              value={code}
+              autoComplete="off"
+              autoCapitalize="none"
+              spellCheck={false}
+              aria-invalid={state === 'error'}
+              aria-describedby={state === 'error' ? 'code-error' : undefined}
+              onChange={(e) => {
+                setCode(e.target.value);
+                if (state === 'error') setState('idle');
+              }}
+              placeholder="Enter your code"
+              className={`w-full bg-transparent border-b py-3.5 mt-1 text-title font-serif font-light text-ink placeholder:text-muted/60 placeholder:font-sans placeholder:text-base focus:outline-none transition-colors duration-base ${
+                state === 'error' ? 'border-clay' : 'border-line-strong focus:border-clay'
+              }`}
+            />
+
+            {state === 'error' && (
+              <p id="code-error" role="alert" className="text-manifest-sm text-clay mt-3">
+                {errorMsg}
+              </p>
+            )}
 
             <button
               type="submit"
               disabled={state === 'loading' || !code.trim()}
-              className="w-full py-4 bg-primary text-primary-foreground text-xs font-medium tracking-[0.12em] uppercase btn-lift disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="btn btn-solid mt-8 disabled:opacity-45"
             >
-              {state === 'loading' ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg
-                    className="animate-spin w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-                  </svg>
-                  Verifying…
-                </span>
-              ) : (
-                'Unlock Catalogue'
+              {state === 'loading' ? 'Checking…' : 'Enter'}
+              {state !== 'loading' && (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
               )}
             </button>
           </form>
 
-          {/* Footer note */}
-          <div className="mt-10 pt-8 border-t border-border text-center space-y-3">
-            <p className="text-xs text-muted-foreground">
-              Don&apos;t have an access code?
-            </p>
-            <Link
-              href="/collections#access"
-              className="inline-block text-xs font-mono text-accent tracking-widest uppercase hover:underline underline-offset-4 transition-colors"
-            >
-              Request access →
+          <p className="text-body text-muted mt-10 rise" style={{ transitionDelay: '420ms' }}>
+            No code yet?{' '}
+            <Link href="/collections#access" className="text-clay link-draw">
+              Request trade access
             </Link>
-          </div>
+            , or write to{' '}
+            <a href={`mailto:${brand.email}`} className="text-clay link-draw">
+              {brand.email}
+            </a>
+            .
+          </p>
         </div>
-      </main>
 
-      {/* Bottom strip */}
-      <footer className="px-6 lg:px-12 py-6 border-t border-border">
-        <p className="text-xs text-muted-foreground text-center">
-          © Vardhman Impex. Private access only. Not indexed by search engines.
-        </p>
-      </footer>
+        <Link
+          href="/collections"
+          className="link-arrow inline-flex items-center gap-2.5 text-manifest text-muted hover:text-ink transition-colors duration-base self-start"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true" style={{ transform: 'rotate(180deg)' }}>
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+          Back to the public collections
+        </Link>
+      </div>
+
+      {/* Plate */}
+      <div className="lg:col-span-5 relative min-h-[42vh] lg:min-h-0 bg-paper-deep order-first lg:order-last overflow-hidden">
+        <AppImage
+          src={plate.src}
+          alt={plate.alt}
+          fill
+          priority
+          sizes="(max-width: 1024px) 100vw, 42vw"
+          placeholder="blur"
+          blurDataURL={plate.blurDataURL}
+          data-parallax
+          className="object-cover scale-[1.14]"
+        />
+      </div>
     </div>
   );
 }

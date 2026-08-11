@@ -1,99 +1,99 @@
 import React from 'react';
 import Link from 'next/link';
 import AppLogo from '@/components/ui/AppLogo';
+import { brand, collections, facts, nav } from '@/lib/site';
+
+const YEAR = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-primary-foreground border-t border-primary">
-      <div className="max-w-8xl mx-auto px-6 lg:px-12 py-16">
-        <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-0">
-          {/* Left: Brand */}
-          <div className="flex flex-col gap-6 max-w-xs">
+    <footer className="bg-paper border-t border-line-strong">
+      <div className="shell py-16 lg:py-20">
+        <div className="grid gap-12 lg:gap-8 lg:grid-cols-12">
+          {/* Colophon */}
+          <div className="lg:col-span-4">
             <div className="flex items-center gap-3">
-              <AppLogo size={28} className="brightness-0 invert" />
-              <span className="font-sans font-semibold text-sm tracking-[0.15em] uppercase text-primary-foreground">
-                Vardhman Impex
+              <AppLogo size={30} />
+              <span className="font-serif text-[1.35rem] leading-none tracking-tight">
+                Vardhman <span className="italic">Impex</span>
               </span>
             </div>
-            <p className="text-sm text-primary-foreground/50 leading-relaxed">
-              Crafting export-grade furniture from Jodhpur, India since 2006.
+            <p className="text-body text-muted mt-5 max-w-[34ch]">
+              Furniture manufacturer and exporter. Solid mango and reclaimed timber,
+              made at Boranada since {brand.established}.
             </p>
-            <p className="text-xs text-primary-foreground/40 font-mono">
-              G-769, Phase IV, Boranada Ind. Area<br />
-              Jodhpur, Rajasthan 342005, India
-            </p>
+            <address className="text-manifest-sm text-muted mt-6 not-italic leading-relaxed">
+              {brand.address.line1}
+              <br />
+              {brand.address.line2}
+              <br />
+              {brand.address.country}
+            </address>
           </div>
 
-          {/* Center: Links */}
-          <div className="flex flex-col sm:flex-row gap-12">
-            <div className="flex flex-col gap-4">
-              <span className="text-xs font-mono uppercase tracking-widest text-primary-foreground/40">Navigate</span>
-              <nav className="flex flex-col gap-3">
-                {[
-                  { label: 'Collections', href: '/collections' },
-                  { label: 'About', href: '/#about' },
-                  { label: 'Factory', href: '/#factory' },
-                  { label: 'Contact', href: '/contact' },
-                ]?.map((link) => (
-                  <Link
-                    key={link?.label}
-                    href={link?.href}
-                    className="text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors font-medium"
-                  >
-                    {link?.label}
+          <div className="lg:col-span-2 lg:col-start-6">
+            <h2 className="text-manifest-sm text-muted pb-3 border-b border-line">Navigate</h2>
+            {/* py-1.5 lifts each link to a >=24px target (WCAG 2.5.8); as plain
+                text lines they were 20px tall. */}
+            <ul className="mt-2 flex flex-col">
+              {nav.map((link) => (
+                <li key={link.label}>
+                  <Link href={link.href} className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-1.5 inline-block">
+                    {link.label}
                   </Link>
-                ))}
-              </nav>
-            </div>
-            <div className="flex flex-col gap-4">
-              <span className="text-xs font-mono uppercase tracking-widest text-primary-foreground/40">Collections</span>
-              <nav className="flex flex-col gap-3">
-                {['Dining', 'Living', 'Storage', 'Bedroom', 'Hospitality']?.map((col) => (
-                  <Link
-                    key={col}
-                    href="/collections"
-                    className="text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors font-medium"
-                  >
-                    {col}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          </div>
-
-          {/* Right: Contact + Social */}
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-primary-foreground/40">Get in Touch</span>
-              <a href="mailto:rishi@vardhman-impex.com" className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-                rishi@vardhman-impex.com
-              </a>
-              <a href="tel:+919352187266" className="text-sm text-primary-foreground/70 hover:text-primary-foreground transition-colors">
-                +91 93521 87266
-              </a>
-            </div>
-            <div className="flex gap-4">
-              {['LinkedIn', 'Instagram']?.map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  className="text-xs font-medium uppercase tracking-widest text-primary-foreground/40 hover:text-primary-foreground transition-colors"
-                >
-                  {social}
-                </a>
+                </li>
               ))}
-            </div>
+            </ul>
+          </div>
+
+          <div className="lg:col-span-2">
+            <h2 className="text-manifest-sm text-muted pb-3 border-b border-line">Collections</h2>
+            {/* py-1.5 lifts each link to a >=24px target (WCAG 2.5.8); as plain
+                text lines they were 20px tall. */}
+            <ul className="mt-2 flex flex-col">
+              {collections.map((collection) => (
+                <li key={collection.name}>
+                  <Link
+                    href={collection.href}
+                    className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-1.5 inline-block"
+                  >
+                    {collection.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="lg:col-span-3">
+            <h2 className="text-manifest-sm text-muted pb-3 border-b border-line">Enquiries</h2>
+            {/* py-1.5 lifts each link to a >=24px target (WCAG 2.5.8); as plain
+                text lines they were 20px tall. */}
+            <ul className="mt-2 flex flex-col">
+              <li>
+                <a href={`mailto:${brand.email}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base break-all py-1.5 inline-block">
+                  {brand.email}
+                </a>
+              </li>
+              <li>
+                <a href={`tel:${brand.phoneHref}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base numeral py-1.5 inline-block">
+                  {brand.phone}
+                </a>
+              </li>
+            </ul>
+            <Link href="/contact" className="btn btn-ghost mt-6 !py-3 !px-5">
+              Enquire
+            </Link>
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-primary-foreground/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <span className="text-xs text-primary-foreground/30 font-mono">
-            © 2026 Vardhman Impex. All rights reserved.
-          </span>
-          <div className="flex gap-6">
-            <Link href="#" className="text-xs text-primary-foreground/30 hover:text-primary-foreground/60 transition-colors">Privacy</Link>
-            <Link href="#" className="text-xs text-primary-foreground/30 hover:text-primary-foreground/60 transition-colors">Terms</Link>
-          </div>
+        {/* Manifest footer line */}
+        <div className="mt-14 pt-6 border-t border-line flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-5">
+          <p className="text-manifest-sm text-muted">
+            © {YEAR} {brand.name}
+          </p>
+          <p className="text-manifest-sm text-muted numeral">
+            {brand.origin}, {brand.country} · Est. {brand.established} · {facts.countries}+ export markets
+          </p>
         </div>
       </div>
     </footer>

@@ -1,11 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { useReveal } from '@/components/ui/useReveal';
+import { brand, facts } from '@/lib/site';
+import { sendEnquiry, BUSINESS_TYPES, labelForBusinessType } from '@/lib/enquiry';
 
-type FormState = 'idle' | 'loading' | 'success' | 'error';
+type FormState = 'idle' | 'success';
 
 export default function ExclusiveAccess() {
-  const [formState, setFormState] = useState<FormState>('idle');
+  const ref = useReveal<HTMLElement>();
+  const [state, setState] = useState<FormState>('idle');
   const [form, setForm] = useState({
     company: '',
     country: '',
@@ -16,139 +21,178 @@ export default function ExclusiveAccess() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormState('loading');
-    // Mock submission — backend integration point
-    setTimeout(() => {
-      setFormState('success');
-    }, 1500);
+    sendEnquiry('Trade catalogue access request — vardhman-impex.com', {
+      Company: form.company,
+      Country: form.country,
+      Website: form.website,
+      Email: form.email,
+      'Business type': labelForBusinessType(form.businessType),
+    });
+    setState('success');
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const field =
+    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-base';
 
   return (
-    <section className="py-24 lg:py-32 bg-secondary border-t border-border">
-      <div className="max-w-8xl mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          {/* Left: Explanation */}
-          <div>
-            <p className="text-xs font-mono text-muted-foreground tracking-[0.2em] uppercase mb-4">
-              The Public Collection
-            </p>
-            <h2 className="font-serif text-section-xl font-light text-foreground mb-6">
-              Explore a curated selection<br />
-              <span className="italic text-muted-foreground">of our designs.</span>
+    <section ref={ref} id="access" className="bg-teal text-paper grain py-20 lg:py-32">
+      <div className="shell relative z-10">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Explanation */}
+          <div className="lg:col-span-5">
+            <p className="text-manifest text-timber rise">Trade access</p>
+            <h2 className="font-serif text-display-sm font-light mt-6 rise" style={{ transitionDelay: '80ms' }}>
+              The rest of the <span className="italic">catalogue</span>
             </h2>
-            <p className="text-body-lg text-muted-foreground mb-6">
-              What you see here is a carefully chosen introduction to our work. Our complete catalogue of 1,000+ designs — including new arrivals, private label options, and container programmes — is shared exclusively with verified business buyers.
-            </p>
-            <p className="text-sm text-muted-foreground mb-8">
-              Verified retailers, interior designers, and hospitality buyers receive exclusive access after a quick enquiry. Our team reviews all applications within 2 business days.
+            <p className="text-lead text-paper/70 mt-6 max-w-measure rise" style={{ transitionDelay: '160ms' }}>
+              What is shown publicly is an introduction. The complete range of{' '}
+              {facts.designs}+ designs — new arrivals, private-label options and
+              container programmes — opens to verified business buyers.
             </p>
 
-            {/* Lock illustration */}
-            <div className="flex items-center gap-6 p-6 border border-border bg-background">
-              <div className="flex-shrink-0">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" className="text-accent">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-serif text-lg font-light text-foreground">Trade buyers only</p>
-                <p className="text-sm text-muted-foreground mt-0.5">Retailers, designers, hospitality groups, and importers welcome.</p>
-              </div>
-            </div>
+            <ul className="mt-10 rise" style={{ transitionDelay: '240ms' }}>
+              {[
+                'Full design catalogue with specifications',
+                'Private-label and custom finish options',
+                'Container planning and indicative pricing',
+                'First sight of each season’s new work',
+              ].map((line, i) => (
+                <li key={line} className="flex gap-5 py-4 border-t border-line-invert">
+                  <span className="text-manifest-sm text-timber numeral">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="text-body text-paper/80">{line}</span>
+                </li>
+              ))}
+            </ul>
 
-            {/* Already have a code */}
-            <div className="mt-6 pt-6 border-t border-border">
-              <p className="text-xs text-muted-foreground mb-2">Already have an access code?</p>
-              <a
-                href="/collections/private"
-                className="inline-flex items-center gap-2 text-xs font-mono text-accent tracking-widest uppercase hover:underline underline-offset-4 transition-colors"
-              >
-                Enter private catalogue →
-              </a>
-            </div>
+            <p className="text-manifest-sm text-paper/50 mt-8 rise">
+              Already verified?{' '}
+              <Link href="/collections/private" className="text-timber link-draw">
+                Enter your access code
+              </Link>
+            </p>
           </div>
 
-          {/* Right: Form */}
-          <div>
-            {formState === 'success' ? (
-              <div className="border border-border bg-background p-10 text-center">
-                <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-6">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-accent">
-                    <path d="M20 6L9 17l-5-5" />
-                  </svg>
-                </div>
-                <h3 className="font-serif text-2xl font-light text-foreground mb-3">Request received.</h3>
-                <p className="text-sm text-muted-foreground">
-                  Our team will review your details and send catalogue access credentials to your email within 2 business days.
+          {/* Form */}
+          <div className="lg:col-span-6 lg:col-start-7">
+            {state === 'success' ? (
+              <div className="border border-line-invert p-8 lg:p-10 rise">
+                <p className="text-manifest text-timber">Request composed</p>
+                <h3 className="font-serif text-title font-light mt-4">
+                  WhatsApp should have opened with your request ready to send.
+                </h3>
+                <p className="text-body text-paper/70 mt-4">
+                  We verify each trade account by hand and reply within two working days.
+                  If WhatsApp did not open, write to{' '}
+                  <a href={`mailto:${brand.email}`} className="text-timber link-draw">
+                    {brand.email}
+                  </a>
+                  .
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="mb-6">
-                  <h3 className="font-serif text-xl font-light text-foreground">Request catalogue access</h3>
-                  <p className="text-sm text-muted-foreground mt-2">Looking for our complete collection of 1,000+ designs? Submit your details below.</p>
-                </div>
-
-                {[
-                  { name: 'company', label: 'Company Name', type: 'text', placeholder: 'Your company name' },
-                  { name: 'country', label: 'Country', type: 'text', placeholder: 'Country of operation' },
-                  { name: 'website', label: 'Website', type: 'url', placeholder: 'https://yourcompany.com' },
-                  { name: 'email', label: 'Business Email', type: 'email', placeholder: 'you@company.com' },
-                ].map((field) => (
-                  <div key={field.name}>
-                    <label className="block text-xs font-mono text-muted-foreground tracking-widest uppercase mb-2">
-                      {field.label}
+              <form onSubmit={handleSubmit} className="rise" style={{ transitionDelay: '120ms' }}>
+                <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7">
+                  <div className="sm:col-span-2">
+                    <label htmlFor="company" className="text-manifest-sm text-paper/55">
+                      Company name
                     </label>
                     <input
-                      type={field.type}
-                      name={field.name}
-                      value={form[field.name as keyof typeof form]}
-                      onChange={handleChange}
-                      placeholder={field.placeholder}
+                      id="company"
+                      name="company"
                       required
-                      className="w-full px-4 py-3 bg-background border border-border text-foreground text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-foreground transition-colors"
+                      value={form.company}
+                      onChange={handleChange}
+                      placeholder="Registered business name"
+                      className={field}
                     />
                   </div>
-                ))}
 
-                <div>
-                  <label className="block text-xs font-mono text-muted-foreground tracking-widest uppercase mb-2">
-                    Business Type
-                  </label>
-                  <select
-                    name="businessType"
-                    value={form.businessType}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-background border border-border text-foreground text-sm focus:outline-none focus:border-foreground transition-colors appearance-none"
-                  >
-                    <option value="" disabled>Select your business type</option>
-                    <option value="retailer">Furniture Retailer</option>
-                    <option value="interior-designer">Interior Designer / Studio</option>
-                    <option value="hospitality">Hospitality Group</option>
-                    <option value="importer">Importer / Distributor</option>
-                    <option value="private-label">Private Label Brand</option>
-                    <option value="other">Other</option>
-                  </select>
+                  <div>
+                    <label htmlFor="country" className="text-manifest-sm text-paper/55">
+                      Country
+                    </label>
+                    <input
+                      id="country"
+                      name="country"
+                      required
+                      value={form.country}
+                      onChange={handleChange}
+                      placeholder="Where you trade"
+                      className={field}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="businessType" className="text-manifest-sm text-paper/55">
+                      Business type
+                    </label>
+                    <select
+                      id="businessType"
+                      name="businessType"
+                      required
+                      value={form.businessType}
+                      onChange={handleChange}
+                      className={`${field} appearance-none`}
+                    >
+                      <option value="" disabled className="bg-teal">
+                        Select
+                      </option>
+                      {BUSINESS_TYPES.map((type) => (
+                        <option key={type.value} value={type.value} className="bg-teal">
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="text-manifest-sm text-paper/55">
+                      Work email
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="name@company.com"
+                      className={field}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="website" className="text-manifest-sm text-paper/55">
+                      Website
+                    </label>
+                    <input
+                      id="website"
+                      name="website"
+                      value={form.website}
+                      onChange={handleChange}
+                      placeholder="Optional"
+                      className={field}
+                    />
+                  </div>
                 </div>
 
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={formState === 'loading'}
-                    className="w-full py-4 bg-primary text-primary-foreground text-xs font-medium tracking-[0.12em] uppercase btn-lift disabled:opacity-60 disabled:cursor-not-allowed transition-all"
-                  >
-                    {formState === 'loading' ? 'Submitting...' : 'Enquire for Full Access'}
-                  </button>
-                  <p className="text-xs text-muted-foreground text-center mt-3">
-                    We review all applications within 2 business days.
-                  </p>
-                </div>
+                <button type="submit" className="btn btn-invert mt-10">
+                  Request access
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+
+                <p className="text-manifest-sm text-paper/45 mt-6 max-w-measure leading-relaxed">
+                  Opens WhatsApp with your request composed. We use these details only to
+                  verify your business — no marketing lists.
+                </p>
               </form>
             )}
           </div>

@@ -1,34 +1,83 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Fraunces } from 'next/font/google';
+import { DM_Sans, Fraunces, IBM_Plex_Mono } from 'next/font/google';
+import MotionProvider from '@/components/motion/MotionProvider';
 import '../styles/tailwind.css';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500'],
   variable: '--font-dm-sans',
   display: 'swap',
 });
 
+// Variable axes are requested explicitly. Left at defaults Fraunces reads like
+// any other serif; driven at high optical size with WONK on, it carries the
+// display voice for the whole site.
 const fraunces = Fraunces({
   subsets: ['latin'],
-  weight: ['300', '400', '600', '700', '900'],
+  axes: ['SOFT', 'WONK', 'opsz'],
   style: ['normal', 'italic'],
   variable: '--font-fraunces',
+  display: 'swap',
+});
+
+// The manifest layer. Previously every `font-mono` class on the site fell back
+// to whatever monospace the browser happened to have.
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-plex-mono',
   display: 'swap',
 });
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  themeColor: '#EFE9DF',
 };
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'VardhmanImpex — Premium Furniture Manufacturer & Exporter',
-  description: 'VardhmanImpex crafts export-grade wooden furniture from Jodhpur, India. 18+ years of manufacturing excellence, low MOQ, worldwide export to 9+ countries.',
+  metadataBase: new URL(SITE),
+  title: {
+    default: 'Vardhman Impex — Furniture Manufacturer & Exporter, Jodhpur',
+    template: '%s — Vardhman Impex',
+  },
+  description:
+    'Solid mango and reclaimed timber furniture, made in Jodhpur and shipped to nine countries. Eighteen years of in-house manufacturing, low minimums, a catalogue of over a thousand designs.',
+  keywords: [
+    'furniture manufacturer India',
+    'furniture exporter Jodhpur',
+    'mango wood furniture wholesale',
+    'reclaimed wood furniture supplier',
+    'contract furniture India',
+    'low MOQ furniture export',
+  ],
+  authors: [{ name: 'Vardhman Impex' }],
   icons: {
-    icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
+    icon: [{ url: '/favicon.png', type: 'image/png' }],
+    apple: [{ url: '/favicon.png' }],
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: SITE,
+    siteName: 'Vardhman Impex',
+    title: 'Vardhman Impex — Furniture Manufacturer & Exporter, Jodhpur',
+    description:
+      'Solid mango and reclaimed timber furniture, made in Jodhpur and shipped to nine countries.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Vardhman Impex — Furniture Manufacturer & Exporter, Jodhpur',
+    description:
+      'Solid mango and reclaimed timber furniture, made in Jodhpur and shipped to nine countries.',
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -36,12 +85,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${fraunces.variable}`}>
-      <body className={dmSans.className}>
+    <html
+      lang="en"
+      className={`${dmSans.variable} ${fraunces.variable} ${plexMono.variable}`}
+    >
+      <body className="bg-paper text-ink antialiased">
+        <MotionProvider />
         {children}
-
-        <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fvardhmanim6028back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.19" />
-        <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2" /></body>
+      </body>
     </html>
   );
 }
