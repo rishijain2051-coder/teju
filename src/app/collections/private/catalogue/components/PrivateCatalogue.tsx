@@ -108,12 +108,17 @@ export default function PrivateCatalogue() {
             })}
           </div>
 
-          {/* Plates */}
-          <div data-reveal-group className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 mt-12">
-            {filtered.map((piece, i) => {
+          {/* Keyed on `active` so the grid replays its entrance on every filter
+              change. See CollectionsGrid for why these cards avoid `.rise`. */}
+          <div
+            key={active}
+            data-reveal-group
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 mt-12 filter-swap"
+          >
+            {filtered.map((piece) => {
               const plate = img(piece.image);
               return (
-                <article key={piece.ref} className="group rise" style={{ transitionDelay: `${(i % 3) * 60}ms` }}>
+                <article key={piece.ref} className="group">
                   <div className="plate aspect-[4/3] bg-paper-deep">
                     <AppImage
                       src={plate.src}

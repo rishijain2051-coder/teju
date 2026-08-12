@@ -81,7 +81,8 @@ export default function ExclusiveAccess() {
           {/* Form */}
           <div className="lg:col-span-6 lg:col-start-7">
             {state === 'success' ? (
-              <div className="border border-line-invert p-8 lg:p-10 rise">
+              /* `filter-swap`, not `rise` — mounts on submit; see ContactSplit. */
+              <div className="border border-line-invert p-8 lg:p-10 filter-swap">
                 <p className="text-manifest text-timber">Request composed</p>
                 <h3 className="font-serif text-title font-light mt-4">
                   WhatsApp should have opened with your request ready to send.

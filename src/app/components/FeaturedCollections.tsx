@@ -45,7 +45,6 @@ export default function FeaturedCollections() {
                 key={collection.name}
                 href={collection.href}
                 className={`group block rise ${SPANS[i]}`}
-                style={{ transitionDelay: `${(i % 2) * 90}ms` }}
               >
                 <div className="plate aspect-[4/3]">
                   <AppImage

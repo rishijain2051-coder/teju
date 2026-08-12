@@ -246,6 +246,35 @@
     transform: translate3d(0, 0, 0);
   }
 
+  /*
+   * For content swapped in by state — filter results, a form's confirmation
+   * panel. A scroll reveal cannot own these: `.rise` is switched on by a
+   * one-shot observer wired at mount, so anything mounting later stays at
+   * opacity 0 forever. Keyframes are right here because a swap is one-way and
+   * non-reversible; there is no in-flight state to retarget. 260ms keeps it
+   * inside the UI budget, since filter tabs are a high-frequency control.
+   */
+  .filter-swap {
+    animation: filter-swap 260ms var(--ease-out) both;
+  }
+
+  @keyframes filter-swap {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 0.5rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .filter-swap {
+      animation: none;
+    }
+  }
+
   /* Type that wipes up from behind a mask — the editorial reveal. */
   .wipe {
     overflow: hidden;
@@ -288,14 +317,20 @@
     background-color: var(--paper-deep);
   }
 
+  /* Hover and press feedback run on --dur-fast, not the reveal scale. A card
+     hover at --dur-slow (640ms) is over twice the UI budget and reads as lag. */
   .plate img {
-    transition: transform var(--dur-slow) var(--ease-out-soft);
+    transition: transform var(--dur-fast) var(--ease-out);
     will-change: transform;
   }
 
-  .group:hover .plate img,
-  .plate:hover img {
-    transform: scale(1.04);
+  /* Gated: a tap on a touchscreen fires a hover that never clears, which would
+     otherwise leave the image stuck at 1.04. */
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover .plate img,
+    .plate:hover img {
+      transform: scale(1.04);
+    }
   }
 
   /* Link that draws its own underline on approach. */
@@ -314,13 +349,20 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: right;
-    transition: transform var(--dur-base) var(--ease-out);
+    transition: transform var(--dur-fast) var(--ease-out);
   }
 
-  .link-draw:hover::after,
+  /* Ungated: keyboard users have no pointer, so focus must always draw. */
   .link-draw:focus-visible::after {
     transform: scaleX(1);
     transform-origin: left;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .link-draw:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
   }
 
   /* The house button: a filled slab that inverts. No lift, no drop shadow. */
@@ -335,9 +377,22 @@
     text-transform: uppercase;
     border: 1px solid currentColor;
     transition:
-      background-color var(--dur-base) var(--ease-out),
-      color var(--dur-base) var(--ease-out),
-      border-color var(--dur-base) var(--ease-out);
+      background-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+
+  /* Deliberately not gated behind `hover: hover` — touch has no hover at all,
+     so a press state is the only acknowledgement a tap ever gets. */
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn:active {
+      transform: none;
+    }
   }
 
   .btn-solid {
@@ -378,12 +433,14 @@
   /* Arrow that steps forward with its button. */
   .btn svg,
   .link-arrow svg {
-    transition: transform var(--dur-base) var(--ease-out);
+    transition: transform var(--dur-fast) var(--ease-out);
   }
 
-  .btn:hover svg,
-  .link-arrow:hover svg {
-    transform: translate3d(0.25rem, 0, 0);
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover svg,
+    .link-arrow:hover svg {
+      transform: translate3d(0.25rem, 0, 0);
+    }
   }
 
   /* ── Texture ───────────────────────────────────────────────────────────── */
@@ -424,9 +481,17 @@
     scroll-behavior: auto;
   }
 
-  .motion-js .rise,
-  .motion-js .veil,
-  .motion-js .wipe-inner {
+  /*
+   * Suppress only what GSAP is about to take over. An element already marked
+   * `shown` was revealed by useReveal's immediate path before the motion layer
+   * finished loading, and GSAP's `fresh()` filter skips it — so if its
+   * transition is removed here, its entrance is killed mid-flight and it snaps
+   * to the end state. Measured before this `:not()`: the hero headline got 52ms
+   * of a 1000ms wipe.
+   */
+  .motion-js .rise:not(.shown),
+  .motion-js .veil:not(.shown),
+  .motion-js .wipe-inner:not(.shown) {
     transition: none;
   }
 

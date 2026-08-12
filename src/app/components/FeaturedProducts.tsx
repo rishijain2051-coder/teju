@@ -33,14 +33,10 @@ export default function FeaturedProducts() {
         </header>
 
         <div data-reveal-group className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 mt-12 lg:mt-16">
-          {pieces.slice(0, SHOWN).map((piece, i) => {
+          {pieces.slice(0, SHOWN).map((piece) => {
             const plate = img(piece.image);
             return (
-              <article
-                key={piece.ref}
-                className="group rise"
-                style={{ transitionDelay: `${(i % 3) * 80}ms` }}
-              >
+              <article key={piece.ref} className="group rise">
                 <Link href="/collections" className="block">
                   <div className="plate aspect-[4/3] bg-paper">
                     <AppImage

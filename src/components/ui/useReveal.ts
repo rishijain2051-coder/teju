@@ -2,7 +2,11 @@
 
 import { useEffect, useRef } from 'react';
 
-const SELECTOR = '.rise, .wipe-inner, .veil, .drift';
+// `.drift` is deliberately absent: it is driven by component state (the hero's
+// active plate), not by scroll position, so React owns its `shown` class. Having
+// both owners meant every plate started drifting at mount, so the third one had
+// already finished by the time it was shown.
+const SELECTOR = '.rise, .wipe-inner, .veil';
 
 interface RevealOptions {
   threshold?: number;
@@ -11,8 +15,8 @@ interface RevealOptions {
 }
 
 /**
- * Reveals `.rise` / `.wipe-inner` / `.veil` / `.drift` descendants once they
- * scroll into view.
+ * Reveals `.rise` / `.wipe-inner` / `.veil` descendants once they scroll into
+ * view.
  *
  * Every section used to hand-roll its own IntersectionObserver — a dozen near
  * identical copies, none of which checked `prefers-reduced-motion`, so content

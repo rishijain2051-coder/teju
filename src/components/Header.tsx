@@ -133,12 +133,19 @@ export default function Header() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="group flex items-baseline gap-5 py-5 border-b border-line"
+                className="group flex items-baseline gap-5 py-5 border-b border-line overflow-hidden"
               >
                 <span className="text-manifest-sm text-muted numeral">
                   {String(i + 1).padStart(2, '0')}
                 </span>
-                <span className="font-serif text-display-sm font-light group-hover:text-clay transition-colors duration-base">
+                {/* Wipes up from behind its own row. Delays reset to 0 on close:
+                    opening is a reveal, dismissing must feel instant. */}
+                <span
+                  className={`font-serif text-display-sm font-light group-hover:text-clay transition-[color,transform] duration-base ease-out ${
+                    menuOpen ? 'translate-y-0' : 'translate-y-full'
+                  }`}
+                  style={{ transitionDelay: menuOpen ? `${80 + i * 40}ms` : '0ms' }}
+                >
                   {link.label}
                 </span>
               </Link>

@@ -50,7 +50,10 @@ export default function ContactSplit() {
           {/* Form */}
           <div className="lg:col-span-7">
             {state === 'success' ? (
-              <div className="border border-line-strong p-8 lg:p-10 rise">
+              /* `filter-swap`, not `rise`: this panel mounts on submit, long
+                 after the scroll reveal was wired, so `.rise` would leave it
+                 invisible. */
+              <div className="border border-line-strong p-8 lg:p-10 filter-swap">
                 <p className="text-manifest text-clay">Enquiry composed</p>
                 <h2 className="font-serif text-title font-light mt-4">
                   WhatsApp should have opened with your enquiry ready to send.

@@ -37,7 +37,7 @@ function useCountUp(target: number, active: boolean, duration = 1600) {
   return value;
 }
 
-function Stat({ stat, index }: { stat: (typeof stats)[number]; index: number }) {
+function Stat({ stat }: { stat: (typeof stats)[number] }) {
   const [active, setActive] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const value = useCountUp(stat.value, active);
@@ -62,7 +62,6 @@ function Stat({ stat, index }: { stat: (typeof stats)[number]; index: number }) 
     <div
       ref={ref}
       className="flex flex-col justify-between py-8 lg:py-10 border-t border-line rise"
-      style={{ transitionDelay: `${index * 70}ms` }}
     >
       <p className="font-serif text-display-sm font-light numeral leading-none">
         {value.toLocaleString('en-IN')}
@@ -90,8 +89,8 @@ export default function TrustSection() {
         </header>
 
         <div data-reveal-group className="grid grid-cols-2 lg:grid-cols-5 gap-x-6 lg:gap-x-8 mt-12 lg:mt-16">
-          {stats.map((stat, i) => (
-            <Stat key={stat.label} stat={stat} index={i} />
+          {stats.map((stat) => (
+            <Stat key={stat.label} stat={stat} />
           ))}
         </div>
       </div>

@@ -83,9 +83,11 @@ export default function HeroSection() {
                 aria-current={i === active}
                 className="group flex items-center gap-2.5 py-2"
               >
+                {/* Scales rather than resizing: `width` is a layout property and
+                    this re-runs every 7s for the life of the page. */}
                 <span
-                  className={`block h-px transition-all duration-base ease-out ${
-                    i === active ? 'w-14 bg-ink' : 'w-7 bg-line-strong group-hover:bg-ink'
+                  className={`block h-px w-14 origin-left transition-[transform,background-color] duration-base ease-out ${
+                    i === active ? 'scale-x-100 bg-ink' : 'scale-x-50 bg-line-strong group-hover:bg-ink'
                   }`}
                 />
                 <span
@@ -108,8 +110,14 @@ export default function HeroSection() {
               <div
                 key={plate}
                 aria-hidden={i !== active}
-                className="absolute inset-0 transition-opacity duration-[1400ms] ease-out-soft"
-                style={{ opacity: i === active ? 1 : 0 }}
+                className="absolute inset-0 transition-[opacity,filter] duration-[1400ms] ease-out-soft"
+                style={{
+                  opacity: i === active ? 1 : 0,
+                  // A slight blur on the outgoing plate stops two sharp
+                  // photographs reading as a double exposure mid-crossfade.
+                  // `blur(0px)` not `none` — `filter` cannot interpolate to a keyword.
+                  filter: i === active ? 'blur(0px)' : 'blur(4px)',
+                }}
               >
                 <AppImage
                   src={plateImg.src}

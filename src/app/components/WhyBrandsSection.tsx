@@ -48,11 +48,10 @@ export default function WhyBrandsSection() {
             </p>
 
             <ul data-reveal-group className="mt-12 lg:mt-16">
-              {capabilities.map((capability, i) => (
+              {capabilities.map((capability) => (
                 <li
                   key={capability.index}
                   className="flex gap-5 lg:gap-8 py-6 border-t border-line-invert rise"
-                  style={{ transitionDelay: `${i * 70}ms` }}
                 >
                   <span className="text-manifest-sm text-timber numeral shrink-0 pt-1.5">
                     {capability.index}

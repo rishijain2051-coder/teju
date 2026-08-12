@@ -22,10 +22,10 @@ export default function JournalSection() {
         </header>
 
         <div data-reveal-group className="grid md:grid-cols-3 gap-x-6 gap-y-12 mt-12 lg:mt-16">
-          {journal.map((article, i) => {
+          {journal.map((article) => {
             const plate = img(article.image);
             return (
-              <article key={article.title} className="group rise" style={{ transitionDelay: `${i * 80}ms` }}>
+              <article key={article.title} className="group rise">
                 <Link href="/#journal" className="block">
                   <div className="plate aspect-[3/2]">
                     <AppImage
