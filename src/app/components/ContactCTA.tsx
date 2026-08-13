@@ -51,7 +51,7 @@ export default function ContactCTA() {
             <div>
               <dt className="text-manifest-sm text-paper/45">Email</dt>
               <dd className="mt-1.5">
-                <a href={`mailto:${brand.email}`} className="text-body text-paper link-draw">
+                <a href={`mailto:${brand.email}`} className="text-body text-paper link-draw tap">
                   {brand.email}
                 </a>
               </dd>
@@ -59,7 +59,7 @@ export default function ContactCTA() {
             <div>
               <dt className="text-manifest-sm text-paper/45">Telephone</dt>
               <dd className="mt-1.5">
-                <a href={`tel:${brand.phoneHref}`} className="text-body text-paper link-draw numeral">
+                <a href={`tel:${brand.phoneHref}`} className="text-body text-paper link-draw numeral tap">
                   {brand.phone}
                 </a>
               </dd>

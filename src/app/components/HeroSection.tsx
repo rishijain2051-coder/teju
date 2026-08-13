@@ -81,7 +81,7 @@ export default function HeroSection() {
                 onClick={() => setActive(i)}
                 aria-label={`Show plate ${i + 1}: ${img(plate).alt}`}
                 aria-current={i === active}
-                className="group flex items-center gap-2.5 py-2"
+                className="group flex items-center gap-2.5 py-3.5"
               >
                 {/* Scales rather than resizing: `width` is a layout property and
                     this re-runs every 7s for the life of the page. */}

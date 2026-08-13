@@ -322,10 +322,15 @@
   }
 
   /* Hover and press feedback run on --dur-fast, not the reveal scale. A card
-     hover at --dur-slow (640ms) is over twice the UI budget and reads as lag. */
+     hover at --dur-slow (640ms) is over twice the UI budget and reads as lag.
+
+     No `will-change` here. It was promoting all 16 plate images to their own
+     compositor layer permanently, which costs GPU memory on every image at once
+     for a transform the browser composites perfectly well on demand.
+     `will-change` is meant to be transient; as a standing declaration it is a
+     cost, not a hint. */
   .plate img {
     transition: transform var(--dur-fast) var(--ease-out);
-    will-change: transform;
   }
 
   /* Gated: a tap on a touchscreen fires a hover that never clears, which would
@@ -335,6 +340,29 @@
     .plate:hover img {
       transform: scale(1.04);
     }
+  }
+
+  /*
+   * Expands a control's clickable area to clear the 24px minimum target size
+   * (WCAG 2.5.8) without changing layout.
+   *
+   * An absolutely-positioned pseudo-element still belongs to its host's hit
+   * area, even outside the host's box — so this buys height without adding
+   * padding. That matters because most of these links also carry `.link-draw`,
+   * whose underline is positioned from the bottom of the box: padding would
+   * push the underline away from the text it belongs to.
+   *
+   * Use padding instead wherever controls stack vertically (the footer lists),
+   * since expanding outward there would make neighbouring targets overlap.
+   */
+  .tap {
+    position: relative;
+  }
+
+  .tap::before {
+    content: '';
+    position: absolute;
+    inset: -0.85rem -0.4rem;
   }
 
   /* Link that draws its own underline on approach. */
@@ -456,7 +484,17 @@
     pointer-events: none;
     z-index: 1;
     opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    /*
+     * Rasterised once onto its own layer. Without this the noise repaints as
+     * content moves over it, and the factory section is the worst case: a
+     * `sticky` image column travels across a ~1400px tall grain field for the
+     * whole section, invalidating it the entire way down. Three grain sections
+     * cost three static layers, which is a fraction of what the 16 permanently
+     * promoted plate images cost.
+     */
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 
   .scrim {

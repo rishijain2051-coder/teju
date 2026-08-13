@@ -31,14 +31,14 @@ export default function Footer() {
             </address>
           </div>
 
+          {/* Footer links use padding rather than the .tap hit-area trick: they
+              stack vertically, so expanding outward would overlap neighbours. */}
           <div className="lg:col-span-2 lg:col-start-6">
             <h2 className="text-manifest-sm text-muted pb-3 border-b border-line">Navigate</h2>
-            {/* py-1.5 lifts each link to a >=24px target (WCAG 2.5.8); as plain
-                text lines they were 20px tall. */}
             <ul className="mt-2 flex flex-col">
               {nav.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-1.5 inline-block">
+                  <Link href={link.href} className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-2 inline-block">
                     {link.label}
                   </Link>
                 </li>
@@ -48,14 +48,12 @@ export default function Footer() {
 
           <div className="lg:col-span-2">
             <h2 className="text-manifest-sm text-muted pb-3 border-b border-line">Collections</h2>
-            {/* py-1.5 lifts each link to a >=24px target (WCAG 2.5.8); as plain
-                text lines they were 20px tall. */}
             <ul className="mt-2 flex flex-col">
               {collections.map((collection) => (
                 <li key={collection.name}>
                   <Link
                     href={collection.href}
-                    className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-1.5 inline-block"
+                    className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-2 inline-block"
                   >
                     {collection.name}
                   </Link>
@@ -66,16 +64,14 @@ export default function Footer() {
 
           <div className="lg:col-span-3">
             <h2 className="text-manifest-sm text-muted pb-3 border-b border-line">Enquiries</h2>
-            {/* py-1.5 lifts each link to a >=24px target (WCAG 2.5.8); as plain
-                text lines they were 20px tall. */}
             <ul className="mt-2 flex flex-col">
               <li>
-                <a href={`mailto:${brand.email}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base break-all py-1.5 inline-block">
+                <a href={`mailto:${brand.email}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base break-all py-2 inline-block">
                   {brand.email}
                 </a>
               </li>
               <li>
-                <a href={`tel:${brand.phoneHref}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base numeral py-1.5 inline-block">
+                <a href={`tel:${brand.phoneHref}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base numeral py-2 inline-block">
                   {brand.phone}
                 </a>
               </li>
