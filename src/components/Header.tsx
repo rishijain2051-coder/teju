@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import AppLogo from '@/components/ui/AppLogo';
-import { lockScroll } from '@/components/motion/scroll';
 import { brand, nav } from '@/lib/site';
 
 export default function Header() {
@@ -23,12 +22,9 @@ export default function Header() {
   useEffect(() => setMenuOpen(false), [pathname]);
 
   useEffect(() => {
-    // Lenis drives scrolling itself, so overflow alone will not hold the page.
     document.body.style.overflow = menuOpen ? 'hidden' : '';
-    lockScroll(menuOpen);
     return () => {
       document.body.style.overflow = '';
-      lockScroll(false);
     };
   }, [menuOpen]);
 

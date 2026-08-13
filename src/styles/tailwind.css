@@ -139,10 +139,14 @@
 
 @layer utilities {
   /* ── Type scale ────────────────────────────────────────────────────────── */
+  /* Sized so the hero column clears the fold on a 1366x768 laptop, the smallest
+     common desktop. The previous 13vw / 14rem cap rendered the headline at
+     194–224px and pushed the hero 230–417px past the viewport at every laptop
+     size tested — the second line sat below the fold. */
   .text-mega {
-    font-size: clamp(3.5rem, 1rem + 13vw, 14rem);
-    line-height: 0.86;
-    letter-spacing: -0.035em;
+    font-size: clamp(2.5rem, 0.5rem + 6.2vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
   }
 
   .text-display {
@@ -475,11 +479,11 @@
   }
 
   /* ── Motion layer handover ─────────────────────────────────────────────── */
-  /* Present once GSAP + Lenis have loaded. GSAP then owns these properties
-     outright; leaving the CSS transitions on would smear every tween. */
-  .motion-js {
-    scroll-behavior: auto;
-  }
+  /* `.motion-js` is present once GSAP has loaded and owns the reveal
+     properties; leaving the CSS transitions on would smear every tween.
+     Scrolling itself is native — a smooth-scroll library was tried here and
+     removed, because easing every wheel tick over ~1s reads as lag no matter
+     how well it renders. */
 
   /*
    * Suppress only what GSAP is about to take over. An element already marked
@@ -493,28 +497,6 @@
   .motion-js .veil:not(.shown),
   .motion-js .wipe-inner:not(.shown) {
     transition: none;
-  }
-
-  /* Lenis' required host styles, inlined rather than pulling in its stylesheet. */
-  html.lenis,
-  html.lenis body {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
-
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
-  }
-
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
-
-  .lenis.lenis-smooth iframe {
-    pointer-events: none;
   }
 
   /* Reveals are driven by JavaScript. If scripting is unavailable the entire

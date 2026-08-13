@@ -7,11 +7,24 @@ import { useReveal } from '@/components/ui/useReveal';
 import { collections, img } from '@/lib/site';
 
 /**
- * Alternating 7/5 column pairs. The old build used a bento grid whose own
- * comment claimed a layout it did not produce — five cards in a three-column
- * grid left a hole in the last row. This pairs cleanly at every breakpoint.
+ * Asymmetric widths, but no gaps.
+ *
+ * Six cards pair into three full rows (7+5, 5+7, 7+5), so every row is exactly
+ * twelve columns wide and nothing is ever left over. The pair in each row shares
+ * one fixed height, which is the part that matters: giving cards of different
+ * widths the same aspect ratio made their heights differ, so captions landed on
+ * ragged baselines and voids opened beside the shorter card. With the height
+ * pinned per row, `object-cover` absorbs the difference, captions align, and the
+ * row heights themselves vary to keep the rhythm from feeling mechanical.
  */
-const SPANS = ['lg:col-span-7', 'lg:col-span-5', 'lg:col-span-5', 'lg:col-span-7', 'lg:col-span-7', 'lg:col-span-5'];
+const LAYOUT = [
+  { span: 'lg:col-span-7', height: 'lg:h-[26rem]' },
+  { span: 'lg:col-span-5', height: 'lg:h-[26rem]' },
+  { span: 'lg:col-span-5', height: 'lg:h-[21rem]' },
+  { span: 'lg:col-span-7', height: 'lg:h-[21rem]' },
+  { span: 'lg:col-span-7', height: 'lg:h-[24rem]' },
+  { span: 'lg:col-span-5', height: 'lg:h-[24rem]' },
+] as const;
 
 export default function FeaturedCollections() {
   const ref = useReveal<HTMLElement>();
@@ -44,9 +57,9 @@ export default function FeaturedCollections() {
               <Link
                 key={collection.name}
                 href={collection.href}
-                className={`group block rise ${SPANS[i]}`}
+                className={`group flex flex-col rise ${LAYOUT[i].span}`}
               >
-                <div className="plate aspect-[4/3]">
+                <div className={`plate h-[62vw] sm:h-[46vw] ${LAYOUT[i].height}`}>
                   <AppImage
                     src={plate.src}
                     alt={plate.alt}

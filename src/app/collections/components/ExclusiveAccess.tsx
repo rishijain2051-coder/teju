@@ -4,13 +4,23 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, facts } from '@/lib/site';
-import { sendEnquiry, BUSINESS_TYPES, labelForBusinessType } from '@/lib/enquiry';
+import {
+  submitEnquiry,
+  whatsappUrl,
+  BUSINESS_TYPES,
+  labelForBusinessType,
+  type EnquiryField,
+} from '@/lib/enquiry';
 
-type FormState = 'idle' | 'success';
+type FormState = 'idle' | 'sending' | 'success' | 'error';
+
+const SUBJECT = 'Trade catalogue access request — vardhman-impex.com';
 
 export default function ExclusiveAccess() {
   const ref = useReveal<HTMLElement>();
   const [state, setState] = useState<FormState>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [form, setForm] = useState({
     company: '',
     country: '',
@@ -19,16 +29,31 @@ export default function ExclusiveAccess() {
     businessType: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const fields = (): EnquiryField[] => [
+    { label: 'Company', value: form.company },
+    { label: 'Country', value: form.country },
+    { label: 'Website', value: form.website },
+    { label: 'Email', value: form.email },
+    { label: 'Business type', value: labelForBusinessType(form.businessType) },
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    sendEnquiry('Trade catalogue access request — vardhman-impex.com', {
-      Company: form.company,
-      Country: form.country,
-      Website: form.website,
-      Email: form.email,
-      'Business type': labelForBusinessType(form.businessType),
+    setState('sending');
+    setErrorMsg('');
+
+    const result = await submitEnquiry(SUBJECT, fields(), {
+      email: form.email,
+      honeypot,
     });
-    setState('success');
+
+    if (result.ok) {
+      setState('success');
+      return;
+    }
+
+    setState('error');
+    setErrorMsg(result.error ?? 'Something went wrong.');
   };
 
   const handleChange = (
@@ -83,13 +108,12 @@ export default function ExclusiveAccess() {
             {state === 'success' ? (
               /* `filter-swap`, not `rise` — mounts on submit; see ContactSplit. */
               <div className="border border-line-invert p-8 lg:p-10 filter-swap">
-                <p className="text-manifest text-timber">Request composed</p>
+                <p className="text-manifest text-timber">Request sent</p>
                 <h3 className="font-serif text-title font-light mt-4">
-                  WhatsApp should have opened with your request ready to send.
+                  We verify each trade account by hand.
                 </h3>
                 <p className="text-body text-paper/70 mt-4">
-                  We verify each trade account by hand and reply within two working days.
-                  If WhatsApp did not open, write to{' '}
+                  You&apos;ll hear back within two working days. Anything urgent, write to{' '}
                   <a href={`mailto:${brand.email}`} className="text-timber link-draw">
                     {brand.email}
                   </a>
@@ -97,7 +121,7 @@ export default function ExclusiveAccess() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="rise" style={{ transitionDelay: '120ms' }}>
+              <form onSubmit={handleSubmit} className="relative rise" style={{ transitionDelay: '120ms' }}>
                 <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7">
                   <div className="sm:col-span-2">
                     <label htmlFor="company" className="text-manifest-sm text-paper/55">
@@ -183,16 +207,51 @@ export default function ExclusiveAccess() {
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-invert mt-10">
-                  Request access
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </button>
+                {/* Bots fill every input they find; nobody sees this one. */}
+                <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                  <label htmlFor="access-ref">Reference</label>
+                  <input
+                    id="access-ref"
+                    name="ref"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 mt-10">
+                  <button
+                    type="submit"
+                    disabled={state === 'sending'}
+                    className="btn btn-invert disabled:opacity-60"
+                  >
+                    {state === 'sending' ? 'Sending…' : 'Request access'}
+                    {state !== 'sending' && (
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    )}
+                  </button>
+
+                  <a
+                    href={whatsappUrl(SUBJECT, fields())}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-invert"
+                  >
+                    Message on WhatsApp
+                  </a>
+                </div>
+
+                {state === 'error' && (
+                  <p role="alert" className="text-body text-timber mt-5 max-w-measure">
+                    {errorMsg}
+                  </p>
+                )}
 
                 <p className="text-manifest-sm text-paper/45 mt-6 max-w-measure leading-relaxed">
-                  Opens WhatsApp with your request composed. We use these details only to
-                  verify your business — no marketing lists.
+                  We use these details only to verify your business — no marketing lists.
                 </p>
               </form>
             )}

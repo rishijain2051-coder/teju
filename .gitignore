@@ -38,3 +38,6 @@ jest-test-results.json
 
 # Optional: if using TurboRepo or monorepo
 turbo/
+# Local env (never commit real credentials)
+.env.local
+.env*.local

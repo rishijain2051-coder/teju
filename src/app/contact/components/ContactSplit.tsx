@@ -4,13 +4,23 @@ import React, { useState } from 'react';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, img } from '@/lib/site';
-import { sendEnquiry, BUSINESS_TYPES, labelForBusinessType } from '@/lib/enquiry';
+import {
+  submitEnquiry,
+  whatsappUrl,
+  BUSINESS_TYPES,
+  labelForBusinessType,
+  type EnquiryField,
+} from '@/lib/enquiry';
 
-type FormState = 'idle' | 'success';
+type FormState = 'idle' | 'sending' | 'success' | 'error';
+
+const SUBJECT = 'New enquiry from vardhman-impex.com';
 
 export default function ContactSplit() {
   const ref = useReveal<HTMLElement>();
   const [state, setState] = useState<FormState>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [form, setForm] = useState({
     company: '',
     country: '',
@@ -24,17 +34,33 @@ export default function ContactSplit() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const fields = (): EnquiryField[] => [
+    { label: 'Company', value: form.company },
+    { label: 'Country', value: form.country },
+    { label: 'Website', value: form.website },
+    { label: 'Email', value: form.email },
+    { label: 'Business type', value: labelForBusinessType(form.businessType) },
+    { label: 'Message', value: form.message },
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    sendEnquiry('New enquiry from vardhman-impex.com', {
-      Company: form.company,
-      Country: form.country,
-      Website: form.website,
-      Email: form.email,
-      'Business type': labelForBusinessType(form.businessType),
-      Message: form.message,
+    setState('sending');
+    setErrorMsg('');
+
+    const result = await submitEnquiry(SUBJECT, fields(), {
+      email: form.email,
+      honeypot,
     });
-    setState('success');
+
+    if (result.ok) {
+      setState('success');
+      return;
+    }
+
+    // Never a silent failure: say what happened and leave WhatsApp reachable.
+    setState('error');
+    setErrorMsg(result.error ?? 'Something went wrong.');
   };
 
   const field =
@@ -54,20 +80,20 @@ export default function ContactSplit() {
                  after the scroll reveal was wired, so `.rise` would leave it
                  invisible. */
               <div className="border border-line-strong p-8 lg:p-10 filter-swap">
-                <p className="text-manifest text-clay">Enquiry composed</p>
+                <p className="text-manifest text-clay">Enquiry sent</p>
                 <h2 className="font-serif text-title font-light mt-4">
-                  WhatsApp should have opened with your enquiry ready to send.
+                  It&apos;s in our inbox. We reply within two working days.
                 </h2>
                 <p className="text-body text-muted mt-4 max-w-measure">
-                  If it did not, write to{' '}
+                  Sent to{' '}
                   <a href={`mailto:${brand.email}`} className="text-clay link-draw">
                     {brand.email}
-                  </a>{' '}
-                  or call{' '}
+                  </a>
+                  . If it&apos;s urgent, call{' '}
                   <a href={`tel:${brand.phoneHref}`} className="text-clay link-draw numeral">
                     {brand.phone}
                   </a>
-                  . We answer enquiries within two working days.
+                  .
                 </p>
                 <button
                   type="button"
@@ -78,7 +104,7 @@ export default function ContactSplit() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="rise">
+              <form onSubmit={handleSubmit} className="relative rise">
                 <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7">
                   <div>
                     <label htmlFor="company" className={label}>
@@ -181,15 +207,51 @@ export default function ContactSplit() {
                   </div>
                 </div>
 
-                <button type="submit" className="btn btn-solid mt-10">
-                  Send enquiry
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </button>
+                {/* Bots fill every input they find; nobody sees this one. */}
+                <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                  <label htmlFor="contact-ref">Reference</label>
+                  <input
+                    id="contact-ref"
+                    name="ref"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 mt-10">
+                  <button
+                    type="submit"
+                    disabled={state === 'sending'}
+                    className="btn btn-solid disabled:opacity-60"
+                  >
+                    {state === 'sending' ? 'Sending…' : 'Send enquiry'}
+                    {state !== 'sending' && (
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                      </svg>
+                    )}
+                  </button>
+
+                  <a
+                    href={whatsappUrl(SUBJECT, fields())}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-ghost"
+                  >
+                    Message on WhatsApp
+                  </a>
+                </div>
+
+                {state === 'error' && (
+                  <p role="alert" className="text-body text-clay mt-5 max-w-measure">
+                    {errorMsg}
+                  </p>
+                )}
 
                 <p className="text-manifest-sm text-muted mt-6 max-w-measure leading-relaxed">
-                  Opens WhatsApp with your enquiry composed. Nothing is sent until you press send.
+                  Sent straight to {brand.email}. We use your details only to reply.
                 </p>
               </form>
             )}

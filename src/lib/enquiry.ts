@@ -1,22 +1,66 @@
 import { brand } from './site';
 
 /**
- * Enquiries are delivered as a pre-composed WhatsApp message rather than posted
- * to a server — there is no backend, and this is the channel the business
- * already runs on.
- *
- * This was previously inlined in the contact form only, which meant the trade
- * access form on /collections resolved to a success screen while sending
- * nothing at all. Both now go through here.
+ * Enquiries are emailed through /api/enquiry, which sends over SMTP server-side.
+ * WhatsApp remains available as a second, explicitly-labelled route for buyers
+ * who prefer to chat — it is no longer what happens when you press "send".
  */
-export function sendEnquiry(subject: string, fields: Record<string, string>): void {
-  const body = Object.entries(fields)
-    .filter(([, value]) => value && value.trim())
-    .map(([label, value]) => `${label}: ${value.trim()}`);
+
+export interface EnquiryField {
+  label: string;
+  value: string;
+}
+
+export interface EnquiryResult {
+  ok: boolean;
+  error?: string;
+}
+
+export async function submitEnquiry(
+  subject: string,
+  fields: EnquiryField[],
+  options: { email?: string; honeypot?: string } = {}
+): Promise<EnquiryResult> {
+  try {
+    const res = await fetch('/api/enquiry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        subject,
+        fields,
+        email: options.email,
+        honeypot: options.honeypot ?? '',
+      }),
+    });
+
+    const data = (await res.json().catch(() => null)) as EnquiryResult | null;
+
+    if (!res.ok || !data?.ok) {
+      return {
+        ok: false,
+        error:
+          data?.error ??
+          'We could not send that just now. Please try WhatsApp or email us directly.',
+      };
+    }
+
+    return { ok: true };
+  } catch {
+    return {
+      ok: false,
+      error: 'No connection. Please try WhatsApp or email us directly.',
+    };
+  }
+}
+
+/** A pre-composed WhatsApp message for the same enquiry. */
+export function whatsappUrl(subject: string, fields: EnquiryField[]): string {
+  const body = fields
+    .filter((f) => f.value && f.value.trim())
+    .map((f) => `${f.label}: ${f.value.trim()}`);
 
   const text = encodeURIComponent([subject, '', ...body].join('\n'));
-
-  window.open(`https://wa.me/${brand.whatsapp}?text=${text}`, '_blank', 'noopener,noreferrer');
+  return `https://wa.me/${brand.whatsapp}?text=${text}`;
 }
 
 export const BUSINESS_TYPES = [

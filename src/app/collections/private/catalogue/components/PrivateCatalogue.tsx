@@ -7,7 +7,18 @@ import AppImage from '@/components/ui/AppImage';
 import AppLogo from '@/components/ui/AppLogo';
 import { useReveal } from '@/components/ui/useReveal';
 import { pieces, privateAdditions, brand, img, type Piece } from '@/lib/site';
-import { sendEnquiry } from '@/lib/enquiry';
+import { submitEnquiry, whatsappUrl, type EnquiryField } from '@/lib/enquiry';
+
+type PieceState = 'sending' | 'sent' | 'error';
+
+const pieceFields = (piece: Piece): EnquiryField[] => [
+  { label: 'Reference', value: piece.ref },
+  { label: 'Piece', value: piece.name },
+  { label: 'Collection', value: piece.collection },
+  { label: 'Material', value: piece.material },
+  { label: 'Finish', value: piece.finish },
+  { label: 'Dimensions', value: piece.dimensions },
+];
 
 const ALL_PIECES: Piece[] = [...pieces, ...privateAdditions];
 const CATEGORIES = ['All', 'Living', 'Storage', 'Dining', 'Bedroom', 'Occasional'] as const;
@@ -18,6 +29,7 @@ export default function PrivateCatalogue() {
   const ref = useReveal<HTMLDivElement>({ immediate: true });
   const [active, setActive] = useState<Category>('All');
   const [signingOut, setSigningOut] = useState(false);
+  const [pieceState, setPieceState] = useState<Record<string, PieceState>>({});
 
   const filtered = useMemo(
     () => (active === 'All' ? ALL_PIECES : ALL_PIECES.filter((p) => p.collection === active)),
@@ -31,15 +43,15 @@ export default function PrivateCatalogue() {
     router.refresh();
   };
 
-  const handleEnquire = (piece: Piece) => {
-    sendEnquiry(`Private catalogue enquiry — ${piece.name}`, {
-      Reference: piece.ref,
-      Piece: piece.name,
-      Collection: piece.collection,
-      Material: piece.material,
-      Finish: piece.finish,
-      Dimensions: piece.dimensions,
-    });
+  const handleEnquire = async (piece: Piece) => {
+    setPieceState((prev) => ({ ...prev, [piece.ref]: 'sending' }));
+
+    const result = await submitEnquiry(
+      `Private catalogue enquiry — ${piece.name}`,
+      pieceFields(piece)
+    );
+
+    setPieceState((prev) => ({ ...prev, [piece.ref]: result.ok ? 'sent' : 'error' }));
   };
 
   return (
@@ -151,13 +163,34 @@ export default function PrivateCatalogue() {
                       ))}
                     </dl>
 
-                    <button
-                      type="button"
-                      onClick={() => handleEnquire(piece)}
-                      className="btn btn-ghost mt-5 !py-2.5 !px-4 w-full justify-center"
-                    >
-                      Enquire on {piece.ref}
-                    </button>
+                    <div className="flex gap-2 mt-5">
+                      <button
+                        type="button"
+                        onClick={() => handleEnquire(piece)}
+                        disabled={pieceState[piece.ref] === 'sending'}
+                        className="btn btn-ghost !py-2.5 !px-4 flex-1 justify-center disabled:opacity-60"
+                      >
+                        {pieceState[piece.ref] === 'sending'
+                          ? 'Sending…'
+                          : pieceState[piece.ref] === 'sent'
+                            ? 'Enquiry sent'
+                            : pieceState[piece.ref] === 'error'
+                              ? 'Failed — retry'
+                              : `Enquire on ${piece.ref}`}
+                      </button>
+                      <a
+                        href={whatsappUrl(`Private catalogue enquiry — ${piece.name}`, pieceFields(piece))}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Message on WhatsApp about ${piece.name}`}
+                        className="btn btn-ghost !py-2.5 !px-3"
+                        title="Message on WhatsApp"
+                      >
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.1 14.1c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.9a11.4 11.4 0 0 1-4.5-4.3c-.9-1.6-.7-2.6-.5-3.1.2-.5.7-.9 1-1 .2 0 .4-.1.6 0 .2 0 .3 0 .5.4l.7 1.6c.1.2.1.4 0 .5l-.3.5-.3.3c-.1.1-.2.2 0 .5.2.3.6 1 1.3 1.6.8.7 1.4 1 1.7 1.1.2.1.4.1.5 0l.7-.8c.2-.2.3-.2.5-.1l1.5.8c.3.2.4.3.4.4.1.2 0 .7-.1 1.3Z" />
+                        </svg>
+                      </a>
+                    </div>
                   </div>
                 </article>
               );
