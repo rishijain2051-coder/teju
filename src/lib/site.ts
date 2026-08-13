@@ -22,9 +22,12 @@ export const brand = {
   established: 2006,
   origin: 'Jodhpur, Rajasthan',
   country: 'India',
+  /* As registered on the FSC trademark licence agreement, which is the address
+     of record. The site previously carried G-769 / 342005 — a different plot and
+     a different PIN. Every surface that shows an address reads from here. */
   address: {
-    line1: 'G-769, Phase IV, Boranada Industrial Area',
-    line2: 'Jodhpur, Rajasthan 342005',
+    line1: 'G 793 A, Phase IV, Boranada Industrial Area',
+    line2: 'Jodhpur, Rajasthan 342012',
     country: 'India',
   },
   email: 'rishi@vardhman-impex.com',
