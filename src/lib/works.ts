@@ -187,13 +187,20 @@ export const notOurWork = [
 export const certification = {
   fsc: {
     /**
-     * The chain-of-custody code from your FSC certificate — format FSC-C123456.
-     * Left empty on purpose: FSC's trademark rules require the code to travel
-     * with the claim, and an invented code would be worse than none. Fill this
-     * in and every FSC block on the site starts printing it automatically.
+     * From the FSC trademark licence agreement with FSC Global Development GmbH.
+     * Printed wherever a claim appears, because FSC's trademark rules require the
+     * code to travel with the claim.
+     *
+     * BEFORE THIS GOES LIVE: clause 9.5–9.6 of the agreement requires prior
+     * approval from the certification body for every promotional use of the
+     * licensed materials, and a website is promotional use. Send them the FSC
+     * blocks on /craft, /factory and the private catalogue for sign-off.
      */
-    code: '',
+    code: 'FSC-C229285',
     holder: 'Vardhman Impex',
+    /** As named on the agreement. */
+    signatory: 'Pradeep Kumar Jain',
+    licensor: 'FSC Global Development GmbH, Bonn',
     scope: 'Chain of custody — solid wood furniture and casegoods',
     /** Why it is offered on request rather than claimed across the board. */
     position:

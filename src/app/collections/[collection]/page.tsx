@@ -184,8 +184,11 @@ export default async function CollectionPage({ params }: Params) {
               not on the factory page. */}
           <section className="pb-20 lg:pb-28">
             <div className="shell">
+              {/* Pointer, not the explanation — so no trademark artwork here.
+                  The mark belongs on /craft and /factory, where the claim is set
+                  out in full. */}
               <div className="rise">
-                <FscPanel variant="brief" />
+                <FscPanel variant="brief" mark={false} />
               </div>
             </div>
           </section>
