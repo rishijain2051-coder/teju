@@ -84,17 +84,6 @@ export default function ContactSplit() {
                 <h2 className="font-serif text-title font-light mt-4">
                   It&apos;s in our inbox. We reply within two working days.
                 </h2>
-                <p className="text-body text-muted mt-4 max-w-measure">
-                  Sent to{' '}
-                  <a href={`mailto:${brand.email}`} className="text-clay link-draw">
-                    {brand.email}
-                  </a>
-                  . If it&apos;s urgent, call{' '}
-                  <a href={`tel:${brand.phoneHref}`} className="text-clay link-draw numeral">
-                    {brand.phone}
-                  </a>
-                  .
-                </p>
                 <button
                   type="button"
                   onClick={() => setState('idle')}

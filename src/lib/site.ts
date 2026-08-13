@@ -6,7 +6,15 @@ import { catalogue, type CatalogueKey } from './imagery';
  * Sections used to carry their own inline data arrays, which is why the same
  * facts drifted between the hero, the stats band and the footer. Everything
  * factual now lives here once.
+ *
+ * The catalogue, the journal and the works content have their own modules now
+ * that each has pages of its own — they are re-exported from here, so
+ * `import { pieces } from '@/lib/site'` still resolves.
  */
+
+export * from './catalogue';
+export * from './journal';
+export * from './works';
 
 export const brand = {
   name: 'Vardhman Impex',
@@ -42,82 +50,16 @@ export const manifest = [
   { key: 'Catalogue', value: `${facts.designs}+ designs` },
   { key: 'Export', value: `${facts.countries} countries` },
   { key: 'Minimum', value: 'Low MOQ' },
-  { key: 'Timber', value: 'FSC available' },
+  { key: 'Timber', value: 'FSC certified, on request' },
 ] as const;
 
 export const nav = [
   { label: 'Collections', href: '/collections' },
-  { label: 'Craft', href: '/#craft' },
-  { label: 'Factory', href: '/#factory' },
-  { label: 'Journal', href: '/#journal' },
+  { label: 'Craft', href: '/craft' },
+  { label: 'Factory', href: '/factory' },
+  { label: 'Journal', href: '/journal' },
   { label: 'Contact', href: '/contact' },
 ] as const;
-
-export interface Collection {
-  index: string;
-  name: string;
-  tagline: string;
-  count: string;
-  image: CatalogueKey;
-  href: string;
-}
-
-export const collections: Collection[] = [
-  { index: '01', name: 'Living', tagline: 'Sideboards, consoles, and the pieces a room is built around.', count: '55 designs', image: 'col-living', href: '/collections' },
-  { index: '02', name: 'Storage', tagline: 'Vitrines, almirahs, and cabinets that hold their line.', count: '35 designs', image: 'col-storage', href: '/collections' },
-  { index: '03', name: 'Dining', tagline: 'Dressers and servers for the room that gathers people.', count: '40 designs', image: 'col-dining', href: '/collections' },
-  { index: '04', name: 'Bedroom', tagline: 'Chests and nightstands in quiet, considered timber.', count: '30 designs', image: 'col-bedroom', href: '/collections' },
-  { index: '05', name: 'Hospitality', tagline: 'Contract-grade programmes, specified and repeatable.', count: 'Custom', image: 'col-hospitality', href: '/collections' },
-  { index: '06', name: 'Occasional', tagline: 'Coffee tables, side tables, and the smaller commissions.', count: '25 designs', image: 'col-occasional', href: '/collections' },
-];
-
-export interface Piece {
-  ref: string;
-  name: string;
-  collection: string;
-  material: string;
-  finish: string;
-  dimensions: string;
-  image: CatalogueKey;
-}
-
-/**
- * Named for Rajasthan — Mehrangarh, Umaid, Marwar, the Thar. Each entry maps to
- * a piece we actually have photographed; nothing here is a stand-in.
- */
-export const pieces: Piece[] = [
-  { ref: 'VI-1042', name: 'Mehrangarh Sideboard', collection: 'Living', material: 'Reclaimed hardwood', finish: 'Natural wax', dimensions: 'L160 × D40 × H80 cm', image: 'pr-chevron-terracotta' },
-  { ref: 'VI-1108', name: 'Umaid Carved Cabinet', collection: 'Storage', material: 'Solid mango', finish: 'Natural matt', dimensions: 'W90 × D40 × H180 cm', image: 'pr-mandala-carved' },
-  { ref: 'VI-0931', name: 'Jodhpur Bar Cabinet', collection: 'Living', material: 'Mango & iron', finish: 'Gunmetal & oak', dimensions: 'W110 × D45 × H120 cm', image: 'hero-chevron-bar' },
-  { ref: 'VI-1215', name: 'Rajwada Media Console', collection: 'Living', material: 'Solid mango', finish: 'Washed natural', dimensions: 'L180 × D45 × H55 cm', image: 'pr-mango-media' },
-  { ref: 'VI-0874', name: 'Thar Vitrine', collection: 'Storage', material: 'Mango & iron', finish: 'Antique walnut', dimensions: 'W100 × D40 × H190 cm', image: 'col-storage' },
-  { ref: 'VI-1330', name: 'Sardar Console', collection: 'Occasional', material: 'Reclaimed teak', finish: 'Block parquet', dimensions: 'L200 × D40 × H80 cm', image: 'pr-block-parquet' },
-  { ref: 'VI-1077', name: 'Bishnoi Tall Chest', collection: 'Bedroom', material: 'Solid mango', finish: 'Natural matt', dimensions: 'W60 × D45 × H130 cm', image: 'hero-tall-chest' },
-  { ref: 'VI-1189', name: 'Marwar Parquet Sideboard', collection: 'Dining', material: 'Solid mango', finish: 'Diamond parquet', dimensions: 'L180 × D45 × H80 cm', image: 'pr-parquet-green' },
-  { ref: 'VI-0812', name: 'Pichola Tile Cabinet', collection: 'Storage', material: 'Mango & ceramic', finish: 'Hand-painted tile', dimensions: 'W80 × D40 × H140 cm', image: 'pr-tile-tall' },
-  { ref: 'VI-1256', name: 'Nagaur Fretwork Sideboard', collection: 'Living', material: 'Mango & iron', finish: 'Bone white', dimensions: 'L150 × D40 × H75 cm', image: 'pr-fretwork-sideboard' },
-  { ref: 'VI-0965', name: 'Osian Barn Sideboard', collection: 'Living', material: 'Solid mango', finish: 'Natural matt', dimensions: 'L180 × D45 × H85 cm', image: 'pr-barn-sideboard' },
-  { ref: 'VI-1301', name: 'Chittor Wave Sideboard', collection: 'Living', material: 'Solid mango', finish: 'Carved relief', dimensions: 'L170 × D42 × H78 cm', image: 'pr-wave-carved' },
-];
-
-/**
- * Shown only behind the access gate. The private range is the public selection
- * plus these — so a verified buyer genuinely sees more than a visitor does.
- */
-export const privateAdditions: Piece[] = [
-  { ref: 'VI-1412', name: 'Amber Sunburst Sideboard', collection: 'Living', material: 'Mixed hardwood', finish: 'Sunburst marquetry', dimensions: 'L165 × D42 × H78 cm', image: 'pr-sunburst-sideboard' },
-  { ref: 'VI-1388', name: 'Kumbhalgarh Sideboard', collection: 'Living', material: 'Reclaimed hardwood', finish: 'Ray inlay', dimensions: 'L170 × D40 × H75 cm', image: 'pr-reclaimed-sideboard' },
-  { ref: 'VI-1455', name: 'Jaisalmer Faceted Cabinet', collection: 'Storage', material: 'Solid mango', finish: 'Diamond relief', dimensions: 'W95 × D42 × H90 cm', image: 'pr-parquet-terracotta' },
-  { ref: 'VI-1470', name: 'Bikaner Media Unit', collection: 'Living', material: 'Solid mango', finish: 'Parquet front', dimensions: 'L190 × D45 × H50 cm', image: 'pr-parquet-media' },
-  { ref: 'VI-1502', name: 'Barmer Industrial Chest', collection: 'Storage', material: 'Mango & iron', finish: 'Natural & black', dimensions: 'W110 × D45 × H95 cm', image: 'pr-industrial-chest' },
-  { ref: 'VI-1518', name: 'Sirohi Console', collection: 'Living', material: 'Solid mango', finish: 'Washed natural', dimensions: 'L200 × D40 × H55 cm', image: 'pr-barn-media' },
-  { ref: 'VI-1533', name: 'Alwar Sideboard', collection: 'Dining', material: 'Solid mango', finish: 'Natural matt', dimensions: 'L160 × D42 × H80 cm', image: 'pr-mango-sideboard' },
-  { ref: 'VI-1547', name: 'Dungarpur Checkerboard', collection: 'Living', material: 'Two-tone mango', finish: 'Checker parquet', dimensions: 'L180 × D45 × H80 cm', image: 'pr-checkerboard' },
-  { ref: 'VI-1566', name: 'Shekhawati Tall Cabinet', collection: 'Storage', material: 'Mango & iron', finish: 'Whitewash', dimensions: 'W90 × D40 × H185 cm', image: 'pr-whitewash-tall' },
-  { ref: 'VI-1579', name: 'Ajmer Medallion Cabinet', collection: 'Storage', material: 'Mango & iron', finish: 'Carved medallion', dimensions: 'W100 × D42 × H175 cm', image: 'pr-mandala-iron' },
-  { ref: 'VI-1594', name: 'Banswara Tile Sideboard', collection: 'Dining', material: 'Mango & ceramic', finish: 'Hand-painted tile', dimensions: 'L150 × D40 × H80 cm', image: 'pr-tile-sideboard' },
-  { ref: 'VI-1610', name: 'Pushkar Glazed Vitrine', collection: 'Storage', material: 'Mango & glass', finish: 'Antique walnut', dimensions: 'W110 × D40 × H200 cm', image: 'pr-white-vitrine' },
-];
 
 export interface Capability {
   index: string;
@@ -166,33 +108,6 @@ export const testimonials = [
     title: 'Operations Director',
     company: 'Ferrara Hospitality Group',
     country: 'Italy',
-  },
-] as const;
-
-export const journal = [
-  {
-    title: 'The enduring appeal of solid mango wood',
-    category: 'Material',
-    date: 'June 2026',
-    excerpt:
-      'Why the most overlooked hardwood in Indian furniture is quietly becoming the material of choice for European buyers.',
-    image: 'craft-barn-door' as CatalogueKey,
-  },
-  {
-    title: 'From timber to container',
-    category: 'Factory',
-    date: 'May 2026',
-    excerpt:
-      'A rare look at how a piece moves from raw stock to a finished, export-ready container on the floor at Boranada.',
-    image: 'pr-industrial-drawers' as CatalogueKey,
-  },
-  {
-    title: 'What European retail is ordering for 2027',
-    category: 'Trade',
-    date: 'April 2026',
-    excerpt:
-      'Wabi-sabi finishes, reclaimed materials, and the return of the sideboard — read from the order book.',
-    image: 'pr-chevron-terracotta' as CatalogueKey,
   },
 ] as const;
 

@@ -66,12 +66,15 @@ export default function WhyBrandsSection() {
               ))}
             </ul>
 
-            <div className="border-t border-line-invert pt-8 mt-2 rise">
-              <Link href="/contact" className="btn btn-invert">
-                Talk to the factory
+            <div className="border-t border-line-invert pt-8 mt-2 flex flex-wrap gap-3 rise">
+              <Link href="/factory" className="btn btn-invert">
+                Inside the factory
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
+              </Link>
+              <Link href="/craft" className="btn btn-invert">
+                How it is made
               </Link>
             </div>
           </div>

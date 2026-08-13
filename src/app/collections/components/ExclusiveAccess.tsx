@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useReveal } from '@/components/ui/useReveal';
-import { brand, facts } from '@/lib/site';
+import { allPieces, brand, facts, pieces } from '@/lib/site';
 import {
   submitEnquiry,
   whatsappUrl,
@@ -15,6 +15,11 @@ import {
 type FormState = 'idle' | 'sending' | 'success' | 'error';
 
 const SUBJECT = 'Trade catalogue access request — vardhman-impex.com';
+
+/* Counted rather than written out, so the claim on this panel cannot drift from
+   the two catalogues it is comparing. */
+const publicCount = pieces.length;
+const privateCount = allPieces.length;
 
 export default function ExclusiveAccess() {
   const ref = useReveal<HTMLElement>();
@@ -74,16 +79,17 @@ export default function ExclusiveAccess() {
               The rest of the <span className="italic">catalogue</span>
             </h2>
             <p className="text-lead text-paper/70 mt-6 max-w-measure rise" style={{ transitionDelay: '160ms' }}>
-              What is shown publicly is an introduction. The complete range of{' '}
-              {facts.designs}+ designs — new arrivals, private-label options and
-              container programmes — opens to verified business buyers.
+              What is shown publicly is an introduction — {publicCount} designs of{' '}
+              {facts.designs}+ in the range. The trade catalogue carries {privateCount} live
+              designs and the figures you need to plan a container.
             </p>
 
             <ul className="mt-10 rise" style={{ transitionDelay: '240ms' }}>
               {[
-                'Full design catalogue with specifications',
-                'Private-label and custom finish options',
-                'Container planning and indicative pricing',
+                `${privateCount} designs against the ${publicCount} shown here, with full specifications`,
+                'Packed carton size, CBM and container counts on every design',
+                'A planner that totals a selection and sends it as one enquiry',
+                'Private-label programme, custom finishes and FSC documentation',
                 'First sight of each season’s new work',
               ].map((line, i) => (
                 <li key={line} className="flex gap-5 py-4 border-t border-line-invert">

@@ -79,7 +79,7 @@ export default function FeaturedCollections() {
                       <h3 className="font-serif text-title font-light group-hover:text-clay transition-colors duration-base">
                         {collection.name}
                       </h3>
-                      <span className="text-manifest-sm text-muted shrink-0">{collection.count}</span>
+                      <span className="text-manifest-sm text-muted shrink-0">{collection.range}</span>
                     </div>
                     <p className="text-body text-muted mt-1.5 max-w-measure">{collection.tagline}</p>
                   </div>

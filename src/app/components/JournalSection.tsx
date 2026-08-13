@@ -19,14 +19,23 @@ export default function JournalSection() {
               From the <span className="italic">workshop</span>
             </h2>
           </div>
+          <Link
+            href="/journal"
+            className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-base"
+          >
+            All notes
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
         </header>
 
         <div data-reveal-group className="grid md:grid-cols-3 gap-x-6 gap-y-12 mt-12 lg:mt-16">
-          {journal.map((article) => {
+          {journal.slice(0, 3).map((article) => {
             const plate = img(article.image);
             return (
-              <article key={article.title} className="group rise">
-                <Link href="/#journal" className="block">
+              <article key={article.slug} className="group rise">
+                <Link href={`/journal/${article.slug}`} className="block">
                   <div className="plate aspect-[3/2]">
                     <AppImage
                       src={plate.src}
