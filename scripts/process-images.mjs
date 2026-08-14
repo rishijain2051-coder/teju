@@ -64,7 +64,16 @@ if (!fs.existsSync(MANIFEST)) {
   process.exit(1);
 }
 
-const existingSource = fs.readFileSync(MANIFEST, 'utf8');
+/*
+ * Read once, then work in LF throughout and write back whatever the checkout
+ * uses. `core.autocrlf` is on for whoever is on Windows, so a fresh clone hands
+ * this script a CRLF file — and the entry pattern below matches on a literal \n,
+ * which meant it parsed zero entries and refused to run at all.
+ */
+const rawSource = fs.readFileSync(MANIFEST, 'utf8');
+const EOL = rawSource.includes('\r\n') ? '\r\n' : '\n';
+const withEol = (text) => (EOL === '\n' ? text : text.replace(/\n/g, EOL));
+const existingSource = rawSource.replace(/\r\n/g, '\n');
 
 /* One capture per entry, in file order. The manifest is generated, so its shape
    is known; anything that does not match is reported rather than skipped. */
@@ -258,6 +267,7 @@ export const byGroup = (group: CatalogueImage['group']): CatalogueImage[] =>
   Object.values(catalogue).filter((i) => i.group === group);
 `;
 
+/* Both sides are LF here — see the read at the top. */
 const identical = source === existingSource;
 
 if (checkOnly) {
@@ -275,7 +285,7 @@ if (checkOnly) {
 if (identical) {
   console.log(`Nothing to change — ${entries.length} photographs, all in step.`);
 } else {
-  fs.writeFileSync(MANIFEST, source);
+  fs.writeFileSync(MANIFEST, withEol(source));
   console.log(`Wrote src/lib/imagery.ts — ${entries.length} photographs.`);
   changes.forEach((change) => console.log(`  ${change}`));
   if (changes.length === 0) console.log('  (formatting normalised; no values changed)');

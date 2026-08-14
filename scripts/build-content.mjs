@@ -252,11 +252,15 @@ export const brandRecord = ${literal(brand)} as const;
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 
+/* Line endings taken from whatever is already there. `core.autocrlf` is on for
+   whoever is on Windows, so a fresh clone hands this a CRLF file — comparing raw
+   would report a rewrite on every single run. */
 const previous = fs.existsSync(OUT) ? fs.readFileSync(OUT, 'utf8') : '';
-if (previous === source) {
+const eol = previous.includes('\r\n') ? '\r\n' : '\n';
+if (previous.replace(/\r\n/g, '\n') === source) {
   console.log(`Content unchanged — ${collections.length} collections, ${pieces.length} pieces, ${journal.length} journal entries.`);
 } else {
-  fs.writeFileSync(OUT, source);
+  fs.writeFileSync(OUT, eol === '\n' ? source : source.replace(/\n/g, eol));
   console.log(
     `Wrote src/lib/generated/content.ts — ${collections.length} collections, ${pieces.length} pieces, ${journal.length} journal entries.`
   );
