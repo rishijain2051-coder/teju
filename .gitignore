@@ -1,6 +1,11 @@
 # Node modules
 node_modules/
-package-lock.json
+
+# package-lock.json is COMMITTED on purpose. It was ignored, which meant there
+# was no reproducible install anywhere: `npm ci` could not run, and every clone
+# and every CI job re-resolved the tree from scratch, so a transitive patch
+# release could change what shipped between two builds of the same commit. A
+# library can reasonably omit a lockfile. An application cannot.
 
 # Next.js build output
 .next/
@@ -41,3 +46,9 @@ turbo/
 # Local env (never commit real credentials)
 .env.local
 .env*.local
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

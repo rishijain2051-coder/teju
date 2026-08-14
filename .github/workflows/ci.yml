@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A second push to the same branch cancels the first. No point paying for a run
+# whose result is already stale.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Types, lint, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Separate steps rather than relying on `next build` alone, so a failure
+      # names which gate caught it. The build enforces both again anyway —
+      # `ignoreBuildErrors` and `ignoreDuringBuilds` are off.
+      - name: Typecheck
+        run: npm run type-check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          # Real values are never needed to build; these keep the build from
+          # warning about absent configuration.
+          NEXT_PUBLIC_SITE_URL: https://vardhman-impex.com
+
+      # The gate is enforced by middleware, and middleware only exists if Next
+      # actually compiled it. It reads `src/middleware.ts` when the app lives in
+      # `src/app` and silently ignores a copy at the repo root — which is how the
+      # private catalogue was public for months, with a green build. This asserts
+      # the manifest is not empty.
+      - name: Assert middleware compiled
+        run: |
+          node -e "
+            const fs = require('node:fs');
+            const path = '.next/server/middleware-manifest.json';
+            if (!fs.existsSync(path)) throw new Error('no middleware manifest at ' + path);
+            const manifest = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const entries = Object.keys(manifest.middleware ?? {});
+            if (entries.length === 0) {
+              throw new Error('middleware compiled to ZERO entries — the access gate is not running');
+            }
+            console.log('middleware entries:', entries.join(', '));
+          "
+
+      # The trademark licence allows ten promotional placements before each
+      # further use needs approval. The registry is typed against that limit, so
+      # the typecheck already fails at eleven; this counts what actually rendered.
+      - name: Assert FSC placements within licence
+        run: |
+          COUNT=$(grep -roh 'data-fsc-placement=' .next/server/app --include=*.html | wc -l)
+          echo "rendered FSC placements: $COUNT (licence allows 10)"
+          if [ "$COUNT" -gt 10 ]; then
+            echo "::error::$COUNT FSC placements rendered; the licence allows 10 without prior approval"
+            exit 1
+          fi
+
+  test:
+    name: Playwright
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Chromium only. Both projects use Chromium-based device profiles, so the
+      # WebKit and Firefox downloads would be dead weight.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests
+        run: npm test
+        env:
+          CI: true
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
