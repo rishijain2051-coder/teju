@@ -30,6 +30,23 @@ and the two `@keystatic/*` packages, whose JavaScript is confined to the
 packages that nothing imported, one of which was costing 80 kB of JavaScript on
 every page.
 
+### `postcss` and `sharp` are pinned twice, on purpose
+
+Both appear in `devDependencies` **and** in `overrides`, at the same version.
+That is not a redundancy to tidy up.
+
+Next.js hard-pins `postcss` to an exact `8.4.31` and declares `sharp` as
+`^0.34.3`. Bumping only the `devDependencies` entry leaves Next resolving its own
+nested copy of each, so `npm audit` keeps reporting them and the fix looks applied
+when it is not — `npm audit` even suggests upgrading Next, which does not move
+either one. The `overrides` entries are what actually collapse the tree to a
+single version. Raise both together, and re-run `npm audit` to confirm the tree
+deduped rather than trusting the version in `package.json`.
+
+`sharp` is worth the care: `images.remotePatterns` in `next.config.mjs` allows
+four third-party hosts, so the image optimiser feeds bytes it did not author to
+libvips at request time — not just at build time.
+
 ## Getting started
 
 ```bash
