@@ -1,0 +1,29 @@
+{
+  "index": "03",
+  "name": "Dining",
+  "tagline": "Dressers and servers for the room that gathers people.",
+  "range": "40 designs",
+  "image": "col-dining",
+  "story": [
+    "Dining pieces get looked at for the length of a meal, which is longer than most furniture is ever studied. The patterned fronts in this collection (parquet, tile, checkerboard) are here because they hold up to that kind of attention.",
+    "Tile work is painted and fired in Jodhpur, then set into a rebate so it finishes flush with the frame. Parquet fronts are laid piece by piece and sanded as a single face, which is the only way the joints disappear."
+  ],
+  "spec": [
+    {
+      "key": "Timber",
+      "value": "Solid mango, mango & ceramic"
+    },
+    {
+      "key": "Pattern work",
+      "value": "Parquet, painted tile, checker"
+    },
+    {
+      "key": "Typical length",
+      "value": "150–190 cm"
+    },
+    {
+      "key": "Lead time",
+      "value": "45–60 days"
+    }
+  ]
+}

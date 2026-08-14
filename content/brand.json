@@ -1,0 +1,23 @@
+{
+  "name": "Vardhman Impex",
+  "short": "VI",
+  "established": 2006,
+  "origin": "Jodhpur, Rajasthan",
+  "country": "India",
+  "address": {
+    "line1": "G 793 A, Phase IV, Boranada Industrial Area",
+    "line2": "Jodhpur, Rajasthan 342012",
+    "country": "India"
+  },
+  "email": "rishi@vardhman-impex.com",
+  "phone": "+91 93521 87266",
+  "phoneHref": "+919352187266",
+  "whatsapp": "919352187266",
+  "facts": {
+    "years": "18",
+    "factory": "9,000",
+    "designs": "1,000",
+    "countries": "9",
+    "craftspeople": "150"
+  }
+}

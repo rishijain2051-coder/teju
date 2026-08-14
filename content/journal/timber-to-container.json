@@ -1,0 +1,57 @@
+{
+  "title": "From timber to container",
+  "category": "Factory",
+  "date": "May 2026",
+  "readTime": "5 min",
+  "excerpt": "A rare look at how a piece moves from raw stock to a finished, export-ready container on the floor at Boranada.",
+  "standfirst": "Nine weeks, six benches, one roof. What actually happens between a signed order and a sealed container.",
+  "image": "pr-industrial-drawers",
+  "body": [
+    {
+      "heading": "",
+      "paragraphs": [
+        "Buyers usually see two moments: the sample and the delivery. Everything between is taken on trust, which is a strange thing to ask of a stranger nine thousand kilometres away. So here is the middle."
+      ],
+      "pull": ""
+    },
+    {
+      "heading": "Weeks one and two: release",
+      "paragraphs": [
+        "An order does not start at the saw. It starts in the yard, where stock is selected against the specification and released to a works order. If the job carries a certification claim, the stack it comes from is tagged and recorded now, because a claim reconstructed later is not a claim.",
+        "Boards are cut oversize deliberately. Timber that has been sitting in a stack will move once it is opened up, and cutting to final size on day one guarantees you will be planing a bow out of it on day twenty."
+      ],
+      "pull": ""
+    },
+    {
+      "heading": "Weeks three to five: the frame and the front",
+      "paragraphs": [
+        "Carcasses are framed rather than slab-built. It uses more joints and more time, and it is the reason a two-metre cabinet arrives with its doors still aligned. Frames are squared, dry-fitted, then glued and clamped.",
+        "The fronts run in parallel on their own benches. Carving, parquet, marquetry and tile are separate trades in this building; a carver does not lay parquet, and a patterned front will spend longer in this stage than the entire carcass did."
+      ],
+      "pull": "A patterned front can take four days of one bench’s time. The carcass behind it takes two."
+    },
+    {
+      "heading": "Week six: finishing",
+      "paragraphs": [
+        "Finishing is where a piece is made or ruined, and it is the stage that cannot be hurried by adding people. Sand, seal, sand back, colour, cure, wax. Each coat has a waiting time and the waiting time is not negotiable, whatever the shipping date says.",
+        "Colour is mixed against a signed sample retained from approval, not against a code. Two batches of timber take the same stain differently, so matching is done by eye at the spray booth and corrected there."
+      ],
+      "pull": ""
+    },
+    {
+      "heading": "Weeks seven to nine: inspection, packing, loading",
+      "paragraphs": [
+        "Every unit is assembled, checked, opened and closed, and then taken apart again where it ships knocked down. Drawers go back into the openings they were fitted to. Hardware is bagged to the unit, not to the order, because a bag of hinges for a container is a bag of hinges for nobody.",
+        "Packing allows three centimetres of protection per face: corner boards, corrugate, and a stretch wrap that goes on last. Then the container is loaded by hand, in a plan drawn before anything moves, and the documents are issued against what actually went in rather than what was ordered."
+      ],
+      "pull": ""
+    },
+    {
+      "heading": "The part nobody advertises",
+      "paragraphs": [
+        "Roughly one piece in forty comes off the line and goes back. Not for a fault a buyer would ever find, but for a drawer that is a fraction stiff, a colour that has gone half a shade warm, a joint that sounds wrong under a knuckle. Catching those on our floor costs us a week. Catching them in your warehouse costs both of us the relationship."
+      ],
+      "pull": ""
+    }
+  ]
+}

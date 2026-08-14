@@ -47,7 +47,9 @@
     "node_modules/",
     ".next/",
     "out/",
-    "public/"
+    "public/",
+    "src/lib/generated/",
+    "src/lib/imagery.ts"
   ],
   "env": {
     "browser": true,

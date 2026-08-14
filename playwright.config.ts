@@ -21,8 +21,19 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? [['github'], ['list']] : 'list',
+
+  /*
+   * `next start` is one process. Run the whole suite at full width and the
+   * workers queue behind each other on it: the sign-out test, which takes about
+   * a second in isolation, blew the default 30-second budget waiting on a
+   * sign-in that was stuck behind nine other renders. Four workers keeps the
+   * suite parallel without turning the server into the bottleneck, and a
+   * 60-second budget leaves room for a slow render inside a test that also has
+   * work to do afterwards.
+   */
+  workers: process.env.CI ? 1 : 4,
+  timeout: 60_000,
 
   use: {
     baseURL: `http://localhost:${PORT}`,

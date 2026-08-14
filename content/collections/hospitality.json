@@ -1,0 +1,30 @@
+{
+  "index": "05",
+  "name": "Hospitality",
+  "tagline": "Contract-grade programmes, specified and repeatable.",
+  "range": "To specification",
+  "image": "col-hospitality",
+  "bespoke": true,
+  "story": [
+    "This is not a range you order from. Contract work starts with your drawings or ours, moves through one sample the specifier signs off, and only then goes near the production floor.",
+    "What changes for a public room is the specification, not the look: thicker tops, welded frames rather than bolted, footrails and edges rated for traffic, and finishes chosen to be repairable in place rather than replaced. We have furnished boutique properties at three hundred pieces and up."
+  ],
+  "spec": [
+    {
+      "key": "Programme",
+      "value": "Specified to drawing"
+    },
+    {
+      "key": "Sampling",
+      "value": "One approval sample, pre-production"
+    },
+    {
+      "key": "Volume",
+      "value": "From 50 pieces"
+    },
+    {
+      "key": "Lead time",
+      "value": "60–90 days from sign-off"
+    }
+  ]
+}

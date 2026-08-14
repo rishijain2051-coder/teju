@@ -28,6 +28,26 @@ jobs:
 
       - run: npm ci
 
+      # `src/lib/generated/content.ts` is committed, because the type-check and
+      # the editor both need it without a build first. That means it can go stale:
+      # edit content/, forget `npm run content`, and the pages keep rendering the
+      # old copy locally while the build quietly regenerates a different one.
+      # Recompiling and asserting no diff makes that a failed check instead.
+      - name: Content compiles, and the committed output matches
+        run: |
+          npm run content
+          git diff --exit-code --stat src/lib/generated/ || {
+            echo "::error::content/ and src/lib/generated/ disagree. Run \`npm run content\` and commit the result."
+            exit 1
+          }
+
+      # Same idea for the photograph manifest: a WebP dropped into
+      # public/assets/images/catalogue/ without an entry is invisible to the
+      # editor, and an entry whose dimensions no longer match a re-exported file
+      # makes every layout that reserves space for it wrong.
+      - name: Imagery manifest matches the photographs on disk
+        run: npm run images:check
+
       # Separate steps rather than relying on `next build` alone, so a failure
       # names which gate caught it. The build enforces both again anyway —
       # `ignoreBuildErrors` and `ignoreDuringBuilds` are off.

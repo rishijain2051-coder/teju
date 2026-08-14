@@ -1,0 +1,29 @@
+{
+  "index": "06",
+  "name": "Occasional",
+  "tagline": "Coffee tables, side tables, and the smaller commissions.",
+  "range": "25 designs",
+  "image": "col-occasional",
+  "story": [
+    "The smaller commissions: mirrors, side tables, long shallow consoles. They are what a buyer adds to load a container properly, and they are also where we try something before it reaches a full range.",
+    "Because they are small, proportionally more of each one is handwork: a stone top cut to size here, a frame pieced from offcuts kept back off the floor. Variation across a run is higher, and on one or two designs that is the entire point."
+  ],
+  "spec": [
+    {
+      "key": "Timber",
+      "value": "Mango, reclaimed teak, stone tops"
+    },
+    {
+      "key": "Packed size",
+      "value": "Mostly under 0.4 CBM"
+    },
+    {
+      "key": "Specified for",
+      "value": "Container fill, showroom accents"
+    },
+    {
+      "key": "Lead time",
+      "value": "30–45 days"
+    }
+  ]
+}

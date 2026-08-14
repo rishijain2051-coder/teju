@@ -1,4 +1,5 @@
 import { catalogue, type CatalogueKey } from './imagery';
+import { brandRecord } from './generated/content';
 
 /**
  * Single source of truth for site content.
@@ -16,34 +17,22 @@ export * from './catalogue';
 export * from './journal';
 export * from './works';
 
-export const brand = {
-  name: 'Vardhman Impex',
-  short: 'VI',
-  established: 2006,
-  origin: 'Jodhpur, Rajasthan',
-  country: 'India',
-  /* As registered on the FSC trademark licence agreement, which is the address
-     of record. The site previously carried G-769 / 342005 — a different plot and
-     a different PIN. Every surface that shows an address reads from here. */
-  address: {
-    line1: 'G 793 A, Phase IV, Boranada Industrial Area',
-    line2: 'Jodhpur, Rajasthan 342012',
-    country: 'India',
-  },
-  email: 'rishi@vardhman-impex.com',
-  phone: '+91 93521 87266',
-  phoneHref: '+919352187266',
-  whatsapp: '919352187266',
-} as const;
+/**
+ * The company details, editable at /keystatic under "Company details".
+ *
+ * The address is the one on the FSC trademark licence agreement, which is the
+ * address of record. Every surface that shows it reads from here — the footer,
+ * the contact page, the factory page, product pages and the private catalogue —
+ * which is why correcting it from G-769 / 342005 was a one-line change.
+ *
+ * `build-content.mjs` checks the required fields are present, that `phoneHref`
+ * has no spaces (it goes straight into a `tel:` link) and that `email` looks like
+ * an address, so an edit here cannot quietly break every contact route.
+ */
+export const brand = brandRecord;
 
 /** The house facts. One place, so nothing contradicts anything else. */
-export const facts = {
-  years: '18',
-  factory: '9,000',
-  designs: '1,000',
-  countries: '9',
-  craftspeople: '150',
-} as const;
+export const facts = brandRecord.facts;
 
 /** Set like a line on a bill of lading — this is the site's voice. */
 export const manifest = [

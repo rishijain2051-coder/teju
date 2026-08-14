@@ -1,0 +1,29 @@
+{
+  "index": "04",
+  "name": "Bedroom",
+  "tagline": "Chests and nightstands in quiet, considered timber.",
+  "range": "30 designs",
+  "image": "col-bedroom",
+  "story": [
+    "Bedroom furniture is judged by its drawers. Everything else can be right, and one drawer that drops or binds still comes back as a complaint, so this is the collection where the fitting bench does the most work.",
+    "Runners are wooden and waxed rather than metal-slid, and every drawer is fitted to its own opening and numbered to it. The finishes run quieter here: whitewash thinned to let the grain through, natural matt, pale stains."
+  ],
+  "spec": [
+    {
+      "key": "Timber",
+      "value": "Solid mango"
+    },
+    {
+      "key": "Drawers",
+      "value": "Fitted wooden runners, waxed"
+    },
+    {
+      "key": "Finishes",
+      "value": "Whitewash, natural matt, pale"
+    },
+    {
+      "key": "Lead time",
+      "value": "45–60 days"
+    }
+  ]
+}

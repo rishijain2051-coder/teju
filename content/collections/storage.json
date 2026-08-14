@@ -1,0 +1,29 @@
+{
+  "index": "02",
+  "name": "Storage",
+  "tagline": "Vitrines, almirahs, and cabinets that hold their line.",
+  "range": "35 designs",
+  "image": "col-storage",
+  "story": [
+    "Tall pieces are the hardest thing to get right. A two-metre cabinet has to stay square through a sea container, arrive with its doors still aligned, and hold that alignment in a climate nothing like the one it was built in.",
+    "So the carcasses are framed rather than slab-built, doors hang on adjustable hinges, and anything glazed has its panes beaded in rather than siliconed. Vitrines can ship glass-out and be glazed on arrival if that suits your warehouse better."
+  ],
+  "spec": [
+    {
+      "key": "Timber",
+      "value": "Solid mango, mango & iron"
+    },
+    {
+      "key": "Typical height",
+      "value": "140–200 cm"
+    },
+    {
+      "key": "Glazing",
+      "value": "4 mm toughened, beaded in"
+    },
+    {
+      "key": "Lead time",
+      "value": "45–60 days"
+    }
+  ]
+}

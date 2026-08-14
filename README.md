@@ -21,11 +21,14 @@ Live: <https://vardhman-impex.com>
 | Styling | Tailwind CSS 3 over CSS custom properties |
 | Motion | GSAP + ScrollTrigger, dynamically imported |
 | Mail | Nodemailer over SMTP |
+| Content | Keystatic, git-backed, compiled to TypeScript at build time |
 | Tests | Playwright |
 
-Five runtime dependencies: `next`, `react`, `react-dom`, `gsap`, `nodemailer`.
-Keep it that way — the last audit removed six packages that nothing imported,
-one of which was costing 80 kB of JavaScript on every page.
+Seven runtime dependencies: `next`, `react`, `react-dom`, `gsap`, `nodemailer`,
+and the two `@keystatic/*` packages, whose JavaScript is confined to the
+`/keystatic` route segment. Keep it that lean — the last audit removed six
+packages that nothing imported, one of which was costing 80 kB of JavaScript on
+every page.
 
 ## Getting started
 
@@ -39,8 +42,11 @@ npm run dev                  # http://localhost:4028
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Dev server on port 4028 |
-| `npm run build` | Production build. **Type errors and lint errors fail it** |
+| `npm run dev` | Dev server on port 4028. The editor is at `/keystatic` |
+| `npm run content` | Compiles `content/` into typed TypeScript, validating as it goes |
+| `npm run images` | Reconciles `src/lib/imagery.ts` with the photographs on disk |
+| `npm run images:check` | Same, read-only — reports drift and writes nothing |
+| `npm run build` | Production build. Runs `content` first. **Type errors and lint errors fail it** |
 | `npm run type-check` | `tsc --noEmit` on its own |
 | `npm run lint` / `lint:fix` | ESLint, including Prettier formatting |
 | `npm test` | Playwright suite (starts its own server) |
@@ -69,37 +75,131 @@ node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
 ## How it is put together
 
 ```
+content/              the editable content — one JSON file per entry
+  collections/        6 · pieces/ 39 · journal/ 4 · brand.json
+scripts/
+  build-content.mjs   compiles and validates content/ → src/lib/generated/
 src/
   app/                  routes; each page composes section components
-    api/                enquiry mail, access verify, logout
+    api/                enquiry mail, access verify, logout, keystatic
     collections/        index, [collection], [collection]/[piece], private/
     craft/ factory/ journal/ contact/
+    keystatic/          the editor UI, dev only
     error.tsx           route-level error boundary
     global-error.tsx    catches faults in the root layout itself
   components/           Header, Footer, motion provider, shared ui/
-  lib/                  all content and all business logic
+  lib/                  content readers and all business logic
+    generated/          compiled from content/ — never hand-edit
   middleware.ts         the trade gate — MUST stay in src/, see below
   styles/tailwind.css   design tokens and every utility class
 ```
 
-### Content lives in `src/lib`
+### `src/lib` is where content becomes logic
 
-There is no CMS. Content is typed TypeScript, which is what makes the whole site
-statically generated and impossible to break with a bad edit:
+Each module reads the compiled records and derives everything the pages need:
 
 - **`site.ts`** — brand facts, address, nav, capabilities, stats, testimonials.
   The single source of truth: the address appears on six surfaces and is written
   once. Re-exports everything below, so `@/lib/site` is the only import you need.
 - **`catalogue.ts`** — collections and pieces. Carton size, CBM and container
   counts are *computed* from each piece's finished dimensions rather than stored,
-  so they can never drift out of step with the spec beside them.
-- **`journal.ts`** — articles, including their bodies.
+  so they can never drift out of step with the spec beside them. Slugs and the
+  FSC claim wording are derived the same way.
+- **`journal.ts`** — articles, ordered by an explicit list rather than by parsing
+  the human-written dates.
 - **`works.ts`** — the craft stages, factory floor, export markets, and the FSC
-  certification data.
-- **`imagery.ts`** — generated. Do not hand-edit; run `scripts/process-images.mjs`.
+  certification data. **Deliberately not editable in the CMS**: these claims
+  carry licence and legal constraints, so they change through code review.
+- **`imagery.ts`** — the photograph manifest. Generated; see below.
 
-Files carry a `FIGURES TO CONFIRM WITH THE WORKS` header where the numbers were
+`works.ts` carries a `FIGURES TO CONFIRM WITH THE WORKS` header where numbers were
 written to be plausible rather than verified. Correct those in place.
+
+## The CMS
+
+Run `npm run dev` and open **<http://localhost:4028/keystatic>**. Keystatic in
+local mode, so edits are written straight to `content/` as JSON on your own disk
+and committed like any other change. The editor route returns 404 in production —
+storage is local, so a deployed editor could not save anything, and shipping an
+authoring UI that silently fails is worse than not shipping one. Keystatic's own
+route handler does the same for `/api/keystatic/*` outside development, so a
+production deploy exposes no read or write path either.
+
+| Editable at `/keystatic` | Not editable |
+|---|---|
+| Collections, pieces, journal entries, company details | Derived figures (CBM, container counts, slugs), FSC claims and the placement register, capabilities, testimonials |
+
+**The filename is the URL.** `content/pieces/mehrangarh-sideboard.json` becomes
+`/collections/living/mehrangarh-sideboard`. Renaming an entry changes its
+address — the schema derives the slug from the filename rather than from the
+display name so that editing a title cannot silently break a link a buyer has.
+
+### Why there is a compile step
+
+`npm run content` reads `content/`, validates it, and writes
+`src/lib/generated/content.ts`. `prebuild` runs it, so a stale generated file
+cannot ship. Three reasons it is a build step rather than a runtime read:
+
+1. The data modules are imported by client components. Reading files at module
+   scope would put `node:fs` in the browser bundle.
+2. An async reader would mean threading content through every component as props,
+   for content that never changes between requests.
+3. **It is the only place a bad edit can be caught.** Validation lives in
+   `scripts/build-content.mjs`, and nothing is written if anything fails:
+
+```
+Content is not valid — 2 problems:
+
+  content/pieces/thar-vitrine.json: "image" is "col-vitrine", which is not a
+    catalogue key. Run npm run images, or pick an existing photograph.
+  content/pieces/luni-side-table.json: "dimensions" ("45 x 55") cannot be parsed,
+    so the packed volume and container counts would be blank. Use
+    L160 × D40 × H80 cm, W90 × D40 × H180 cm, or Ø45 × H55 cm.
+```
+
+It checks every image key against the imagery manifest, every collection name
+against the six the site knows, every reference for uniqueness across the whole
+catalogue, every dimension string against the parser that computes CBM, and the
+brand fields that go into `tel:` and `mailto:` links. A mistyped image key used to
+render a blank plate in production; now it fails the build, by filename.
+
+### Adding a photograph
+
+The image field in the editor is a dropdown over the photographs that exist, not
+a free-text field, so a piece can never reference a picture that isn't there. To
+add to that list:
+
+1. Export a WebP into `public/assets/images/catalogue/`. **Name it by group** —
+   `hero-`, `col-`, `craft-` or `pr-` — because the prefix is what assigns it one.
+2. Run `npm run images`. It will refuse, naming the file: a photograph with no alt
+   text is an accessibility defect that is easy to ship and hard to notice.
+3. Add the entry to `src/lib/imagery.ts` with the key, the group and a sentence
+   describing the picture. Leave the measurements out.
+4. Run `npm run images` again. It fills in `src`, `width`, `height` and the blur
+   placeholder from the file itself.
+
+The split is deliberate: measurements are recomputed every run, so a re-export at
+a new size can never leave the site laying out against stale dimensions, while the
+alt text and the curated order are read back from the existing file and preserved.
+`--reblur` regenerates every placeholder; it is opt-in because the current ones
+were encoded by an older tool and re-encoding all 45 would churn the diff for no
+visible change.
+
+### Moving the editor to GitHub mode
+
+Local mode needs a checkout and a dev server. To let someone edit from a browser
+and open a pull request instead, install the
+[Keystatic GitHub app](https://keystatic.com/docs/github-mode) on this repository,
+then in `keystatic.config.ts` swap:
+
+```ts
+storage: { kind: 'github', repo: 'rishijain2051-coder/teju' },
+```
+
+and add `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET` and
+`KEYSTATIC_SECRET` to the environment. The 404 guard in
+`src/app/keystatic/[[...params]]/page.tsx` has to come off at the same time —
+that guard is what makes local mode safe to deploy.
 
 ### The design system
 
@@ -186,6 +286,10 @@ push and pull request. Two assertions beyond the obvious:
 - **Middleware compiled to a non-empty manifest.** The gate only exists if Next
   actually compiled it, and it fails silently when the file is misplaced.
 - **FSC placements are within the licence.** Counted in the rendered HTML.
+- **`src/lib/generated/` matches `content/`.** Recompiled and diffed, so an edit
+  committed without running `npm run content` fails the check instead of leaving
+  the site rendering the previous copy.
+- **`src/lib/imagery.ts` matches the photographs on disk.** `npm run images:check`.
 
 ## Deployment
 

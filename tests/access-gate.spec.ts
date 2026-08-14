@@ -107,7 +107,10 @@ test.describe('signing in', () => {
     await page.getByLabel('Access code').fill(TEST_ACCESS_CODE);
     await page.getByRole('button', { name: /enter/i }).click();
 
-    await expect(page).toHaveURL(new RegExp(`${GATED}$`), { timeout: 30_000 });
+    /* Longer than the default expect timeout: signing in is a POST, a client
+       navigation and a server render of all 39 cards. Well under the test
+       budget, so a step that follows this one still has room. */
+    await expect(page).toHaveURL(new RegExp(`${GATED}$`), { timeout: 20_000 });
 
     // The point of the gate: more designs than the public grid, plus the packed
     // volumes that are not published.
@@ -119,13 +122,13 @@ test.describe('signing in', () => {
     await page.goto(GATE);
     await page.getByLabel('Access code').fill(TEST_ACCESS_CODE);
     await page.getByRole('button', { name: /enter/i }).click();
-    await expect(page).toHaveURL(new RegExp(`${GATED}$`), { timeout: 30_000 });
+    await expect(page).toHaveURL(new RegExp(`${GATED}$`), { timeout: 20_000 });
 
     await Promise.all([
       page.waitForResponse((r) => r.url().includes('/api/logout') && r.status() === 200),
       page.getByRole('button', { name: /sign out/i }).click(),
     ]);
-    await expect(page).toHaveURL(/\/collections$/, { timeout: 30_000 });
+    await expect(page).toHaveURL(/\/collections$/, { timeout: 20_000 });
 
     await page.goto(GATED);
     await expect(page).toHaveURL(new RegExp(`${GATE}$`));
