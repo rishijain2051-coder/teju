@@ -314,6 +314,34 @@
     font-feature-settings: 'tnum' 1, 'lnum' 1;
   }
 
+  /*
+   * 16px floor on form controls, phones and tablets only.
+   *
+   * iOS Safari magnifies the whole viewport the moment a field smaller than 16px
+   * takes focus, and it does not zoom back out — the reader is left panning a
+   * magnified page for the rest of the session. The usual workaround is
+   * `maximum-scale=1` on the viewport meta, which fixes it by forbidding pinch
+   * zoom entirely; that fails WCAG 1.4.4 and punishes everyone to spare one
+   * browser's default. So the floor goes on the field.
+   *
+   * Every form on the site tripped it: `.text-body` computes to 15.15px at 375px
+   * (the contact, catalogue-access, piece-enquiry and planner fields), and
+   * `.text-manifest-sm` to 12px (the catalogue's quantity inputs and sort select).
+   * Scoped to the element so it cannot leak into body copy, and `input`/`select`
+   * out-specify the bare utility. Fields already set larger — the access code is
+   * `.text-title` — are untouched.
+   */
+  @media (max-width: 1023px) {
+    input.text-body,
+    select.text-body,
+    textarea.text-body,
+    input.text-manifest-sm,
+    select.text-manifest-sm,
+    textarea.text-manifest-sm {
+      font-size: 1rem;
+    }
+  }
+
   /* ── Shell ─────────────────────────────────────────────────────────────── */
   .shell {
     width: 100%;
