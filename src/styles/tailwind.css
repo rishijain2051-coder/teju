@@ -152,7 +152,7 @@
      size tested — the second line sat below the fold. */
   .text-mega {
     font-size: clamp(2.5rem, 0.5rem + 6.2vw, 7rem);
-    line-height: 0.9;
+    line-height: 0.88;
     letter-spacing: -0.03em;
   }
 

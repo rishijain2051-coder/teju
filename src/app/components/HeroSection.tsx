@@ -25,27 +25,35 @@ export default function HeroSection() {
     <section ref={ref} className="relative grain">
       <div className="grid lg:grid-cols-12 min-h-[100svh]">
         {/* ── Type column ──────────────────────────────────────────────── */}
-        <div className="lg:col-span-7 flex flex-col justify-between pt-24 pb-8 lg:pt-32 lg:pb-10 px-gutter">
+        <div className="lg:col-span-7 flex flex-col justify-between pt-24 pb-8 lg:pt-28 lg:pb-10 px-gutter">
           <div className="max-w-[46rem]">
             <p className="text-manifest text-clay veil" style={{ transitionDelay: '80ms' }}>
               Est. {brand.established} · {brand.origin}
             </p>
 
-            <h1 className="font-serif text-mega font-light mt-6 lg:mt-8">
+            {/* Three lines, not two: each word wipes on its own beat, and the
+                delays stay 100ms apart so the cadence reads as a list rather than
+                a sentence being assembled. */}
+            <h1 className="font-serif text-mega font-light mt-5 lg:mt-6">
               <span className="wipe">
                 <span className="wipe-inner" style={{ transitionDelay: '160ms' }}>
-                  Timber
+                  Raw
                 </span>
               </span>
               <span className="wipe">
-                <span className="wipe-inner italic text-clay" style={{ transitionDelay: '280ms' }}>
-                  that travels.
+                <span className="wipe-inner" style={{ transitionDelay: '260ms' }}>
+                  Real
+                </span>
+              </span>
+              <span className="wipe">
+                <span className="wipe-inner italic text-clay" style={{ transitionDelay: '360ms' }}>
+                  Remarkable
                 </span>
               </span>
             </h1>
 
             <p
-              className="text-lead text-ink-soft max-w-measure mt-6 lg:mt-8 rise"
+              className="text-lead text-ink-soft max-w-measure mt-5 lg:mt-7 rise"
               style={{ transitionDelay: '520ms' }}
             >
               Solid mango and reclaimed hardwood, cut, carved and finished on our own
@@ -54,7 +62,7 @@ export default function HeroSection() {
             </p>
 
             <div
-              className="flex flex-wrap gap-3 mt-8 lg:mt-10 rise"
+              className="flex flex-wrap gap-3 mt-7 lg:mt-8 rise"
               style={{ transitionDelay: '640ms' }}
             >
               <Link href="/collections" className="btn btn-solid">
@@ -71,7 +79,7 @@ export default function HeroSection() {
 
           {/* Plate index, set like a contact sheet. */}
           <div
-            className="hidden lg:flex items-center gap-5 mt-10 rise"
+            className="hidden lg:flex items-center gap-5 mt-8 rise"
             style={{ transitionDelay: '760ms' }}
           >
             {PLATES.map((plate, i) => (
