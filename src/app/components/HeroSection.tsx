@@ -15,11 +15,17 @@ export default function HeroSection() {
   const ref = useReveal<HTMLElement>({ immediate: true });
   const [active, setActive] = useState(0);
 
+  /*
+   * Keyed on `active`, not mounted once: the interval is re-armed every time the
+   * plate changes, so a plate the visitor picked gets the full HOLD rather than
+   * whatever was left of a cycle that started before they clicked. With `[]` a
+   * click 6.5s into a cycle was overridden 500ms later, mid-crossfade.
+   */
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const id = setInterval(() => setActive((i) => (i + 1) % PLATES.length), HOLD);
-    return () => clearInterval(id);
-  }, []);
+    const id = setTimeout(() => setActive((i) => (i + 1) % PLATES.length), HOLD);
+    return () => clearTimeout(id);
+  }, [active]);
 
   return (
     <section ref={ref} className="relative grain">
@@ -97,7 +103,7 @@ export default function HeroSection() {
                 onClick={() => setActive(i)}
                 aria-label={`Show plate ${i + 1}: ${img(plate).alt}`}
                 aria-current={i === active}
-                className="group flex items-center gap-2.5 py-3.5"
+                className="group flex items-center gap-2.5 py-3.5 tap"
               >
                 {/* Rules alone, no numerals. The plate caption already reads
                     "Plate 01 / 03", and these three sat within a screen of the
@@ -125,7 +131,7 @@ export default function HeroSection() {
               <div
                 key={plate}
                 aria-hidden={i !== active}
-                className="absolute inset-0 transition-[opacity,filter] duration-[1400ms] ease-out-soft"
+                className="absolute inset-0 transition-[opacity,filter] duration-crossfade ease-out-soft"
                 style={{
                   opacity: i === active ? 1 : 0,
                   // A slight blur on the outgoing plate stops two sharp

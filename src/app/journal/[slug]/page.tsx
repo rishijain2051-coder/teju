@@ -53,7 +53,7 @@ export default async function ArticlePage({ params }: Params) {
               <nav aria-label="Breadcrumb" className="veil">
                 <Link
                   href="/journal"
-                  className="text-manifest-sm text-muted hover:text-clay transition-colors duration-base tap"
+                  className="text-manifest-sm text-muted hover:text-clay transition-colors duration-fast ease-out tap"
                 >
                   Journal
                 </Link>
@@ -161,7 +161,7 @@ export default async function ArticlePage({ params }: Params) {
                 </div>
                 <Link
                   href="/journal"
-                  className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-base"
+                  className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-fast ease-out"
                 >
                   All notes
                   <svg
@@ -195,9 +195,9 @@ export default async function ArticlePage({ params }: Params) {
                             className="object-cover"
                           />
                         </div>
-                        <div className="pt-4 mt-4 border-t border-line-strong group-hover:border-ink transition-colors duration-base">
+                        <div className="pt-4 mt-4 border-t border-line-strong group-hover:border-ink transition-colors duration-fast ease-out">
                           <span className="text-manifest-sm text-clay">{entry.category}</span>
-                          <h3 className="text-title mt-2.5 group-hover:text-clay transition-colors duration-base">
+                          <h3 className="text-title mt-2.5 group-hover:text-clay transition-colors duration-fast ease-out">
                             {entry.title}
                           </h3>
                         </div>

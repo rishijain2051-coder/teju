@@ -82,11 +82,7 @@ export default async function CollectionPage({ params }: Params) {
 
               <div className="lg:col-span-5 flex flex-col justify-center">
                 {collection.story.map((paragraph, i) => (
-                  <p
-                    key={i}
-                    className="text-lead text-ink-soft max-w-measure mt-6 first:mt-0 rise"
-                    style={{ transitionDelay: `${i * 90}ms` }}
-                  >
+                  <p key={i} className="text-lead text-ink-soft max-w-measure mt-6 first:mt-0 rise">
                     {paragraph}
                   </p>
                 ))}
@@ -216,7 +212,7 @@ export default async function CollectionPage({ params }: Params) {
                       className="group flex flex-wrap items-baseline gap-x-6 gap-y-1 py-6 border-t border-line-strong"
                     >
                       <span className="text-manifest-sm text-muted numeral">{entry.index}</span>
-                      <h3 className="font-serif text-display-sm font-light group-hover:text-clay transition-colors duration-base">
+                      <h3 className="font-serif text-display-sm font-light group-hover:text-clay transition-colors duration-fast ease-out">
                         {entry.name}
                       </h3>
                       <p className="text-body text-muted flex-1 min-w-[16rem]">{entry.tagline}</p>

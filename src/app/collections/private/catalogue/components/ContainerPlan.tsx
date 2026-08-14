@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { cartonFor, packingNote, type Piece } from '@/lib/site';
 import { submitEnquiry, whatsappUrl, type EnquiryField } from '@/lib/enquiry';
 
@@ -43,7 +43,21 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
     return { rows, units, cbm };
   }, [pieces, quantities]);
 
-  if (selection.rows.length === 0) return null;
+  /* One frame at the undocked transform before the docked one is applied, so the
+     transition has a before-change state to run from. Without this the bar is
+     already at translateY(0) on its first painted frame and the rise is skipped —
+     the same trap the mobile overlay fell into (see plans/013). */
+  const [docked, setDocked] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setDocked(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  /* Not `return null` on an empty selection: that unmounted the bar on the empty
+     keystroke of an ordinary edit and replayed its entrance on the next one. The
+     bar stays mounted and reads zeros; `onClear` is the way to dismiss it. */
+  const engaged = Object.keys(quantities).length > 0;
+  if (!engaged) return null;
 
   const cbm = Math.round(selection.cbm * 100) / 100;
   const twenty = cbm / LOADABLE.twenty;
@@ -138,13 +152,26 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
   return (
     <aside
       aria-label="Container plan"
-      className="sticky bottom-0 z-30 bg-ink text-paper border-t border-line-invert filter-swap"
+      data-docked={docked ? '' : undefined}
+      /*
+       * `translateY(100%)` -> `0`, not `.filter-swap`. This bar is flush with the
+       * bottom of the viewport, so it should arrive from the edge it docks to
+       * rather than drift up 8px from a position it is already fully visible in.
+       * A transition, not a keyframe: the bar's visibility is reversible, and a
+       * keyframe restarts from zero every time it is retriggered.
+       */
+      className="sticky bottom-0 z-30 bg-ink text-paper border-t border-line-invert translate-y-full data-[docked]:translate-y-0 transition-transform duration-base ease-out"
     >
       {/* Capped and scrollable: stacked on a phone this bar is tall enough to
           swallow the screen it is meant to summarise. */}
       <div className="shell py-5 max-h-[60vh] overflow-y-auto">
         {state === 'sent' ? (
-          <div className="flex flex-wrap items-center justify-between gap-4">
+          /* `filter-swap` on this panel rather than relying on the one on the <aside>:
+             that animation ran when the bar first docked and cannot replay, because
+             React never re-inserts the aside. Without it the planner's whole interior
+             is replaced in a single frame, in a bar pinned to the bottom of the
+             viewport — the deepest conversion on the site reading as a glitch. */
+          <div className="flex flex-wrap items-center justify-between gap-4 filter-swap">
             <div>
               <p className="text-manifest text-timber">Plan sent</p>
               <p className="text-body text-paper/70 mt-1">
@@ -188,13 +215,27 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                 <p className="text-manifest-sm text-paper/45">40 ft high-cube</p>
                 <p className="text-manifest-sm text-paper numeral">
                   {Math.round(Math.min(forty, 1) * 100)}%
-                  {forty > 1 && <span className="text-timber"> · ×{forty.toFixed(2)}</span>}
+                  {forty > 1 && (
+                    /* Fades in rather than appearing: this is the answer to the
+                       question the panel exists to ask, and it used to arrive as a
+                       text fragment with no acknowledgement at all. */
+                    <span className="text-timber filter-swap"> · ×{forty.toFixed(2)}</span>
+                  )}
                 </p>
               </div>
-              {/* scaleX, not width: width animates layout, transform composites. */}
+              {/* scaleX, not width: width animates layout, transform composites.
+                  The fill also changes colour once the plan passes one container:
+                  `Math.min` pins the transform at 1 from that point on, so colour is
+                  the only channel left to carry the one state change a buyer is
+                  actually watching for. Clay-soft rather than clay — this is a filled
+                  bar on the ink ground, where `--clay` is too dark to read and
+                  `--clay-soft` is documented as decorative-only, which is exactly what
+                  a bar fill is. */}
               <div className="h-1.5 bg-paper/15 mt-2.5 overflow-hidden">
                 <div
-                  className="h-full bg-timber origin-left transition-transform duration-base ease-out"
+                  className={`h-full origin-left transition-[transform,background-color] duration-fast ease-out ${
+                    forty > 1 ? 'bg-clay-soft' : 'bg-timber'
+                  }`}
                   style={{ transform: `scaleX(${Math.min(forty, 1)})` }}
                 />
               </div>
@@ -214,7 +255,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="w-full bg-transparent border-b border-line-invert py-2 text-body text-paper placeholder:text-paper/35 focus:border-timber focus:outline-none transition-colors duration-base"
+                  className="w-full bg-transparent border-b border-line-invert py-2 text-body text-paper placeholder:text-paper/35 focus:border-timber focus:outline-none transition-colors duration-fast ease-out"
                 />
               </label>
               <button
@@ -231,7 +272,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
               <button
                 type="button"
                 onClick={onClear}
-                className="text-manifest-sm text-paper/50 hover:text-paper transition-colors duration-base px-2 py-3"
+                className="text-manifest-sm text-paper/50 hover:text-paper transition-colors duration-fast ease-out px-2 py-3 tap"
               >
                 Clear
               </button>

@@ -84,7 +84,7 @@ export default function PrivateProgramme() {
 
       {/* Certification and paperwork — the two things a buying team asks for
           before it asks about price. */}
-      <section className="py-20 lg:py-28 bg-teal text-paper grain">
+      <section className="relative py-20 lg:py-28 bg-teal text-paper grain">
         <div className="shell relative z-10">
           <header className="rule-label rise" style={{ borderColor: 'var(--line-invert)' }}>
             <div className="flex-1">

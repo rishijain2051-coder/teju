@@ -55,7 +55,7 @@ export default function NotFound() {
                       <span className="text-manifest-sm text-muted numeral">
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span className="text-title group-hover:text-clay transition-colors duration-base">
+                      <span className="text-title group-hover:text-clay transition-colors duration-fast ease-out">
                         {link.label}
                       </span>
                     </Link>

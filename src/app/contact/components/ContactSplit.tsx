@@ -64,7 +64,7 @@ export default function ContactSplit() {
   };
 
   const field =
-    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-base';
+    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-fast ease-out';
   const label = 'block text-manifest-sm text-muted mb-1';
 
   const plate = img('craft-round-table');
@@ -93,7 +93,11 @@ export default function ContactSplit() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="relative rise">
+              /* `filter-swap`, not `rise`, for the same reason as the panel above:
+                 clicking "Send another" mounts a fresh form long after the scroll
+                 reveal was wired, so `.rise` would leave it at opacity 0 with
+                 nothing left to reveal it. */
+              <form onSubmit={handleSubmit} className="relative filter-swap">
                 <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7">
                   <div>
                     <label htmlFor="company" className={label}>

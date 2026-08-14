@@ -28,7 +28,8 @@ const AppLogo = memo(function AppLogo({
 }: AppLogoProps) {
   const containerClassName = useMemo(() => {
     const classes = ['flex items-center'];
-    if (onClick) classes.push('cursor-pointer hover:opacity-80 transition-opacity');
+    if (onClick)
+      classes.push('cursor-pointer hover:opacity-80 transition-opacity duration-fast ease-out');
     if (className) classes.push(className);
     return classes.join(' ');
   }, [onClick, className]);

@@ -37,7 +37,7 @@ export default function CollectionsGrid() {
                 type="button"
                 onClick={() => setActive(category)}
                 aria-pressed={isActive}
-                className={`text-manifest py-2 transition-colors duration-base tap ${
+                className={`text-manifest py-2 transition-colors duration-fast ease-out tap ${
                   isActive ? 'text-clay' : 'text-muted hover:text-ink'
                 }`}
               >
@@ -60,7 +60,6 @@ export default function CollectionsGrid() {
         */}
         <div
           key={active}
-          data-reveal-group
           className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 mt-12 filter-swap"
         >
           {filtered.map((piece) => (

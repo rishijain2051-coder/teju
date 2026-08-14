@@ -22,21 +22,16 @@ export default function ContactCTA() {
               <span className="wipe-inner">Let&apos;s build</span>
             </span>
             <span className="wipe">
-              <span className="wipe-inner italic" style={{ transitionDelay: '110ms' }}>
-                something lasting.
-              </span>
+              <span className="wipe-inner italic">something lasting.</span>
             </span>
           </h2>
 
-          <p
-            className="text-lead text-paper/70 max-w-measure mt-8 rise"
-            style={{ transitionDelay: '260ms' }}
-          >
+          <p className="text-lead text-paper/70 max-w-measure mt-8 rise">
             Retailer, interior designer, or hospitality buyer: send us the specification and we will
             come back with honest lead times and a price that holds.
           </p>
 
-          <div className="flex flex-wrap gap-3 mt-10 rise" style={{ transitionDelay: '340ms' }}>
+          <div className="flex flex-wrap gap-3 mt-10 rise">
             <Link href="/contact" className="btn btn-invert">
               Send an enquiry
               <svg
@@ -57,10 +52,7 @@ export default function ContactCTA() {
           </div>
 
           {/* Direct lines, set as a manifest block. */}
-          <dl
-            className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mt-14 pt-8 border-t border-line-invert rise"
-            style={{ transitionDelay: '420ms' }}
-          >
+          <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mt-14 pt-8 border-t border-line-invert rise">
             <div>
               <dt className="text-manifest-sm text-paper/45">Email</dt>
               <dd className="mt-1.5">

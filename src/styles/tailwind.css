@@ -69,6 +69,12 @@
   --dur-base: 320ms;
   --dur-slow: 640ms;
   --dur-reveal: 1000ms;
+  /* The hero plate crossfade only. Longer than a reveal on purpose: two large
+     photographs dissolving into each other need time to stop reading as a cut, and
+     the outgoing plate is blurred on the way out to mask the double exposure. Lives
+     here rather than as an arbitrary value in one class list, so the whole motion
+     scale is visible in one place. */
+  --dur-crossfade: 1400ms;
 
   /* The editorial measure */
   --gutter: 1.5rem;
@@ -130,16 +136,56 @@
     outline-offset: 3px;
   }
 
-  /* Honour the OS setting. The previous build animated regardless. */
+  /*
+   * Honour the OS setting. The previous build animated regardless.
+   *
+   * The delays are reset alongside the durations, not left to run. `0.01ms` is a
+   * nonzero duration, so a transition is still generated and its delay is still
+   * honoured — which meant a reduced-motion reader waited out the full authored
+   * stagger at `opacity: 0` and then got a hard pop. On the hero that was seven
+   * pops over 760ms, and the `.wipe-inner` words sat clipped entirely outside
+   * their mask while they waited. Zeroing the delay is what turns "no animation"
+   * into an instant paint rather than a slow flicker.
+   */
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      transition-delay: 0s !important;
       scroll-behavior: auto !important;
+    }
+  }
+
+  /*
+   * Colour is not motion.
+   *
+   * The blanket reset above is the right default — it catches anything new without
+   * anyone having to remember — but it cannot tell a 4px slide from a border turning
+   * clay, so it removed both. Reduced motion means fewer and gentler animations, not
+   * none: a focus border that crossfades and a button that resolves into its hover
+   * state carry information and move nothing. Eight form focus borders were the real
+   * loss here.
+   *
+   * Re-asserted narrowly and by hand. Anything with a transform in its transition list
+   * is deliberately absent, and `.rise` and `.wipe-inner` stay snapped — keeping their
+   * opacity half would mean forcing `transform: none` on them too, which is the exact
+   * machinery that once left the hero truncated.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .btn,
+    [class*='transition-colors'] {
+      transition-duration: var(--dur-fast) !important;
+    }
+
+    /* Pure opacity, no transform in the primitive at all. Shortened from
+       --dur-slow: a 640ms fade is an entrance; 320ms is an acknowledgement. */
+    .veil {
+      transition-duration: var(--dur-base) !important;
     }
   }
 }
@@ -345,6 +391,25 @@
     }
   }
 
+  /*
+   * For content that toggles rather than swaps: a dossier, a disclosure. A
+   * transition, not `.filter-swap`'s keyframe — reverse a keyframe mid-flight and
+   * it restarts from zero, so a buyer who opens a dossier and closes it again gets
+   * the entrance replayed from the beginning rather than resumed from where it was.
+   *
+   * Only opacity moves. The height change is instantaneous on purpose: animating it
+   * would mean animating a layout property on a `<tr>` inside a 39-row table, which
+   * costs layout + paint + composite on every frame for the whole table.
+   */
+  .disclose {
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease-out);
+  }
+
+  .disclose[data-open] {
+    opacity: 1;
+  }
+
   /* Type that wipes up from behind a mask — the editorial reveal. */
 
   /*
@@ -396,15 +461,42 @@
     opacity: 1;
   }
 
-  /* Slow ambient drift on hero stills. Disabled under reduced motion by the
-     global rule above. */
+  /*
+   * Slow ambient drift on hero stills.
+   *
+   * 7s, matching HOLD in HeroSection: this is a transition, not an animation, so
+   * dropping `.shown` reverses it rather than resetting. At 14s against a 7s hold no
+   * plate ever reached either end — two of the three were mid-transform at every
+   * instant for the life of the page, ~12.6s of each cycle ran on a fully transparent
+   * image, and the declared 1.11 was never reached (it topped out near 1.065). Keep
+   * this number in step with `HOLD` in src/app/components/HeroSection.tsx.
+   *
+   * The travel is reduced to match: 1.02 -> 1.065 is what was actually visible before,
+   * so holding the same visual range keeps the hero looking unchanged while letting
+   * the transform finish and the compositor go idle between cycles.
+   *
+   * Under reduced motion the global rule collapses the duration, so the image snaps to
+   * its end scale and holds as a static crop — no motion, which is the intent.
+   */
   .drift {
     transform: scale(1.02);
-    transition: transform 14s linear;
+    transition: transform 7s linear;
+  }
+
+  /*
+   * Asymmetric on purpose. Transitions start from the after-change style, so an
+   * element losing `.shown` sees `transition: none` and snaps back to its origin
+   * instead of unwinding for another seven seconds — which it would spend entirely
+   * behind a finished 1400ms crossfade, invisible. Without this, one plate is
+   * always mid-reverse: with it, two of the three sit idle and every plate starts
+   * its drift from the same place.
+   */
+  .drift:not(.shown) {
+    transition: none;
   }
 
   .drift.shown {
-    transform: scale(1.11);
+    transform: scale(1.065);
   }
 
   /* ── Interaction ───────────────────────────────────────────────────────── */
@@ -436,7 +528,7 @@
 
   /*
    * Expands a control's clickable area to clear the 24px minimum target size
-   * (WCAG 2.5.8) without changing layout.
+   * (WCAG 2.5.8) without changing layout, and acknowledges the press.
    *
    * An absolutely-positioned pseudo-element still belongs to its host's hit
    * area, even outside the host's box — so this buys height without adding
@@ -446,15 +538,32 @@
    *
    * Use padding instead wherever controls stack vertically (the footer lists),
    * since expanding outward there would make neighbouring targets overlap.
+   *
+   * The press state is here rather than on each control because `.tap` already
+   * marks the set that needs it: things a finger hits. On touch there is no hover,
+   * so before this a tap on a filter tab, a dossier toggle or the planner's Clear
+   * produced no acknowledgement at all. Same 0.97 and same 160ms as `.btn`, so a
+   * press feels identical wherever it lands.
    */
   .tap {
     position: relative;
+    transition: transform 160ms var(--ease-out);
   }
 
   .tap::before {
     content: '';
     position: absolute;
     inset: -0.85rem -0.4rem;
+  }
+
+  .tap:active {
+    transform: scale(0.97);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tap:active {
+      transform: none;
+    }
   }
 
   /* Link that draws its own underline on approach. */

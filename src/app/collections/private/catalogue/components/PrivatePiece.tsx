@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppImage from '@/components/ui/AppImage';
 import { cartonFor, fscClaimFor, img, type Piece } from '@/lib/site';
 import { whatsappUrl, type EnquiryField } from '@/lib/enquiry';
@@ -58,14 +58,14 @@ function Quantity({
           const next = Number(e.target.value.replace(/[^0-9]/g, ''));
           onChange(Number.isFinite(next) ? Math.min(next, 9999) : 0);
         }}
-        className="w-16 bg-transparent border-b border-line-strong py-1.5 text-manifest-sm text-ink numeral text-center placeholder:text-muted/60 focus:border-clay focus:outline-none transition-colors duration-base"
+        className="w-16 bg-transparent border-b border-line-strong py-1.5 text-manifest-sm text-ink numeral text-center placeholder:text-muted/60 focus:border-clay focus:outline-none transition-colors duration-fast ease-out"
       />
       <span className="text-manifest-sm text-muted">pcs</span>
     </label>
   );
 }
 
-function Dossier({ piece }: { piece: Piece }) {
+function Dossier({ piece, open }: { piece: Piece; open: boolean }) {
   const carton = cartonFor(piece);
   const fsc = fscClaimFor(piece);
 
@@ -87,7 +87,10 @@ function Dossier({ piece }: { piece: Piece }) {
   ];
 
   return (
-    <div className="bg-paper-warm border border-line p-5 lg:p-6 filter-swap">
+    <div
+      data-open={open ? '' : undefined}
+      className="bg-paper-warm border border-line p-5 lg:p-6 disclose"
+    >
       <p className="text-manifest-sm text-clay">Trade dossier · {piece.ref}</p>
 
       <dl className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 mt-4">
@@ -127,6 +130,18 @@ export default function PrivatePiece({
   const carton = cartonFor(piece);
   const dossierId = `dossier-${piece.slug}`;
 
+  /* Held one transition beyond `open` so the close fades instead of disappearing.
+     180ms matches `--dur-fast`, which is what `.disclose` transitions on. */
+  const [mounted, setMounted] = useState(open);
+  useEffect(() => {
+    if (open) {
+      setMounted(true);
+      return;
+    }
+    const id = window.setTimeout(() => setMounted(false), 180);
+    return () => window.clearTimeout(id);
+  }, [open]);
+
   const enquiryLabel =
     state === 'sending'
       ? 'Sending…'
@@ -150,7 +165,7 @@ export default function PrivatePiece({
               onClick={onToggle}
               aria-expanded={open}
               aria-controls={dossierId}
-              className="text-left text-[1.0625rem] font-medium leading-snug tracking-tight text-ink hover:text-clay transition-colors duration-base"
+              className="text-left text-[1.0625rem] font-medium leading-snug tracking-tight text-ink hover:text-clay transition-colors duration-fast ease-out tap"
             >
               {piece.name}
             </button>
@@ -178,7 +193,7 @@ export default function PrivatePiece({
                 type="button"
                 onClick={onEnquire}
                 disabled={state === 'sending'}
-                className="text-manifest-sm text-clay hover:text-ink transition-colors duration-base disabled:opacity-60 whitespace-nowrap tap"
+                className="text-manifest-sm text-clay hover:text-ink transition-colors duration-fast ease-out disabled:opacity-60 whitespace-nowrap tap"
               >
                 {enquiryLabel}
               </button>
@@ -187,7 +202,7 @@ export default function PrivatePiece({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Message on WhatsApp about ${piece.name}`}
-                className="text-muted hover:text-ink transition-colors duration-base tap"
+                className="text-muted hover:text-ink transition-colors duration-fast ease-out tap"
               >
                 <WhatsAppIcon />
               </a>
@@ -195,10 +210,10 @@ export default function PrivatePiece({
           </td>
         </tr>
 
-        {open && (
+        {mounted && (
           <tr>
             <td colSpan={10} id={dossierId} className="pb-6">
-              <Dossier piece={piece} />
+              <Dossier piece={piece} open={open} />
             </td>
           </tr>
         )}
@@ -255,15 +270,15 @@ export default function PrivatePiece({
             onClick={onToggle}
             aria-expanded={open}
             aria-controls={dossierId}
-            className="text-manifest-sm text-muted hover:text-ink transition-colors duration-base tap"
+            className="text-manifest-sm text-muted hover:text-ink transition-colors duration-fast ease-out tap"
           >
             {open ? 'Hide dossier' : 'Trade dossier'}
           </button>
         </div>
 
-        {open && (
+        {mounted && (
           <div id={dossierId} className="mt-4">
-            <Dossier piece={piece} />
+            <Dossier piece={piece} open={open} />
           </div>
         )}
 

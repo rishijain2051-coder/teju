@@ -20,7 +20,7 @@ export default function JournalSection() {
           </div>
           <Link
             href="/journal"
-            className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-base"
+            className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-fast ease-out"
           >
             All notes
             <svg
@@ -55,12 +55,12 @@ export default function JournalSection() {
                     />
                   </div>
 
-                  <div className="pt-4 mt-4 border-t border-line group-hover:border-ink transition-colors duration-base">
+                  <div className="pt-4 mt-4 border-t border-line group-hover:border-ink transition-colors duration-fast ease-out">
                     <div className="flex items-baseline justify-between gap-4">
                       <span className="text-manifest-sm text-clay">{article.category}</span>
                       <span className="text-manifest-sm text-muted">{article.date}</span>
                     </div>
-                    <h3 className="text-title mt-3 group-hover:text-clay transition-colors duration-base">
+                    <h3 className="text-title mt-3 group-hover:text-clay transition-colors duration-fast ease-out">
                       {article.title}
                     </h3>
                     <p className="text-body text-muted mt-2">{article.excerpt}</p>

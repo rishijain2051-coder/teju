@@ -65,31 +65,25 @@ export default function ExclusiveAccess() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const field =
-    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-base';
+    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-fast ease-out';
 
   return (
-    <section ref={ref} id="access" className="bg-teal text-paper grain py-20 lg:py-32">
+    <section ref={ref} id="access" className="relative bg-teal text-paper grain py-20 lg:py-32">
       <div className="shell relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
           {/* Explanation */}
           <div className="lg:col-span-5">
             <p className="text-manifest text-timber rise">Trade access</p>
-            <h2
-              className="font-serif text-display-sm font-light mt-6 rise"
-              style={{ transitionDelay: '80ms' }}
-            >
+            <h2 className="font-serif text-display-sm font-light mt-6 rise">
               The rest of the <span className="italic">catalogue</span>
             </h2>
-            <p
-              className="text-lead text-paper/70 mt-6 max-w-measure rise"
-              style={{ transitionDelay: '160ms' }}
-            >
+            <p className="text-lead text-paper/70 mt-6 max-w-measure rise">
               What is shown publicly is an introduction: {publicCount} designs of {facts.designs}+
               in the range. The trade catalogue carries {privateCount} live designs and the figures
               you need to plan a container.
             </p>
 
-            <ul className="mt-10 rise" style={{ transitionDelay: '240ms' }}>
+            <ul className="mt-10 rise">
               {[
                 `${privateCount} designs against the ${publicCount} shown here, with full specifications`,
                 'Packed carton size, CBM and container counts on every design',
@@ -130,11 +124,7 @@ export default function ExclusiveAccess() {
                 </p>
               </div>
             ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="relative rise"
-                style={{ transitionDelay: '120ms' }}
-              >
+              <form onSubmit={handleSubmit} className="relative rise">
                 <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7">
                   <div className="sm:col-span-2">
                     <label htmlFor="company" className="text-manifest-sm text-paper/55">

@@ -40,7 +40,7 @@ export default function Footer() {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-2 inline-block"
+                    className="text-body text-ink-soft hover:text-clay transition-colors duration-fast ease-out py-2 inline-block"
                   >
                     {link.label}
                   </Link>
@@ -56,7 +56,7 @@ export default function Footer() {
                 <li key={collection.name}>
                   <Link
                     href={collection.href}
-                    className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-2 inline-block"
+                    className="text-body text-ink-soft hover:text-clay transition-colors duration-fast ease-out py-2 inline-block"
                   >
                     {collection.name}
                   </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
               <li>
                 <a
                   href={`mailto:${brand.email}`}
-                  className="text-body text-ink-soft hover:text-clay transition-colors duration-base break-all py-2 inline-block"
+                  className="text-body text-ink-soft hover:text-clay transition-colors duration-fast ease-out break-all py-2 inline-block"
                 >
                   {brand.email}
                 </a>
@@ -79,7 +79,7 @@ export default function Footer() {
               <li>
                 <a
                   href={`tel:${brand.phoneHref}`}
-                  className="text-body text-ink-soft hover:text-clay transition-colors duration-base numeral py-2 inline-block"
+                  className="text-body text-ink-soft hover:text-clay transition-colors duration-fast ease-out numeral py-2 inline-block"
                 >
                   {brand.phone}
                 </a>

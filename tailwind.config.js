@@ -100,6 +100,7 @@ module.exports = {
         base: '320ms',
         slow: '640ms',
         reveal: '1000ms',
+        crossfade: '1400ms',
       },
 
       keyframes: {

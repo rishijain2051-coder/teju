@@ -80,7 +80,7 @@ export default async function PiecePage({ params }: Params) {
                   <li>
                     <Link
                       href="/collections"
-                      className="hover:text-clay transition-colors duration-base tap"
+                      className="hover:text-clay transition-colors duration-fast ease-out tap"
                     >
                       Collections
                     </Link>
@@ -89,7 +89,7 @@ export default async function PiecePage({ params }: Params) {
                   <li>
                     <Link
                       href={collection.href}
-                      className="hover:text-clay transition-colors duration-base tap"
+                      className="hover:text-clay transition-colors duration-fast ease-out tap"
                     >
                       {collection.name}
                     </Link>

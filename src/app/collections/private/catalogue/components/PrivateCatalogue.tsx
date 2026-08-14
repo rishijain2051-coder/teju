@@ -114,31 +114,42 @@ export default function PrivateCatalogue() {
     setPieceState((prev) => ({ ...prev, [piece.ref]: result.ok ? 'sent' : 'error' }));
   }, []);
 
+  /*
+   * A ref set to 0 is kept, not deleted. Deleting it made `planning` false on the
+   * intermediate keystroke of any edit that passes through empty — backspacing
+   * "12" to type "20" — which unmounted the planner and snapped 176px of page
+   * padding away under a buyer who was scrolled to the bottom of the page looking
+   * at it. `ContainerPlan` already filters on `> 0`, so a zero entry contributes
+   * nothing to the totals. `onClear` resets the whole object, which is the one
+   * deliberate way back to no selection.
+   */
   const setQuantity = useCallback((pieceRef: string, next: number) => {
-    setQuantities((prev) => {
-      if (next <= 0) {
-        const { [pieceRef]: _removed, ...rest } = prev;
-        return rest;
-      }
-      return { ...prev, [pieceRef]: next };
-    });
+    setQuantities((prev) => ({ ...prev, [pieceRef]: Math.max(0, next) }));
   }, []);
 
   const toggleDossier = useCallback((pieceRef: string) => {
     setOpenDossiers((prev) => ({ ...prev, [pieceRef]: !prev[pieceRef] }));
   }, []);
 
-  const control = 'text-manifest py-2 transition-colors duration-base tap disabled:opacity-40';
+  const control =
+    'text-manifest py-2 transition-colors duration-fast ease-out tap disabled:opacity-40';
 
   /* Keyed on the coarse filters only. Including the search query would remount
      every plate on each keystroke — the animation is for a deliberate change of
-     view, not for typing. */
-  const gridKey = `${filter}-${sort}-${onlyNew}-${view}`;
+     view, not for typing. `sort` is out for the same reason and one more: a
+     re-order is the same items in a new sequence, so there is nothing for an
+     entrance to explain, and a closed native <select> fires `change` on every
+     arrow keypress — three restarted keyframes over 39 rows to get from Reference
+     to Newest. `filter` and `view` stay: those genuinely change what is on screen. */
+  const gridKey = `${filter}-${onlyNew}-${view}`;
 
   /* The planner is a sticky bar, so while scrolling it covers whatever is
      underneath it. Reserving the space only once a selection exists keeps the
-     page from carrying dead room before the bar is ever shown. */
-  const planning = Object.keys(quantities).length > 0;
+     page from carrying dead room before the bar is ever shown.
+
+     Any entry at all, including zeros, so the reserved space does not thrash
+     while a quantity is being edited. */
+  const planning = Object.values(quantities).length > 0;
 
   return (
     <div ref={ref} className="min-h-screen flex flex-col">
@@ -158,7 +169,7 @@ export default function PrivateCatalogue() {
               type="button"
               onClick={handleSignOut}
               disabled={signingOut}
-              className="text-manifest-sm text-paper/60 hover:text-paper transition-colors duration-base disabled:opacity-50 tap"
+              className="text-manifest-sm text-paper/60 hover:text-paper transition-colors duration-fast ease-out disabled:opacity-50 tap"
             >
               {signingOut ? 'Signing out…' : 'Sign out'}
             </button>
@@ -246,7 +257,7 @@ export default function PrivateCatalogue() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Reference, name, material, finish"
-                  className="w-full bg-transparent border-b border-line py-2 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-base"
+                  className="w-full bg-transparent border-b border-line py-2 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-fast ease-out"
                 />
               </label>
 
@@ -267,7 +278,7 @@ export default function PrivateCatalogue() {
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value as Sort)}
-                  className="bg-transparent border-b border-line py-2 text-manifest-sm text-ink focus:border-clay focus:outline-none transition-colors duration-base"
+                  className="bg-transparent border-b border-line py-2 text-manifest-sm text-ink focus:border-clay focus:outline-none transition-colors duration-fast ease-out"
                 >
                   {SORTS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -311,7 +322,6 @@ export default function PrivateCatalogue() {
           ) : view === 'gallery' ? (
             <div
               key={gridKey}
-              data-reveal-group
               className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 mt-8 filter-swap"
             >
               {visible.map((piece) => (

@@ -69,7 +69,7 @@ export default function CollectionsPage() {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h2 className="text-title group-hover:text-clay transition-colors duration-base">
+                          <h2 className="text-title group-hover:text-clay transition-colors duration-fast ease-out">
                             {collection.name}
                           </h2>
                           <p className="text-body text-muted mt-1 hidden sm:block">
@@ -89,7 +89,7 @@ export default function CollectionsPage() {
                           stroke="currentColor"
                           strokeWidth="1.75"
                           aria-hidden="true"
-                          className="shrink-0 text-muted group-hover:text-clay transition-colors duration-base"
+                          className="shrink-0 text-muted group-hover:text-clay transition-colors duration-fast ease-out"
                         >
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>

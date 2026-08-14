@@ -67,7 +67,7 @@ export default function Header() {
                   key={link.label}
                   href={link.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`text-manifest link-draw tap transition-colors duration-base ${
+                  className={`text-manifest link-draw tap transition-colors duration-fast ease-out ${
                     active ? 'text-clay' : 'text-ink-soft hover:text-ink'
                   }`}
                 >
@@ -80,7 +80,7 @@ export default function Header() {
           <div className="flex items-center gap-5">
             <a
               href={`tel:${brand.phoneHref}`}
-              className="hidden xl:block text-manifest-sm text-muted hover:text-ink transition-colors duration-base numeral tap"
+              className="hidden xl:block text-manifest-sm text-muted hover:text-ink transition-colors duration-fast ease-out numeral tap"
             >
               {brand.phone}
             </a>
@@ -98,15 +98,15 @@ export default function Header() {
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((v) => !v)}
-              className="lg:hidden flex flex-col justify-center gap-[5px] w-10 h-10 items-center -mr-2"
+              className="lg:hidden flex flex-col justify-center gap-[5px] w-10 h-10 items-center -mr-2 tap"
             >
               <span
-                className={`block w-6 h-px bg-ink transition-transform duration-base ease-out ${
+                className={`block w-6 h-px bg-ink transition-transform duration-fast ease-out ${
                   menuOpen ? 'translate-y-[3px] rotate-45' : ''
                 }`}
               />
               <span
-                className={`block w-6 h-px bg-ink transition-transform duration-base ease-out ${
+                className={`block w-6 h-px bg-ink transition-transform duration-fast ease-out ${
                   menuOpen ? '-translate-y-[3px] -rotate-45' : ''
                 }`}
               />
@@ -115,10 +115,19 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Mobile overlay */}
+      {/*
+        `inert`, not `hidden`. `hidden` resolves to `display: none`, and a
+        transition cannot start from a not-rendered before-change style — React
+        flips the attribute and the opacity class in the same commit, so the fade,
+        the row wipe and the stagger below were all skipped and the overlay hard-cut
+        in both directions. `inert` keeps the element rendered while still taking
+        the whole subtree out of the tab order and the accessibility tree, which is
+        the part `hidden` was actually needed for. `pointer-events-none` stays as
+        belt-and-braces for the transparent frames.
+      */}
       <div
         id="mobile-menu"
-        hidden={!menuOpen}
+        inert={!menuOpen}
         className={`fixed inset-0 z-40 bg-paper lg:hidden transition-opacity duration-base ease-out ${
           menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}

@@ -40,7 +40,7 @@ export default function FeaturedCollections() {
           </div>
           <Link
             href="/collections"
-            className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-base"
+            className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-fast ease-out"
           >
             All collections
             <svg
@@ -82,11 +82,11 @@ export default function FeaturedCollections() {
                 </div>
 
                 {/* Caption below the plate, catalogue-style — no scrim. */}
-                <div className="flex items-baseline gap-4 pt-4 mt-4 border-t border-line group-hover:border-ink transition-colors duration-base">
+                <div className="flex items-baseline gap-4 pt-4 mt-4 border-t border-line group-hover:border-ink transition-colors duration-fast ease-out">
                   <span className="text-manifest-sm text-muted numeral">{collection.index}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-4">
-                      <h3 className="text-title group-hover:text-clay transition-colors duration-base">
+                      <h3 className="text-title group-hover:text-clay transition-colors duration-fast ease-out">
                         {collection.name}
                       </h3>
                       <span className="text-manifest-sm text-muted shrink-0">

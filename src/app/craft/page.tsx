@@ -158,7 +158,7 @@ export default function CraftPage() {
 
           {/* Certification. It belongs here rather than on a page of its own:
               chain of custody is a sourcing decision, and sourcing is stage one. */}
-          <section id="fsc" className="py-20 lg:py-32 bg-teal text-paper grain">
+          <section id="fsc" className="relative py-20 lg:py-32 bg-teal text-paper grain">
             <div className="shell relative z-10">
               <SectionHead
                 invert

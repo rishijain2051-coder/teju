@@ -47,14 +47,14 @@ export default function JournalPage() {
                   />
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-6 lg:gap-16 pt-5 mt-5 border-t border-line group-hover:border-ink transition-colors duration-base">
+                <div className="grid lg:grid-cols-12 gap-6 lg:gap-16 pt-5 mt-5 border-t border-line group-hover:border-ink transition-colors duration-fast ease-out">
                   <div className="lg:col-span-3 flex flex-wrap items-baseline gap-x-5 gap-y-1">
                     <span className="text-manifest-sm text-clay">{lead.category}</span>
                     <span className="text-manifest-sm text-muted">{lead.date}</span>
                     <span className="text-manifest-sm text-muted numeral">{lead.readTime}</span>
                   </div>
                   <div className="lg:col-span-8">
-                    <h2 className="font-serif text-display font-light group-hover:text-clay transition-colors duration-base rise">
+                    <h2 className="font-serif text-display font-light group-hover:text-clay transition-colors duration-fast ease-out rise">
                       {lead.title}
                     </h2>
                     <p className="text-lead text-ink-soft mt-4 max-w-measure rise">
@@ -87,12 +87,12 @@ export default function JournalPage() {
                           />
                         </div>
 
-                        <div className="pt-4 mt-4 border-t border-line group-hover:border-ink transition-colors duration-base">
+                        <div className="pt-4 mt-4 border-t border-line group-hover:border-ink transition-colors duration-fast ease-out">
                           <div className="flex items-baseline justify-between gap-4">
                             <span className="text-manifest-sm text-clay">{article.category}</span>
                             <span className="text-manifest-sm text-muted">{article.date}</span>
                           </div>
-                          <h2 className="text-title mt-3 group-hover:text-clay transition-colors duration-base">
+                          <h2 className="text-title mt-3 group-hover:text-clay transition-colors duration-fast ease-out">
                             {article.title}
                           </h2>
                           <p className="text-body text-muted mt-2">{article.excerpt}</p>

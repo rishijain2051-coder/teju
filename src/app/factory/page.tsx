@@ -176,7 +176,7 @@ export default function FactoryPage() {
           </section>
 
           {/* Capability ledger, on the dark ground the home page uses for it. */}
-          <section className="py-20 lg:py-32 bg-teal text-paper grain">
+          <section className="relative py-20 lg:py-32 bg-teal text-paper grain">
             <div className="shell relative z-10">
               <SectionHead
                 invert

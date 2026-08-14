@@ -8,7 +8,7 @@ import AppLogo from '@/components/ui/AppLogo';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, facts, img } from '@/lib/site';
 
-type EntryState = 'idle' | 'loading' | 'error';
+type EntryState = 'idle' | 'loading' | 'granted' | 'error';
 
 export default function AccessCodeEntry() {
   const router = useRouter();
@@ -32,6 +32,15 @@ export default function AccessCodeEntry() {
       });
 
       if (res.ok) {
+        /*
+         * Acknowledge before navigating, but do not delay the navigation. The push
+         * still fires on this tick; fetching the catalogue's payload already takes
+         * a beat, and the confirmation occupies that beat instead of leaving the
+         * button reading "Checking…" until the page cuts away. A buyer crosses this
+         * threshold once, so it is worth the twelve lines — and worth nothing more
+         * than this: the range behind the gate is the reward, not an animation.
+         */
+        setState('granted');
         router.push('/collections/private/catalogue');
         return;
       }
@@ -91,8 +100,12 @@ export default function AccessCodeEntry() {
                 if (state === 'error') setState('idle');
               }}
               placeholder="Enter your code"
-              className={`w-full bg-transparent border-b py-3.5 mt-1 text-title font-serif font-light text-ink placeholder:text-muted/60 placeholder:font-sans placeholder:text-base focus:outline-none transition-colors duration-base ${
-                state === 'error' ? 'border-clay' : 'border-line-strong focus:border-clay'
+              className={`w-full bg-transparent border-b py-3.5 mt-1 text-title font-serif font-light text-ink placeholder:text-muted/60 placeholder:font-sans placeholder:text-base focus:outline-none transition-colors duration-fast ease-out ${
+                state === 'error'
+                  ? 'border-clay'
+                  : state === 'granted'
+                    ? 'border-ink'
+                    : 'border-line-strong focus:border-clay'
               }`}
             />
 
@@ -102,13 +115,19 @@ export default function AccessCodeEntry() {
               </p>
             )}
 
+            {state === 'granted' && (
+              <p className="text-manifest-sm text-ink mt-3 filter-swap">
+                Code accepted. Opening the full range…
+              </p>
+            )}
+
             <button
               type="submit"
-              disabled={state === 'loading' || !code.trim()}
+              disabled={state === 'loading' || state === 'granted' || !code.trim()}
               className="btn btn-solid mt-8 disabled:opacity-45"
             >
-              {state === 'loading' ? 'Checking…' : 'Enter'}
-              {state !== 'loading' && (
+              {state === 'loading' ? 'Checking…' : state === 'granted' ? 'Access granted' : 'Enter'}
+              {state !== 'loading' && state !== 'granted' && (
                 <svg
                   width="13"
                   height="13"
@@ -142,7 +161,7 @@ export default function AccessCodeEntry() {
           /* `py-2` rather than `.tap`: this is the only way back off the gate, so
              the hit area belongs in the box itself rather than in a pseudo-element
              that a neighbour could win. */
-          className="link-arrow inline-flex items-center gap-2.5 py-2 text-manifest text-muted hover:text-ink transition-colors duration-base self-start"
+          className="link-arrow inline-flex items-center gap-2.5 py-2 text-manifest text-muted hover:text-ink transition-colors duration-fast ease-out self-start"
         >
           <svg
             width="13"
