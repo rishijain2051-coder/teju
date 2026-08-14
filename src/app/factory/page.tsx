@@ -262,7 +262,7 @@ export default function FactoryPage() {
                   </Link>
                 </div>
                 <div className="lg:col-span-6 lg:col-start-7 rise">
-                  <FscPanel variant="brief" />
+                  <FscPanel variant="brief" placement="factory-certification" />
                 </div>
               </div>
             </div>

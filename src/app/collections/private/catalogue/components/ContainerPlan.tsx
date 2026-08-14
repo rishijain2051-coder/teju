@@ -196,9 +196,11 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
               </p>
             </div>
 
-            {/* Actions */}
+            {/* Actions. Wrapping freely left "Clear" stranded on a line of its
+                own beneath CSV on a phone, so below `sm` the send button takes the
+                full width and the two secondary controls share the row under it. */}
             <div className="lg:col-span-4 flex flex-wrap items-end gap-3">
-              <label className="flex-1 min-w-[12rem]">
+              <label className="w-full sm:flex-1 sm:min-w-[12rem]">
                 <span className="block text-manifest-sm text-paper/45 mb-1">Your email</span>
                 <input
                   type="email"
@@ -212,17 +214,17 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                 type="button"
                 onClick={handleSend}
                 disabled={state === 'sending' || !email.includes('@')}
-                className="btn btn-invert disabled:opacity-50"
+                className="btn btn-invert justify-center flex-1 sm:flex-none disabled:opacity-50"
               >
                 {state === 'sending' ? 'Sending…' : 'Send this plan'}
               </button>
-              <button type="button" onClick={exportCsv} className="btn btn-invert">
+              <button type="button" onClick={exportCsv} className="btn btn-invert justify-center">
                 CSV
               </button>
               <button
                 type="button"
                 onClick={onClear}
-                className="text-manifest-sm text-paper/50 hover:text-paper transition-colors duration-base tap"
+                className="text-manifest-sm text-paper/50 hover:text-paper transition-colors duration-base px-2 py-3"
               >
                 Clear
               </button>
@@ -239,14 +241,14 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="link-draw"
+                    className="link-draw tap"
                   >
                     Send it on WhatsApp instead
                   </a>
                   .
                 </p>
               )}
-              <p className="text-manifest-sm text-paper/40 leading-relaxed">
+              <p className="text-note text-paper/55">
                 Indicative. {packingNote}
               </p>
             </div>

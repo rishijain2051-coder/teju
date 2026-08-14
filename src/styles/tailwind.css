@@ -200,23 +200,67 @@
     line-height: 1.68;
   }
 
-  /* The manifest layer: every piece of metadata on this site is set like a
-     line on a bill of lading. This is the house voice. */
+  /*
+   * The manifest layer: every piece of metadata on this site is set like a line
+   * on a bill of lading. This is the house voice.
+   *
+   * Larger on phones, not smaller. These two classes carry far more than
+   * decoration — form labels, spec values, dimensions, the works address, image
+   * credits — and at 10 and 11px they were the smallest type on the site in the
+   * place it is hardest to read. Tiny tracked caps are a desktop affectation
+   * that survives a 1440px column and does not survive a 390px one, so the
+   * editorial setting is the override and legibility is the base.
+   */
   .text-manifest {
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    line-height: 1.4;
-    letter-spacing: 0.18em;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     font-weight: 450;
   }
 
   .text-manifest-sm {
     font-family: var(--font-mono);
-    font-size: 0.625rem;
-    line-height: 1.4;
-    letter-spacing: 0.2em;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
+  }
+
+  @media (min-width: 1024px) {
+    .text-manifest {
+      font-size: 0.6875rem;
+      line-height: 1.4;
+      letter-spacing: 0.18em;
+    }
+
+    .text-manifest-sm {
+      font-size: 0.625rem;
+      line-height: 1.4;
+      letter-spacing: 0.2em;
+    }
+  }
+
+  /*
+   * Fine print that is prose rather than a label: packing notes, image credits,
+   * privacy lines.
+   *
+   * The manifest face is right for one to three tracked words and wrong for a
+   * sentence. Uppercase flattens the ascender and descender pattern a reader uses
+   * to recognise word shapes, so a thirty-word note set in it is slow going
+   * anywhere and punishing on a phone. Same modest size, mixed case, no tracking.
+   */
+  .text-note {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .text-note {
+      font-size: 0.75rem;
+    }
   }
 
   .numeral {
@@ -452,8 +496,10 @@
     gap: 0.75rem;
     padding: 1rem 1.75rem;
     font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
+    /* Tracks the manifest scale: a button label is the last thing that should be
+       the smallest type on a phone. */
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     border: 1px solid currentColor;
     transition:
@@ -461,6 +507,13 @@
       color var(--dur-fast) var(--ease-out),
       border-color var(--dur-fast) var(--ease-out),
       transform 160ms var(--ease-out);
+  }
+
+  @media (min-width: 1024px) {
+    .btn {
+      font-size: 0.6875rem;
+      letter-spacing: 0.18em;
+    }
   }
 
   /* Deliberately not gated behind `hover: hover` — touch has no hover at all,

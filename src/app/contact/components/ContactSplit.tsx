@@ -239,7 +239,7 @@ export default function ContactSplit() {
                   </p>
                 )}
 
-                <p className="text-manifest-sm text-muted mt-6 max-w-measure leading-relaxed">
+                <p className="text-note text-muted mt-6 max-w-measure">
                   Sent straight to {brand.email}. We use your details only to reply.
                 </p>
               </form>
@@ -274,7 +274,7 @@ export default function ContactSplit() {
               <div className="py-5 border-t border-line">
                 <dt className="text-manifest-sm text-muted">Telephone</dt>
                 <dd className="text-body mt-2">
-                  <a href={`tel:${brand.phoneHref}`} className="text-ink link-draw numeral">
+                  <a href={`tel:${brand.phoneHref}`} className="text-ink link-draw numeral tap">
                     {brand.phone}
                   </a>
                 </dd>
@@ -282,7 +282,7 @@ export default function ContactSplit() {
               <div className="py-5 border-t border-line">
                 <dt className="text-manifest-sm text-muted">Email</dt>
                 <dd className="text-body mt-2">
-                  <a href={`mailto:${brand.email}`} className="text-ink link-draw break-all">
+                  <a href={`mailto:${brand.email}`} className="text-ink link-draw break-all tap">
                     {brand.email}
                   </a>
                 </dd>

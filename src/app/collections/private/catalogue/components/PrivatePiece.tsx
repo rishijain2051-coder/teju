@@ -239,7 +239,7 @@ export default function PrivatePiece({
             ['Volume', carton ? `${carton.cbm.toFixed(2)} CBM · ${carton.per40}/40ft` : '–'],
           ].map(([key, value]) => (
             <div key={key} className="flex gap-3">
-              <dt className="text-manifest-sm text-muted w-24 shrink-0">{key}</dt>
+              <dt className="text-manifest-sm text-muted w-28 lg:w-24 shrink-0">{key}</dt>
               <dd className="text-manifest-sm text-ink-soft numeral">{value}</dd>
             </div>
           ))}

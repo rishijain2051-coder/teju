@@ -28,7 +28,7 @@ export default function SpecList({
       <dl className={`space-y-1 ${className}`}>
         {rows.map((row) => (
           <div key={row.key} className="flex gap-3">
-            <dt className={`text-manifest-sm w-24 shrink-0 ${label}`}>{row.key}</dt>
+            <dt className={`text-manifest-sm w-28 lg:w-24 shrink-0 ${label}`}>{row.key}</dt>
             <dd className={`text-manifest-sm numeral ${invert ? 'text-paper/80' : 'text-ink-soft'}`}>
               {row.value}
             </dd>

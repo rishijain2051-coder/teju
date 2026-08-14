@@ -129,7 +129,7 @@ export default function PrivateCatalogue() {
   }, []);
 
   const control =
-    'text-manifest transition-colors duration-base tap disabled:opacity-40';
+    'text-manifest py-2 transition-colors duration-base tap disabled:opacity-40';
 
   /* Keyed on the coarse filters only. Including the search query would remount
      every plate on each keystroke — the animation is for a deliberate change of
@@ -251,7 +251,7 @@ export default function PrivateCatalogue() {
                 />
               </label>
 
-              <label className="flex items-center gap-2.5">
+              <label className="flex items-center gap-2.5 py-2">
                 <input
                   type="checkbox"
                   checked={onlyNew}
@@ -263,7 +263,7 @@ export default function PrivateCatalogue() {
                 </span>
               </label>
 
-              <label className="flex items-center gap-2.5">
+              <label className="flex items-center gap-2.5 py-2">
                 <span className="text-manifest-sm text-muted">Sort</span>
                 <select
                   value={sort}

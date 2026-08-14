@@ -191,10 +191,9 @@ export const certification = {
      * Printed wherever a claim appears, because FSC's trademark rules require the
      * code to travel with the claim.
      *
-     * BEFORE THIS GOES LIVE: clause 9.5–9.6 of the agreement requires prior
-     * approval from the certification body for every promotional use of the
-     * licensed materials, and a website is promotional use. Send them the FSC
-     * blocks on /craft, /factory and the private catalogue for sign-off.
+     * Placement budget: the certification body has allowed up to ten promotional
+     * placements without prior approval, and approval per use after that. The
+     * count is enforced in `fscPlacements` below rather than left to memory.
      */
     code: 'FSC-C229285',
     holder: 'Vardhman Impex',
@@ -251,3 +250,56 @@ export const certification = {
     ],
   },
 } as const;
+
+/* ── Trademark placement budget ──────────────────────────────────────────── */
+
+/**
+ * The certification body allows ten promotional placements of the licensed FSC
+ * materials before each further use needs prior approval. That makes ten a
+ * budget to spend deliberately, so it is counted here rather than remembered.
+ *
+ * ONE ENTRY = ONE PAGE THAT RENDERS THE MARK.
+ *
+ * A mark placed inside a route template is not one placement. `[collection]`
+ * builds six pages and `[piece]` builds twenty, so a single `FscMark` in either
+ * would spend the entire budget several times over — which is why those
+ * templates render the FSC copy without the artwork, and why the header and
+ * footer carry no mark at all: either would put one on all forty-six routes.
+ *
+ * Enforcement is real, not advisory. `FscMark` will not compile without a
+ * registered `placement`, and `fscPlacementCount` below fails the typecheck on
+ * the eleventh entry.
+ */
+export const FSC_PLACEMENT_LIMIT = 10;
+
+export const fscPlacements = [
+  {
+    id: 'craft-chain-of-custody',
+    route: '/craft',
+    where: 'Certified timber section, beside the chain-of-custody ledger',
+  },
+  {
+    id: 'factory-certification',
+    route: '/factory',
+    where: 'Certification card above the closing call to action',
+  },
+  {
+    id: 'private-certification',
+    route: '/collections/private/catalogue',
+    where: 'Certification and paperwork section, behind the trade access gate',
+  },
+] as const;
+
+export type FscPlacement = (typeof fscPlacements)[number]['id'];
+
+/** 0–10. Any wider and the licence term is being exceeded. */
+type WithinBudget = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+
+/**
+ * Typed against the licence term, so an eleventh placement is a build failure
+ * rather than a compliance problem discovered later. Widen `WithinBudget` only
+ * once the certification body has approved the extra uses in writing.
+ */
+export const fscPlacementCount: WithinBudget = fscPlacements.length;
+
+export const fscPlacementsRemaining = FSC_PLACEMENT_LIMIT - fscPlacements.length;

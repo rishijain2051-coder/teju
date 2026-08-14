@@ -75,7 +75,7 @@ export default function CraftPage() {
                 className="object-cover"
               />
             </div>
-            <p className="text-manifest-sm text-muted mt-4 rise">
+            <p className="text-note text-muted mt-4 rise">
               Sliding barn-door cabinet, iron track fitted at the frame bench · Boranada
             </p>
           </section>
@@ -153,7 +153,7 @@ export default function CraftPage() {
                 title={<>Certified <span className="italic text-timber">timber</span></>}
               />
               <div className="mt-12 lg:mt-16">
-                <FscPanel invert />
+                <FscPanel invert placement="craft-chain-of-custody" />
               </div>
             </div>
           </section>

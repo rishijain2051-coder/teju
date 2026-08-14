@@ -108,7 +108,7 @@ export default async function PiecePage({ params }: Params) {
                       className="object-cover"
                     />
                   </div>
-                  <p className="text-manifest-sm text-muted mt-4 rise">{plate.alt}</p>
+                  <p className="text-note text-muted mt-4 rise">{plate.alt}</p>
                 </div>
 
                 {/* Record */}
@@ -158,7 +158,7 @@ export default async function PiecePage({ params }: Params) {
                   <div className="mt-10 rise">
                     <p className="text-manifest-sm text-muted mb-5">Enquire on this design</p>
                     <PieceEnquiry piece={piece} />
-                    <p className="text-manifest-sm text-muted mt-5 max-w-measure leading-relaxed">
+                    <p className="text-note text-muted mt-5 max-w-measure">
                       Packed carton size, CBM and container counts are issued with the quotation, or
                       in full to verified trade buyers.
                     </p>

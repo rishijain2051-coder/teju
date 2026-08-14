@@ -95,7 +95,7 @@ export default function PrivateProgramme() {
           </header>
 
           <div className="mt-12 lg:mt-16">
-            <FscPanel invert />
+            <FscPanel invert placement="private-certification" />
           </div>
 
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-16 lg:mt-20 pt-10 border-t border-line-invert">
@@ -116,7 +116,7 @@ export default function PrivateProgramme() {
 
             <div className="lg:col-span-6 lg:col-start-7 rise">
               <SpecList rows={DOCUMENTS} invert />
-              <p className="text-manifest-sm text-paper/45 mt-6 leading-relaxed">{packingNote}</p>
+              <p className="text-note text-paper/60 mt-6">{packingNote}</p>
             </div>
           </div>
         </div>

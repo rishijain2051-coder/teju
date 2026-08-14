@@ -103,7 +103,7 @@ export default function ExclusiveAccess() {
 
             <p className="text-manifest-sm text-paper/50 mt-8 rise">
               Already verified?{' '}
-              <Link href="/collections/private" className="text-timber link-draw">
+              <Link href="/collections/private" className="text-timber link-draw tap">
                 Enter your access code
               </Link>
             </p>
@@ -120,7 +120,7 @@ export default function ExclusiveAccess() {
                 </h3>
                 <p className="text-body text-paper/70 mt-4">
                   You&apos;ll hear back within two working days. Anything urgent, write to{' '}
-                  <a href={`mailto:${brand.email}`} className="text-timber link-draw">
+                  <a href={`mailto:${brand.email}`} className="text-timber link-draw tap">
                     {brand.email}
                   </a>
                   .
@@ -256,7 +256,7 @@ export default function ExclusiveAccess() {
                   </p>
                 )}
 
-                <p className="text-manifest-sm text-paper/45 mt-6 max-w-measure leading-relaxed">
+                <p className="text-note text-paper/60 mt-6 max-w-measure">
                   We use these details only to verify your business, never a marketing list.
                 </p>
               </form>

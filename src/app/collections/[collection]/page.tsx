@@ -189,7 +189,7 @@ export default async function CollectionPage({ params }: Params) {
                   The mark belongs on /craft and /factory, where the claim is set
                   out in full. */}
               <div className="rise">
-                <FscPanel variant="brief" mark={false} />
+                <FscPanel variant="brief" />
               </div>
             </div>
           </section>

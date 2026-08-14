@@ -1,5 +1,5 @@
 import React from 'react';
-import { certification } from '@/lib/works';
+import { certification, type FscPlacement } from '@/lib/works';
 
 const { fsc } = certification;
 
@@ -37,6 +37,13 @@ const MARKS = {
 } as const;
 
 interface FscMarkProps {
+  /**
+   * Which registered placement this is. Required, and typed to the registry in
+   * works.ts: the licence allows ten placements before each further use needs
+   * approval, so a mark cannot be dropped in without spending a budgeted slot.
+   * Adding one means registering it, and the eleventh fails the typecheck.
+   */
+  placement: FscPlacement;
   variant?: keyof typeof MARKS;
   /** Rendered height in px. Kept above the point where the code stops being
    *  readable — an illegible licence code is the same as no licence code. */
@@ -48,6 +55,7 @@ interface FscMarkProps {
 const MIN_HEIGHT = { panel: 180, tree: 56 };
 
 export default function FscMark({
+  placement,
   variant = 'panel',
   height,
   ground = 'light',
@@ -61,6 +69,9 @@ export default function FscMark({
     <img
       src={mark.src}
       alt={mark.alt}
+      /* The registered placement id, so an audit of the rendered HTML can count
+         and locate every use of the licensed artwork without reading the source. */
+      data-fsc-placement={placement}
       width={width}
       height={drawn}
       /* Intrinsic ratio is fixed by the artwork; never let a flex parent squash it. */

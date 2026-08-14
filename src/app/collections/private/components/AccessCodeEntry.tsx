@@ -118,11 +118,11 @@ export default function AccessCodeEntry() {
 
           <p className="text-body text-muted mt-10 rise" style={{ transitionDelay: '420ms' }}>
             No code yet?{' '}
-            <Link href="/collections#access" className="text-clay link-draw">
+            <Link href="/collections#access" className="text-clay link-draw tap">
               Request trade access
             </Link>
             , or write to{' '}
-            <a href={`mailto:${brand.email}`} className="text-clay link-draw">
+            <a href={`mailto:${brand.email}`} className="text-clay link-draw tap">
               {brand.email}
             </a>
             .
@@ -131,7 +131,10 @@ export default function AccessCodeEntry() {
 
         <Link
           href="/collections"
-          className="link-arrow inline-flex items-center gap-2.5 text-manifest text-muted hover:text-ink transition-colors duration-base self-start"
+          /* `py-2` rather than `.tap`: this is the only way back off the gate, so
+             the hit area belongs in the box itself rather than in a pseudo-element
+             that a neighbour could win. */
+          className="link-arrow inline-flex items-center gap-2.5 py-2 text-manifest text-muted hover:text-ink transition-colors duration-base self-start"
         >
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true" style={{ transform: 'rotate(180deg)' }}>
             <path d="M5 12h14M12 5l7 7-7 7" />

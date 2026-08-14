@@ -1,6 +1,6 @@
 import React from 'react';
 import FscMark from '@/components/ui/FscMark';
-import { certification } from '@/lib/works';
+import { certification, type FscPlacement } from '@/lib/works';
 
 const { fsc } = certification;
 
@@ -9,26 +9,29 @@ interface FscPanelProps {
   variant?: 'full' | 'brief';
   invert?: boolean;
   /**
-   * Whether to show the licensed panel artwork. On where certification is
-   * actually explained; off where the block is only a pointer to it, so the mark
-   * stays meaningful rather than becoming wallpaper on every page.
+   * The registered placement this panel's artwork occupies, or omitted to render
+   * the copy without the mark.
+   *
+   * A boolean used to sit here, which made it far too easy to switch the artwork
+   * on inside a route template and quietly turn one placement into twenty. An id
+   * from the registry cannot be reused for a second page, so the budget stays
+   * honest.
    */
-  mark?: boolean;
+  placement?: FscPlacement;
 }
 
 /**
- * The FSC block.
+ * The FSC block: the position, the three claims, the custody chain, and — on a
+ * registered placement — the licensed artwork.
  *
- * No FSC logo artwork here on purpose. FSC's trademark rules only permit the
- * marks alongside the holder's own licence code, so the certificate number in
- * `certification.fsc.code` gates the whole identity line: fill it in and the
- * code prints wherever a claim appears, leave it empty and the site states the
- * certification in words and prints nothing it cannot substantiate.
+ * The licence code gates the identity line. FSC only permits the marks alongside
+ * the holder's own code, so an empty `certification.fsc.code` makes the panel
+ * state the certification in words and print nothing it cannot substantiate.
  */
 export default function FscPanel({
   variant = 'full',
   invert = false,
-  mark = true,
+  placement,
 }: FscPanelProps) {
   const line = invert ? 'border-line-invert' : 'border-line';
   const lead = invert ? 'text-paper/70' : 'text-muted';
@@ -54,7 +57,9 @@ export default function FscPanel({
           )}
         </div>
 
-        {mark && <FscMark variant="panel" height={200} ground={invert ? 'dark' : 'light'} />}
+        {placement && (
+          <FscMark placement={placement} variant="panel" height={200} ground={invert ? 'dark' : 'light'} />
+        )}
       </div>
     );
   }
@@ -101,8 +106,9 @@ export default function FscPanel({
         {/* The licensed panel itself, unaltered. Its strapline — "Ask for our
             FSC-certified materials" — is FSC's own wording and happens to say
             exactly what the heading above it says. */}
-        {mark && (
+        {placement && (
           <FscMark
+            placement={placement}
             variant="panel"
             height={230}
             ground={invert ? 'dark' : 'light'}
