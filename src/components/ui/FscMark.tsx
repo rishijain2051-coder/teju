@@ -66,6 +66,10 @@ export default function FscMark({
   const width = Math.round((mark.width / mark.height) * drawn);
 
   const image = (
+    /* eslint-disable-next-line @next/next/no-img-element --
+       Deliberate. `next/image` re-encodes and may resize what it serves, and
+       clause 9.4 of the trademark licence makes any amendment of the licensed
+       materials a breach. These SVGs must reach the browser byte-identical. */
     <img
       src={mark.src}
       alt={mark.alt}
@@ -81,9 +85,7 @@ export default function FscMark({
   );
 
   if (ground === 'dark') {
-    return (
-      <div className={`inline-block bg-paper-warm p-5 ${className}`}>{image}</div>
-    );
+    return <div className={`inline-block bg-paper-warm p-5 ${className}`}>{image}</div>;
   }
 
   return <div className={`inline-block ${className}`}>{image}</div>;

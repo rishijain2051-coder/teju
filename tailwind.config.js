@@ -114,5 +114,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  // No plugins. Typography was registered but no `prose` class exists anywhere
+  // in the source, and forms was never registered at all.
+  plugins: [],
 };

@@ -87,7 +87,10 @@ export default function TrustSection() {
           </h2>
         </header>
 
-        <div data-reveal-group className="grid grid-cols-2 lg:grid-cols-5 gap-x-6 lg:gap-x-8 mt-12 lg:mt-16">
+        <div
+          data-reveal-group
+          className="grid grid-cols-2 lg:grid-cols-5 gap-x-6 lg:gap-x-8 mt-12 lg:mt-16"
+        >
           {stats.map((stat) => (
             <Stat key={stat.label} stat={stat} />
           ))}

@@ -71,12 +71,41 @@ export interface Capability {
 }
 
 export const capabilities: Capability[] = [
-  { index: '01', title: 'One factory, start to finish', detail: 'Sawing, joinery, carving, finishing and packing all happen under our own roof in Boranada. Nothing is subcontracted, so nothing drifts.' },
-  { index: '02', title: 'Low minimums, honestly quoted', detail: 'Mixed containers and small first orders are normal here. We would rather start small and grow than quote a minimum you cannot use.' },
-  { index: '03', title: 'FSC timber on request', detail: 'Certified sustainable stock is available across the mango and reclaimed ranges when your market asks for the paperwork.' },
-  { index: '04', title: 'Private label and custom finishes', detail: 'Your specification, your finish, your label. Sampling runs before the production floor commits.' },
-  { index: '05', title: 'Export documentation handled', detail: 'Nine destination markets and the paperwork that comes with each. Lead times we quote are lead times we hold.' },
-  { index: '06', title: 'A catalogue that keeps moving', detail: `Over ${facts.designs} live designs, with new work added each season from our own drawing floor.` },
+  {
+    index: '01',
+    title: 'One factory, start to finish',
+    detail:
+      'Sawing, joinery, carving, finishing and packing all happen under our own roof in Boranada. Nothing is subcontracted, so nothing drifts.',
+  },
+  {
+    index: '02',
+    title: 'Low minimums, honestly quoted',
+    detail:
+      'Mixed containers and small first orders are normal here. We would rather start small and grow than quote a minimum you cannot use.',
+  },
+  {
+    index: '03',
+    title: 'FSC timber on request',
+    detail:
+      'Certified sustainable stock is available across the mango and reclaimed ranges when your market asks for the paperwork.',
+  },
+  {
+    index: '04',
+    title: 'Private label and custom finishes',
+    detail:
+      'Your specification, your finish, your label. Sampling runs before the production floor commits.',
+  },
+  {
+    index: '05',
+    title: 'Export documentation handled',
+    detail:
+      'Nine destination markets and the paperwork that comes with each. Lead times we quote are lead times we hold.',
+  },
+  {
+    index: '06',
+    title: 'A catalogue that keeps moving',
+    detail: `Over ${facts.designs} live designs, with new work added each season from our own drawing floor.`,
+  },
 ];
 
 export const stats = [

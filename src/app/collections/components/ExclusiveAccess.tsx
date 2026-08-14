@@ -61,9 +61,8 @@ export default function ExclusiveAccess() {
     setErrorMsg(result.error ?? 'Something went wrong.');
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const field =
     'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-base';
@@ -75,13 +74,19 @@ export default function ExclusiveAccess() {
           {/* Explanation */}
           <div className="lg:col-span-5">
             <p className="text-manifest text-timber rise">Trade access</p>
-            <h2 className="font-serif text-display-sm font-light mt-6 rise" style={{ transitionDelay: '80ms' }}>
+            <h2
+              className="font-serif text-display-sm font-light mt-6 rise"
+              style={{ transitionDelay: '80ms' }}
+            >
               The rest of the <span className="italic">catalogue</span>
             </h2>
-            <p className="text-lead text-paper/70 mt-6 max-w-measure rise" style={{ transitionDelay: '160ms' }}>
-              What is shown publicly is an introduction: {publicCount} designs of{' '}
-              {facts.designs}+ in the range. The trade catalogue carries {privateCount} live
-              designs and the figures you need to plan a container.
+            <p
+              className="text-lead text-paper/70 mt-6 max-w-measure rise"
+              style={{ transitionDelay: '160ms' }}
+            >
+              What is shown publicly is an introduction: {publicCount} designs of {facts.designs}+
+              in the range. The trade catalogue carries {privateCount} live designs and the figures
+              you need to plan a container.
             </p>
 
             <ul className="mt-10 rise" style={{ transitionDelay: '240ms' }}>
@@ -115,9 +120,7 @@ export default function ExclusiveAccess() {
               /* `filter-swap`, not `rise` — mounts on submit; see ContactSplit. */
               <div className="border border-line-invert p-8 lg:p-10 filter-swap">
                 <p className="text-manifest text-timber">Request sent</p>
-                <h3 className="text-title mt-4">
-                  We verify each trade account by hand.
-                </h3>
+                <h3 className="text-title mt-4">We verify each trade account by hand.</h3>
                 <p className="text-body text-paper/70 mt-4">
                   You&apos;ll hear back within two working days. Anything urgent, write to{' '}
                   <a href={`mailto:${brand.email}`} className="text-timber link-draw tap">
@@ -127,7 +130,11 @@ export default function ExclusiveAccess() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="relative rise" style={{ transitionDelay: '120ms' }}>
+              <form
+                onSubmit={handleSubmit}
+                className="relative rise"
+                style={{ transitionDelay: '120ms' }}
+              >
                 <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7">
                   <div className="sm:col-span-2">
                     <label htmlFor="company" className="text-manifest-sm text-paper/55">
@@ -234,7 +241,15 @@ export default function ExclusiveAccess() {
                   >
                     {state === 'sending' ? 'Sending…' : 'Request access'}
                     {state !== 'sending' && (
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        aria-hidden="true"
+                      >
                         <path d="M5 12h14M12 5l7 7-7 7" />
                       </svg>
                     )}

@@ -34,7 +34,10 @@ export default function PageHeader({ eyebrow, title, lead, meta, children }: Pag
         </h1>
 
         {lead && (
-          <p className="text-lead text-ink-soft max-w-measure mt-7 rise" style={{ transitionDelay: '300ms' }}>
+          <p
+            className="text-lead text-ink-soft max-w-measure mt-7 rise"
+            style={{ transitionDelay: '300ms' }}
+          >
             {lead}
           </p>
         )}

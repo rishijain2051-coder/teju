@@ -128,8 +128,7 @@ export default function PrivateCatalogue() {
     setOpenDossiers((prev) => ({ ...prev, [pieceRef]: !prev[pieceRef] }));
   }, []);
 
-  const control =
-    'text-manifest py-2 transition-colors duration-base tap disabled:opacity-40';
+  const control = 'text-manifest py-2 transition-colors duration-base tap disabled:opacity-40';
 
   /* Keyed on the coarse filters only. Including the search query would remount
      every plate on each keystroke — the animation is for a deliberate change of
@@ -371,11 +370,7 @@ export default function PrivateCatalogue() {
         <PrivateProgramme />
       </main>
 
-      <ContainerPlan
-        pieces={allPieces}
-        quantities={quantities}
-        onClear={() => setQuantities({})}
-      />
+      <ContainerPlan pieces={allPieces} quantities={quantities} onClear={() => setQuantities({})} />
     </div>
   );
 }

@@ -17,13 +17,21 @@ export default function NotFound() {
                 This page has <span className="italic">shipped.</span>
               </h1>
               <p className="text-lead text-ink-soft max-w-measure mt-7">
-                The address you followed does not lead anywhere on this site. It may
-                have moved, or it may never have existed.
+                The address you followed does not lead anywhere on this site. It may have moved, or
+                it may never have existed.
               </p>
               <div className="flex flex-wrap gap-3 mt-10">
                 <Link href="/" className="btn btn-solid">
                   Back to the front
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    aria-hidden="true"
+                  >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </Link>

@@ -15,12 +15,7 @@ import { type CatalogueKey } from './imagery';
  */
 
 export type CollectionName =
-  | 'Living'
-  | 'Storage'
-  | 'Dining'
-  | 'Bedroom'
-  | 'Hospitality'
-  | 'Occasional';
+  'Living' | 'Storage' | 'Dining' | 'Bedroom' | 'Hospitality' | 'Occasional';
 
 /** URL-safe slug from a display name. Kept for both collections and pieces so
  *  a route never has to carry a second, hand-maintained list of identifiers. */

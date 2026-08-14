@@ -84,7 +84,13 @@ export default function CraftPage() {
               images in a column reads as a gallery, and the copy is the point. */}
           <section className="py-20 lg:py-32">
             <div className="shell">
-              <SectionHead title={<>From board to <span className="italic">carton</span></>} />
+              <SectionHead
+                title={
+                  <>
+                    From board to <span className="italic">carton</span>
+                  </>
+                }
+              />
 
               <ol data-reveal-group className="mt-12 lg:mt-16">
                 {craftStages.map((stage) => {
@@ -131,7 +137,13 @@ export default function CraftPage() {
           {/* Materials */}
           <section className="py-20 lg:py-32 bg-paper-deep">
             <div className="shell">
-              <SectionHead title={<>What we <span className="italic">build with</span></>} />
+              <SectionHead
+                title={
+                  <>
+                    What we <span className="italic">build with</span>
+                  </>
+                }
+              />
 
               <div data-reveal-group className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mt-12 lg:mt-16">
                 {MATERIALS.map((material) => (
@@ -150,7 +162,11 @@ export default function CraftPage() {
             <div className="shell relative z-10">
               <SectionHead
                 invert
-                title={<>Certified <span className="italic text-timber">timber</span></>}
+                title={
+                  <>
+                    Certified <span className="italic text-timber">timber</span>
+                  </>
+                }
               />
               <div className="mt-12 lg:mt-16">
                 <FscPanel invert placement="craft-chain-of-custody" />
@@ -172,7 +188,15 @@ export default function CraftPage() {
                   </Link>
                   <Link href="/factory" className="btn btn-solid">
                     Inside the factory
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      aria-hidden="true"
+                    >
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>

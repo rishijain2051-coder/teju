@@ -56,9 +56,9 @@ export default function HeroSection() {
               className="text-lead text-ink-soft max-w-measure mt-5 lg:mt-7 rise"
               style={{ transitionDelay: '520ms' }}
             >
-              Solid mango and reclaimed hardwood, cut, carved and finished on our own
-              floor in Boranada, then packed into containers bound for nine countries.
-              Low minimums. Honest lead times. One set of hands from log to lorry.
+              Solid mango and reclaimed hardwood, cut, carved and finished on our own floor in
+              Boranada, then packed into containers bound for nine countries. Low minimums. Honest
+              lead times. One set of hands from log to lorry.
             </p>
 
             <div
@@ -67,7 +67,15 @@ export default function HeroSection() {
             >
               <Link href="/collections" className="btn btn-solid">
                 View the collections
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  aria-hidden="true"
+                >
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </Link>
@@ -99,7 +107,9 @@ export default function HeroSection() {
                     page. The `aria-label` still names each plate. */}
                 <span
                   className={`block h-px w-16 origin-left transition-[transform,background-color] duration-base ease-out ${
-                    i === active ? 'scale-x-100 bg-ink' : 'scale-x-[0.45] bg-line-strong group-hover:bg-ink'
+                    i === active
+                      ? 'scale-x-100 bg-ink'
+                      : 'scale-x-[0.45] bg-line-strong group-hover:bg-ink'
                   }`}
                 />
               </button>

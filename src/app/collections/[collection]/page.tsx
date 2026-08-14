@@ -100,7 +100,11 @@ export default async function CollectionPage({ params }: Params) {
             <section className="py-20 lg:py-32">
               <div className="shell">
                 <SectionHead
-                  title={<>How a programme <span className="italic">runs</span></>}
+                  title={
+                    <>
+                      How a programme <span className="italic">runs</span>
+                    </>
+                  }
                 />
 
                 <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-12 lg:mt-16">
@@ -119,9 +123,7 @@ export default async function CollectionPage({ params }: Params) {
                         {/* Upright, matching the home page pull quote. The
                             quotation marks mark it as speech; italic on top of
                             them is the same signal twice. */}
-                        <p className="text-title leading-[1.45]">
-                          &ldquo;{reference.quote}&rdquo;
-                        </p>
+                        <p className="text-title leading-[1.45]">&ldquo;{reference.quote}&rdquo;</p>
                         <footer className="mt-5">
                           <p className="text-manifest text-ink">{reference.author}</p>
                           <p className="text-manifest-sm text-muted mt-1">
@@ -138,10 +140,7 @@ export default async function CollectionPage({ params }: Params) {
                     <p className="text-manifest-sm text-muted rise">
                       Representative builds, specified rather than stocked
                     </p>
-                    <div
-                      data-reveal-group
-                      className="grid sm:grid-cols-2 gap-x-6 gap-y-12 mt-6"
-                    >
+                    <div data-reveal-group className="grid sm:grid-cols-2 gap-x-6 gap-y-12 mt-6">
                       {shown.map((piece) => (
                         <PieceCard
                           key={piece.ref}
@@ -159,7 +158,11 @@ export default async function CollectionPage({ params }: Params) {
             <section className="py-20 lg:py-32">
               <div className="shell">
                 <SectionHead
-                  title={<>In this <span className="italic">collection</span></>}
+                  title={
+                    <>
+                      In this <span className="italic">collection</span>
+                    </>
+                  }
                   href="/collections"
                   linkLabel="All collections"
                 />
@@ -197,7 +200,13 @@ export default async function CollectionPage({ params }: Params) {
           {/* Sideways navigation between collections. */}
           <section className="pb-20 lg:pb-32 bg-paper-deep pt-20 lg:pt-28">
             <div className="shell">
-              <SectionHead title={<>Other <span className="italic">collections</span></>} />
+              <SectionHead
+                title={
+                  <>
+                    Other <span className="italic">collections</span>
+                  </>
+                }
+              />
 
               <ul data-reveal-group className="mt-10">
                 {others.map((entry) => (
@@ -224,7 +233,15 @@ export default async function CollectionPage({ params }: Params) {
                 </p>
                 <Link href="/collections#access" className="btn btn-solid shrink-0">
                   Request catalogue access
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    aria-hidden="true"
+                  >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </Link>

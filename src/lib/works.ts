@@ -96,12 +96,28 @@ export interface FloorArea {
 
 /** Sums to the 9,000 sq.mt in `facts.factory`. Keep it that way. */
 export const floorAreas: FloorArea[] = [
-  { name: 'Timber yard & kiln', size: '2,100 sq.mt', detail: 'Open stacks, tagged certified stock, two kiln chambers.' },
+  {
+    name: 'Timber yard & kiln',
+    size: '2,100 sq.mt',
+    detail: 'Open stacks, tagged certified stock, two kiln chambers.',
+  },
   { name: 'Machine shop', size: '1,600 sq.mt', detail: 'Sawing, planing, thicknessing, moulding.' },
-  { name: 'Joinery & assembly', size: '2,400 sq.mt', detail: 'Frame benches, dry-fit bays, clamping.' },
-  { name: 'Carving & surface work', size: '1,100 sq.mt', detail: 'Chisel benches, parquet laying, tile setting.' },
+  {
+    name: 'Joinery & assembly',
+    size: '2,400 sq.mt',
+    detail: 'Frame benches, dry-fit bays, clamping.',
+  },
+  {
+    name: 'Carving & surface work',
+    size: '1,100 sq.mt',
+    detail: 'Chisel benches, parquet laying, tile setting.',
+  },
   { name: 'Finishing', size: '1,000 sq.mt', detail: 'Spray booths, curing racks, wax bench.' },
-  { name: 'Inspection, packing & loading', size: '800 sq.mt', detail: 'Assembly check, carton line, container bay.' },
+  {
+    name: 'Inspection, packing & loading',
+    size: '800 sq.mt',
+    detail: 'Assembly check, carton line, container bay.',
+  },
 ];
 
 export interface TimelineStep {
@@ -114,37 +130,44 @@ export const orderTimeline: TimelineStep[] = [
   {
     when: 'Day 0',
     title: 'Enquiry and quotation',
-    detail: 'Specification in, price and lead time out. If a date cannot be held, it is not quoted.',
+    detail:
+      'Specification in, price and lead time out. If a date cannot be held, it is not quoted.',
   },
   {
     when: 'Day 3–10',
     title: 'Sample or drawing sign-off',
-    detail: 'One approval sample for a new design or a contract programme. It is retained and becomes the reference for colour and finish.',
+    detail:
+      'One approval sample for a new design or a contract programme. It is retained and becomes the reference for colour and finish.',
   },
   {
     when: 'Week 2',
     title: 'Timber released',
-    detail: 'Stock selected against the works order and released from the yard. Certification claims are recorded here, at the stack.',
+    detail:
+      'Stock selected against the works order and released from the yard. Certification claims are recorded here, at the stack.',
   },
   {
     when: 'Week 3–5',
     title: 'Joinery and surface work',
-    detail: 'Carcasses framed and squared while fronts run in parallel on the carving, parquet and tile benches.',
+    detail:
+      'Carcasses framed and squared while fronts run in parallel on the carving, parquet and tile benches.',
   },
   {
     when: 'Week 6',
     title: 'Finishing',
-    detail: 'Coats and cure times, matched to the retained sample. The one stage that cannot be compressed by adding people.',
+    detail:
+      'Coats and cure times, matched to the retained sample. The one stage that cannot be compressed by adding people.',
   },
   {
     when: 'Week 7',
     title: 'Inspection and packing',
-    detail: 'Every unit assembled and checked, then packed with three centimetres of protection per face.',
+    detail:
+      'Every unit assembled and checked, then packed with three centimetres of protection per face.',
   },
   {
     when: 'Week 8–9',
     title: 'Container loaded, documents issued',
-    detail: 'Loaded by hand to a plan drawn before anything moves. Paperwork is issued against what went in, not what was ordered.',
+    detail:
+      'Loaded by hand to a plan drawn before anything moves. Paperwork is issued against what went in, not what was ordered.',
   },
 ];
 

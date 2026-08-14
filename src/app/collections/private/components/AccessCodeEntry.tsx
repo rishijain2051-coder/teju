@@ -69,8 +69,8 @@ export default function AccessCodeEntry() {
           </h1>
 
           <p className="text-lead text-ink-soft mt-6 rise" style={{ transitionDelay: '260ms' }}>
-            The full range of {facts.designs}+ designs is held for verified trade
-            buyers. Enter the code we issued you.
+            The full range of {facts.designs}+ designs is held for verified trade buyers. Enter the
+            code we issued you.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-10 rise" style={{ transitionDelay: '340ms' }}>
@@ -109,7 +109,15 @@ export default function AccessCodeEntry() {
             >
               {state === 'loading' ? 'Checking…' : 'Enter'}
               {state !== 'loading' && (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  aria-hidden="true"
+                >
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               )}
@@ -136,7 +144,16 @@ export default function AccessCodeEntry() {
              that a neighbour could win. */
           className="link-arrow inline-flex items-center gap-2.5 py-2 text-manifest text-muted hover:text-ink transition-colors duration-base self-start"
         >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true" style={{ transform: 'rotate(180deg)' }}>
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            aria-hidden="true"
+            style={{ transform: 'rotate(180deg)' }}
+          >
             <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
           Back to the public collections

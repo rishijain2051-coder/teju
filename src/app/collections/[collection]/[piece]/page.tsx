@@ -78,13 +78,19 @@ export default async function PiecePage({ params }: Params) {
               <nav aria-label="Breadcrumb" className="veil">
                 <ol className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1 text-manifest-sm text-muted">
                   <li>
-                    <Link href="/collections" className="hover:text-clay transition-colors duration-base tap">
+                    <Link
+                      href="/collections"
+                      className="hover:text-clay transition-colors duration-base tap"
+                    >
                       Collections
                     </Link>
                   </li>
                   <li aria-hidden="true">/</li>
                   <li>
-                    <Link href={collection.href} className="hover:text-clay transition-colors duration-base tap">
+                    <Link
+                      href={collection.href}
+                      className="hover:text-clay transition-colors duration-base tap"
+                    >
                       {collection.name}
                     </Link>
                   </li>
@@ -173,7 +179,10 @@ export default async function PiecePage({ params }: Params) {
           {/* A single detail band: the same photograph, cropped tight. Honest —
               there is one photograph of each design, and pretending otherwise
               with a fabricated gallery would misrepresent the range. */}
-          <section aria-hidden="true" className="relative h-[45vh] lg:h-[60vh] overflow-hidden bg-paper-deep">
+          <section
+            aria-hidden="true"
+            className="relative h-[45vh] lg:h-[60vh] overflow-hidden bg-paper-deep"
+          >
             <AppImage
               src={plate.src}
               alt=""
@@ -205,7 +214,15 @@ export default async function PiecePage({ params }: Params) {
                   </p>
                   <Link href="/craft" className="btn btn-ghost mt-8 rise">
                     The eight stages
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      aria-hidden="true"
+                    >
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>
@@ -232,7 +249,11 @@ export default async function PiecePage({ params }: Params) {
             <section className="py-20 lg:py-28 bg-paper-deep">
               <div className="shell">
                 <SectionHead
-                  title={<>Also in the <span className="italic">range</span></>}
+                  title={
+                    <>
+                      Also in the <span className="italic">range</span>
+                    </>
+                  }
                   href={collection.href}
                   linkLabel={`All ${collection.name.toLowerCase()}`}
                 />

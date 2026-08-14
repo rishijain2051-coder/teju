@@ -217,7 +217,15 @@ export default function ContactSplit() {
                   >
                     {state === 'sending' ? 'Sending…' : 'Send enquiry'}
                     {state !== 'sending' && (
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        aria-hidden="true"
+                      >
                         <path d="M5 12h14M12 5l7 7-7 7" />
                       </svg>
                     )}
@@ -289,9 +297,7 @@ export default function ContactSplit() {
               </div>
               <div className="py-5 border-y border-line">
                 <dt className="text-manifest-sm text-muted">Hours</dt>
-                <dd className="text-body text-ink mt-2 numeral">
-                  Mon–Sat, 09:30–18:30 IST
-                </dd>
+                <dd className="text-body text-ink mt-2 numeral">Mon–Sat, 09:30–18:30 IST</dd>
               </div>
             </dl>
           </div>

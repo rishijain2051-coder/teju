@@ -52,7 +52,10 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
   const fields = (): EnquiryField[] => [
     { label: 'Selection', value: `${selection.rows.length} designs, ${selection.units} pieces` },
     { label: 'Indicative volume', value: `${cbm.toFixed(2)} CBM` },
-    { label: 'Container', value: `${twenty.toFixed(2)} × 20 ft, or ${forty.toFixed(2)} × 40 ft HQ` },
+    {
+      label: 'Container',
+      value: `${twenty.toFixed(2)} × 20 ft, or ${forty.toFixed(2)} × 40 ft HQ`,
+    },
     ...selection.rows.map((row) => ({
       label: row.piece.ref,
       value: `${row.qty} × ${row.piece.name} (${row.piece.collection}) · ${row.cbm.toFixed(2)} CBM`,
@@ -119,7 +122,11 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
 
     const csv = [header.map(escape).join(','), ...rows, totals].join('\r\n');
 
-    const blob = new Blob([`﻿${csv}`], { type: 'text/csv;charset=utf-8' });
+    /* Leading BOM, written as an escape rather than a literal: Excel needs it to
+       read the file as UTF-8 (without it, "×" and "—" arrive as mojibake), and as
+       an invisible character in source it was one stray editor save away from
+       vanishing silently. */
+    const blob = new Blob([`\ufeff${csv}`], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -248,9 +255,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                   .
                 </p>
               )}
-              <p className="text-note text-paper/55">
-                Indicative. {packingNote}
-              </p>
+              <p className="text-note text-paper/55">Indicative. {packingNote}</p>
             </div>
           </div>
         )}

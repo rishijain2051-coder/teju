@@ -89,7 +89,13 @@ export default function FactoryPage() {
           {/* The floor, area by area. A plan, set as a manifest. */}
           <section className="py-20 lg:py-32">
             <div className="shell">
-              <SectionHead title={<>The <span className="italic">floor</span></>} />
+              <SectionHead
+                title={
+                  <>
+                    The <span className="italic">floor</span>
+                  </>
+                }
+              />
 
               <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-12 lg:mt-16">
                 <div className="lg:col-span-7">
@@ -103,7 +109,9 @@ export default function FactoryPage() {
                           <h3 className="text-title">{area.name}</h3>
                           <p className="text-body text-muted mt-1">{area.detail}</p>
                         </div>
-                        <span className="text-manifest text-clay numeral shrink-0">{area.size}</span>
+                        <span className="text-manifest text-clay numeral shrink-0">
+                          {area.size}
+                        </span>
                       </li>
                     ))}
                     <li className="flex items-baseline justify-between gap-8 py-5 border-y border-line-strong rise">
@@ -137,7 +145,11 @@ export default function FactoryPage() {
           <section className="py-20 lg:py-32 bg-paper-deep">
             <div className="shell">
               <SectionHead
-                title={<>Order to <span className="italic">container</span></>}
+                title={
+                  <>
+                    Order to <span className="italic">container</span>
+                  </>
+                }
               />
               <p className="text-lead text-ink-soft max-w-measure mt-8 rise">
                 Forty-five to sixty days is the figure we quote, and this is where it goes. Buyers
@@ -154,7 +166,9 @@ export default function FactoryPage() {
                       {step.when}
                     </span>
                     <h3 className="sm:col-span-4 text-title">{step.title}</h3>
-                    <p className="sm:col-span-6 text-body text-muted max-w-measure">{step.detail}</p>
+                    <p className="sm:col-span-6 text-body text-muted max-w-measure">
+                      {step.detail}
+                    </p>
                   </li>
                 ))}
               </ol>
@@ -166,7 +180,11 @@ export default function FactoryPage() {
             <div className="shell relative z-10">
               <SectionHead
                 invert
-                title={<>What the floor <span className="italic text-timber">gives you</span></>}
+                title={
+                  <>
+                    What the floor <span className="italic text-timber">gives you</span>
+                  </>
+                }
               />
 
               <ul data-reveal-group className="grid lg:grid-cols-2 gap-x-16 mt-12 lg:mt-16">
@@ -206,7 +224,13 @@ export default function FactoryPage() {
           {/* Export */}
           <section className="py-20 lg:py-32">
             <div className="shell">
-              <SectionHead title={<>Export &amp; <span className="italic">logistics</span></>} />
+              <SectionHead
+                title={
+                  <>
+                    Export &amp; <span className="italic">logistics</span>
+                  </>
+                }
+              />
 
               <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-12 lg:mt-16">
                 <div className="lg:col-span-6">
@@ -256,7 +280,15 @@ export default function FactoryPage() {
                   </p>
                   <Link href="/craft#fsc" className="btn btn-ghost mt-8 rise">
                     How the claim is kept intact
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      aria-hidden="true"
+                    >
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>
@@ -282,7 +314,15 @@ export default function FactoryPage() {
                   </Link>
                   <Link href="/contact" className="btn btn-solid">
                     Talk to the factory
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      aria-hidden="true"
+                    >
                       <path d="M5 12h14M12 5l7 7-7 7" />
                     </svg>
                   </Link>

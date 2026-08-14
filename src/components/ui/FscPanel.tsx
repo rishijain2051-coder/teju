@@ -28,11 +28,7 @@ interface FscPanelProps {
  * the holder's own code, so an empty `certification.fsc.code` makes the panel
  * state the certification in words and print nothing it cannot substantiate.
  */
-export default function FscPanel({
-  variant = 'full',
-  invert = false,
-  placement,
-}: FscPanelProps) {
+export default function FscPanel({ variant = 'full', invert = false, placement }: FscPanelProps) {
   const line = invert ? 'border-line-invert' : 'border-line';
   const lead = invert ? 'text-paper/70' : 'text-muted';
   const accent = invert ? 'text-timber' : 'text-clay';
@@ -48,17 +44,20 @@ export default function FscPanel({
         <div className="flex-1 min-w-[16rem]">
           <p className={`text-manifest ${accent}`}>Certified timber</p>
           <p className={`text-body ${body} mt-3 max-w-measure`}>
-            FSC-certified stock is available across the mango and reclaimed ranges when your
-            market needs the paperwork. The claim and our certificate code travel on the
-            invoice and the packing list.
+            FSC-certified stock is available across the mango and reclaimed ranges when your market
+            needs the paperwork. The claim and our certificate code travel on the invoice and the
+            packing list.
           </p>
-          {fsc.code && (
-            <p className={`text-manifest-sm ${lead} numeral mt-4`}>{fsc.code}</p>
-          )}
+          {fsc.code && <p className={`text-manifest-sm ${lead} numeral mt-4`}>{fsc.code}</p>}
         </div>
 
         {placement && (
-          <FscMark placement={placement} variant="panel" height={200} ground={invert ? 'dark' : 'light'} />
+          <FscMark
+            placement={placement}
+            variant="panel"
+            height={200}
+            ground={invert ? 'dark' : 'light'}
+          />
         )}
       </div>
     );
@@ -83,19 +82,25 @@ export default function FscPanel({
           </div>
           <div className={`flex items-baseline justify-between gap-6 py-4 border-t ${line}`}>
             <dt className={`text-manifest-sm ${lead}`}>Scope</dt>
-            <dd className={`text-body ${invert ? 'text-paper' : 'text-ink'} text-right max-w-[22ch]`}>
+            <dd
+              className={`text-body ${invert ? 'text-paper' : 'text-ink'} text-right max-w-[22ch]`}
+            >
               {fsc.scope}
             </dd>
           </div>
           <div className={`flex items-baseline justify-between gap-6 py-4 border-t ${line}`}>
             <dt className={`text-manifest-sm ${lead}`}>Licensed by</dt>
-            <dd className={`text-body text-right max-w-[22ch] ${invert ? 'text-paper' : 'text-ink'}`}>
+            <dd
+              className={`text-body text-right max-w-[22ch] ${invert ? 'text-paper' : 'text-ink'}`}
+            >
               {fsc.licensor}
             </dd>
           </div>
           <div className={`flex items-baseline justify-between gap-6 py-4 border-y ${line}`}>
             <dt className={`text-manifest-sm ${lead}`}>Licence code</dt>
-            <dd className={`text-body numeral text-right ${fsc.code ? (invert ? 'text-paper' : 'text-ink') : lead}`}>
+            <dd
+              className={`text-body numeral text-right ${fsc.code ? (invert ? 'text-paper' : 'text-ink') : lead}`}
+            >
               {/* Never invented: an FSC claim without the holder's own code is
                   one the buyer cannot verify. */}
               {fsc.code || 'On the certificate, quoted with each claim'}

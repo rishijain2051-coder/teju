@@ -81,14 +81,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${dmSans.variable} ${fraunces.variable} ${plexMono.variable}`}
-    >
+    <html lang="en" className={`${dmSans.variable} ${fraunces.variable} ${plexMono.variable}`}>
       <body className="bg-paper text-ink antialiased">
         <MotionProvider />
         {children}

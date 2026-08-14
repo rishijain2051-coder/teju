@@ -32,9 +32,8 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
     { label: 'Message', value: form.message },
   ];
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,7 +143,15 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
         >
           {state === 'sending' ? 'Sending…' : `Enquire on ${piece.ref}`}
           {state !== 'sending' && (
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              aria-hidden="true"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           )}

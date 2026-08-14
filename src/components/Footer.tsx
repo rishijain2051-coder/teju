@@ -19,8 +19,8 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-body text-muted mt-5 max-w-[34ch]">
-              Furniture manufacturer and exporter. Solid mango and reclaimed timber,
-              made at Boranada since {brand.established}.
+              Furniture manufacturer and exporter. Solid mango and reclaimed timber, made at
+              Boranada since {brand.established}.
             </p>
             <address className="text-manifest-sm text-muted mt-6 not-italic leading-relaxed">
               {brand.address.line1}
@@ -38,7 +38,10 @@ export default function Footer() {
             <ul className="mt-2 flex flex-col">
               {nav.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-2 inline-block">
+                  <Link
+                    href={link.href}
+                    className="text-body text-ink-soft hover:text-clay transition-colors duration-base py-2 inline-block"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -66,12 +69,18 @@ export default function Footer() {
             <h2 className="text-manifest-sm text-muted pb-3 border-b border-line">Enquiries</h2>
             <ul className="mt-2 flex flex-col">
               <li>
-                <a href={`mailto:${brand.email}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base break-all py-2 inline-block">
+                <a
+                  href={`mailto:${brand.email}`}
+                  className="text-body text-ink-soft hover:text-clay transition-colors duration-base break-all py-2 inline-block"
+                >
                   {brand.email}
                 </a>
               </li>
               <li>
-                <a href={`tel:${brand.phoneHref}`} className="text-body text-ink-soft hover:text-clay transition-colors duration-base numeral py-2 inline-block">
+                <a
+                  href={`tel:${brand.phoneHref}`}
+                  className="text-body text-ink-soft hover:text-clay transition-colors duration-base numeral py-2 inline-block"
+                >
                   {brand.phone}
                 </a>
               </li>
@@ -88,7 +97,8 @@ export default function Footer() {
             © {YEAR} {brand.name}
           </p>
           <p className="text-manifest-sm text-muted numeral">
-            {brand.origin}, {brand.country} · Est. {brand.established} · {facts.countries}+ export markets
+            {brand.origin}, {brand.country} · Est. {brand.established} · {facts.countries}+ export
+            markets
           </p>
         </div>
       </div>

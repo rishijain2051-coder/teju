@@ -77,7 +77,7 @@ export function useReveal<T extends HTMLElement = HTMLElement>({
        */
       const applyFor = new Map<Element, Element[]>();
       for (const el of targets) {
-        const watch = el.classList.contains('wipe-inner') ? el.parentElement ?? el : el;
+        const watch = el.classList.contains('wipe-inner') ? (el.parentElement ?? el) : el;
         const list = applyFor.get(watch);
         if (list) list.push(el);
         else applyFor.set(watch, [el]);

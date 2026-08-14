@@ -88,9 +88,7 @@ export async function sendMail(options: SendMailOptions): Promise<boolean> {
           .trim(),
       // Only set when the enquirer's own address is deliverable, so a typo'd or
       // reserved domain cannot poison the reply header.
-      ...(options.replyTo && !isUndeliverable(options.replyTo)
-        ? { replyTo: options.replyTo }
-        : {}),
+      ...(options.replyTo && !isUndeliverable(options.replyTo) ? { replyTo: options.replyTo } : {}),
     });
     return true;
   } catch (err) {

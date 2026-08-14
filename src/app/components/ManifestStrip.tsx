@@ -20,7 +20,10 @@ export default function ManifestStrip() {
   );
 
   return (
-    <section className="bg-ink overflow-hidden border-y border-line-invert" aria-label="Export details">
+    <section
+      className="bg-ink overflow-hidden border-y border-line-invert"
+      aria-label="Export details"
+    >
       <div className="flex w-max animate-marquee marquee-track py-4">
         {row}
         <div aria-hidden="true" className="flex">

@@ -28,16 +28,26 @@ export default function ContactCTA() {
             </span>
           </h2>
 
-          <p className="text-lead text-paper/70 max-w-measure mt-8 rise" style={{ transitionDelay: '260ms' }}>
-            Retailer, interior designer, or hospitality buyer: send us the
-            specification and we will come back with honest lead times and a price
-            that holds.
+          <p
+            className="text-lead text-paper/70 max-w-measure mt-8 rise"
+            style={{ transitionDelay: '260ms' }}
+          >
+            Retailer, interior designer, or hospitality buyer: send us the specification and we will
+            come back with honest lead times and a price that holds.
           </p>
 
           <div className="flex flex-wrap gap-3 mt-10 rise" style={{ transitionDelay: '340ms' }}>
             <Link href="/contact" className="btn btn-invert">
               Send an enquiry
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                aria-hidden="true"
+              >
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </Link>
@@ -47,7 +57,10 @@ export default function ContactCTA() {
           </div>
 
           {/* Direct lines, set as a manifest block. */}
-          <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mt-14 pt-8 border-t border-line-invert rise" style={{ transitionDelay: '420ms' }}>
+          <dl
+            className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mt-14 pt-8 border-t border-line-invert rise"
+            style={{ transitionDelay: '420ms' }}
+          >
             <div>
               <dt className="text-manifest-sm text-paper/45">Email</dt>
               <dd className="mt-1.5">
@@ -59,7 +72,10 @@ export default function ContactCTA() {
             <div>
               <dt className="text-manifest-sm text-paper/45">Telephone</dt>
               <dd className="mt-1.5">
-                <a href={`tel:${brand.phoneHref}`} className="text-body text-paper link-draw numeral tap">
+                <a
+                  href={`tel:${brand.phoneHref}`}
+                  className="text-body text-paper link-draw numeral tap"
+                >
                   {brand.phone}
                 </a>
               </dd>

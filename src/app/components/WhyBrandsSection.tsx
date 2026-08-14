@@ -41,9 +41,9 @@ export default function WhyBrandsSection() {
           {/* Capability ledger */}
           <div className="lg:col-span-7">
             <p className="text-lead text-paper/75 max-w-measure rise">
-              We are a factory, not a trading desk. Every stage from rough stock to
-              the packed container happens on one floor, which is the only reliable
-              way to promise a buyer that the third container matches the first.
+              We are a factory, not a trading desk. Every stage from rough stock to the packed
+              container happens on one floor, which is the only reliable way to promise a buyer that
+              the third container matches the first.
             </p>
 
             <ul data-reveal-group className="mt-12 lg:mt-16">
@@ -68,7 +68,15 @@ export default function WhyBrandsSection() {
             <div className="border-t border-line-invert pt-8 mt-2 flex flex-wrap gap-3 rise">
               <Link href="/factory" className="btn btn-invert">
                 Inside the factory
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  aria-hidden="true"
+                >
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </Link>

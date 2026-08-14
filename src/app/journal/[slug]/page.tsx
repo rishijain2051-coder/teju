@@ -119,11 +119,7 @@ export default async function ArticlePage({ params }: Params) {
                 <div className="lg:col-span-8 lg:col-start-3">
                   {article.body.map((block, i) => (
                     <section key={i} className={i > 0 ? 'mt-12 lg:mt-16' : ''}>
-                      {block.heading && (
-                        <h2 className="text-title mb-5 rise">
-                          {block.heading}
-                        </h2>
-                      )}
+                      {block.heading && <h2 className="text-title mb-5 rise">{block.heading}</h2>}
 
                       {block.paragraphs.map((paragraph) => (
                         <p
@@ -168,7 +164,15 @@ export default async function ArticlePage({ params }: Params) {
                   className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-base"
                 >
                   All notes
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                  <svg
+                    width="13"
+                    height="13"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    aria-hidden="true"
+                  >
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </Link>

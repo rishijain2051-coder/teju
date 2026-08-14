@@ -40,10 +40,7 @@ export default function MotionProvider() {
 
     (async () => {
       try {
-        const [gsapMod, stMod] = await Promise.all([
-          import('gsap'),
-          import('gsap/ScrollTrigger'),
-        ]);
+        const [gsapMod, stMod] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
         if (disposed) return;
 
         const gsap = (gsapMod.gsap ?? gsapMod.default) as Gsap;
@@ -76,9 +73,7 @@ export default function MotionProvider() {
       // immediately so they are never blank — is left alone so it is never
       // animated twice.
       const fresh = (selector: string) =>
-        gsap.utils
-          .toArray<HTMLElement>(selector)
-          .filter((el) => !el.classList.contains('shown'));
+        gsap.utils.toArray<HTMLElement>(selector).filter((el) => !el.classList.contains('shown'));
 
       gsap.utils.toArray<HTMLElement>('[data-reveal-group]').forEach((group) => {
         const items = gsap.utils

@@ -43,13 +43,24 @@ export default function FeaturedCollections() {
             className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-base"
           >
             All collections
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              aria-hidden="true"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </Link>
         </header>
 
-        <div data-reveal-group className="grid lg:grid-cols-12 gap-x-6 gap-y-12 lg:gap-y-16 mt-12 lg:mt-16">
+        <div
+          data-reveal-group
+          className="grid lg:grid-cols-12 gap-x-6 gap-y-12 lg:gap-y-16 mt-12 lg:mt-16"
+        >
           {collections.map((collection, i) => {
             const plate = img(collection.image);
             return (
@@ -78,9 +89,13 @@ export default function FeaturedCollections() {
                       <h3 className="text-title group-hover:text-clay transition-colors duration-base">
                         {collection.name}
                       </h3>
-                      <span className="text-manifest-sm text-muted shrink-0">{collection.range}</span>
+                      <span className="text-manifest-sm text-muted shrink-0">
+                        {collection.range}
+                      </span>
                     </div>
-                    <p className="text-body text-muted mt-1.5 max-w-measure">{collection.tagline}</p>
+                    <p className="text-body text-muted mt-1.5 max-w-measure">
+                      {collection.tagline}
+                    </p>
                   </div>
                 </div>
               </Link>
@@ -90,12 +105,20 @@ export default function FeaturedCollections() {
 
         <div className="rule mt-16 lg:mt-20 pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rise">
           <p className="text-body text-muted max-w-measure">
-            The full catalogue runs to over a thousand designs. Verified trade buyers
-            receive access to the private range.
+            The full catalogue runs to over a thousand designs. Verified trade buyers receive access
+            to the private range.
           </p>
           <Link href="/collections#access" className="btn btn-ghost shrink-0">
             Request catalogue access
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              aria-hidden="true"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </Link>

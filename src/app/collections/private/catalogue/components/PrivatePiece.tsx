@@ -92,16 +92,17 @@ function Dossier({ piece }: { piece: Piece }) {
 
       <dl className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 mt-4">
         {rows.map((row) => (
-          <div key={row.key} className="flex items-baseline justify-between gap-4 py-2 border-t border-line">
+          <div
+            key={row.key}
+            className="flex items-baseline justify-between gap-4 py-2 border-t border-line"
+          >
             <dt className="text-manifest-sm text-muted">{row.key}</dt>
             <dd className="text-manifest-sm text-ink numeral text-right">{row.value}</dd>
           </div>
         ))}
       </dl>
 
-      <p className="text-manifest-sm text-muted mt-4 max-w-measure leading-relaxed">
-        {piece.note}
-      </p>
+      <p className="text-manifest-sm text-muted mt-4 max-w-measure leading-relaxed">{piece.note}</p>
     </div>
   );
 }
@@ -154,7 +155,9 @@ export default function PrivatePiece({
               {piece.name}
             </button>
           </td>
-          <td className="py-3 pr-4 text-manifest-sm text-muted whitespace-nowrap">{piece.collection}</td>
+          <td className="py-3 pr-4 text-manifest-sm text-muted whitespace-nowrap">
+            {piece.collection}
+          </td>
           <td className="py-3 pr-4 text-manifest-sm text-ink-soft">{piece.material}</td>
           <td className="py-3 pr-4 text-manifest-sm text-ink-soft">{piece.finish}</td>
           <td className="py-3 pr-4 text-manifest-sm text-ink-soft numeral whitespace-nowrap">
