@@ -26,6 +26,25 @@ jobs:
           node-version: 22
           cache: npm
 
+      # `next/font/google` downloads DM Sans, Fraunces and IBM Plex Mono from
+      # fonts.gstatic.com during compilation and self-hosts the result. When that
+      # host is unreachable from the runner it retries three times and then fails
+      # the build outright — nothing to do with the code being tested. Restoring
+      # the Next build cache means a run that has seen those files before does not
+      # ask for them again. `restore-keys` matters more than `key` here: even when
+      # the source has changed, the partial match brings the fetched fonts back.
+      #
+      # A mitigation, not a cure — a genuinely cold cache still reaches out. The
+      # cure is self-hosting the woff2 files with `next/font/local`.
+      - name: Cache the Next build cache (fonts live here)
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**', 'content/**') }}
+          restore-keys: |
+            next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            next-${{ runner.os }}-
+
       - run: npm ci
 
       # `src/lib/generated/content.ts` is committed, because the type-check and
@@ -107,6 +126,25 @@ jobs:
         with:
           node-version: 22
           cache: npm
+
+      # `next/font/google` downloads DM Sans, Fraunces and IBM Plex Mono from
+      # fonts.gstatic.com during compilation and self-hosts the result. When that
+      # host is unreachable from the runner it retries three times and then fails
+      # the build outright — nothing to do with the code being tested. Restoring
+      # the Next build cache means a run that has seen those files before does not
+      # ask for them again. `restore-keys` matters more than `key` here: even when
+      # the source has changed, the partial match brings the fetched fonts back.
+      #
+      # A mitigation, not a cure — a genuinely cold cache still reaches out. The
+      # cure is self-hosting the woff2 files with `next/font/local`.
+      - name: Cache the Next build cache (fonts live here)
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**', 'content/**') }}
+          restore-keys: |
+            next-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+            next-${{ runner.os }}-
 
       - run: npm ci
 
