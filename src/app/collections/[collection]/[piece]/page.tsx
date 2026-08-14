@@ -43,10 +43,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!piece) return { title: 'Collections' };
 
   return {
-    title: `${piece.name} — ${piece.ref}`,
+    title: `${piece.name} · ${piece.ref}`,
     description: `${piece.note} ${piece.material}, ${piece.finish.toLowerCase()}, ${piece.dimensions}.`,
     openGraph: {
-      title: `${piece.name} — Vardhman Impex`,
+      title: `${piece.name} · Vardhman Impex`,
       description: piece.note,
       images: [{ url: img(piece.image).src }],
     },
@@ -114,7 +114,7 @@ export default async function PiecePage({ params }: Params) {
                 {/* Record */}
                 <div className="lg:col-span-5">
                   <p className="text-manifest text-clay veil">
-                    {collection.name} — {piece.ref}
+                    {collection.name} · {piece.ref}
                   </p>
 
                   <h1 className="font-serif text-display font-light mt-5">

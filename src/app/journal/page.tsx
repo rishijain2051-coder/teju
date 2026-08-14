@@ -92,7 +92,7 @@ export default function JournalPage() {
                             <span className="text-manifest-sm text-clay">{article.category}</span>
                             <span className="text-manifest-sm text-muted">{article.date}</span>
                           </div>
-                          <h2 className="font-serif text-title font-light mt-3 group-hover:text-clay transition-colors duration-base">
+                          <h2 className="text-title mt-3 group-hover:text-clay transition-colors duration-base">
                             {article.title}
                           </h2>
                           <p className="text-body text-muted mt-2">{article.excerpt}</p>

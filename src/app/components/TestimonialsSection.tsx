@@ -13,7 +13,6 @@ export default function TestimonialsSection() {
     <section ref={ref} className="py-20 lg:py-32 bg-paper-deep">
       <div className="shell">
         <header className="flex items-baseline gap-5 rise">
-          <span className="text-manifest-sm text-muted numeral">05</span>
           <h2 className="font-serif text-display font-light">
             From the <span className="italic">buyers</span>
           </h2>
@@ -22,13 +21,17 @@ export default function TestimonialsSection() {
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-12 lg:mt-20">
           <div className="lg:col-span-8">
             <blockquote className="rise">
-              <p className="font-serif text-display-sm font-light italic text-ink leading-[1.18]">
+              {/* Sans, upright, at reading size rather than serif italic at
+                  display size. A sixty-word quote set in italic Fraunces was
+                  four lines of decoration a buyer had to fight through; the
+                  quotation marks already mark it as speech. */}
+              <p className="text-[1.375rem] lg:text-[1.625rem] leading-[1.45] tracking-tight text-ink max-w-[42ch]">
                 &ldquo;{current.quote}&rdquo;
               </p>
               <footer className="mt-10 pt-6 border-t border-line-strong">
-                <p className="font-serif text-title font-light not-italic">{current.author}</p>
+                <p className="text-title">{current.author}</p>
                 <p className="text-manifest text-muted mt-2">
-                  {current.title} — {current.company}
+                  {current.title} · {current.company}
                 </p>
                 <p className="text-manifest-sm text-clay mt-1.5">{current.country}</p>
               </footer>
@@ -38,7 +41,7 @@ export default function TestimonialsSection() {
           {/* Index of buyers */}
           <div className="lg:col-span-4 lg:pl-8 rise">
             <p className="text-manifest-sm text-muted pb-4 border-b border-line-strong">
-              {String(testimonials.length).padStart(2, '0')} references
+              {testimonials.length} references
             </p>
             <ul>
               {testimonials.map((entry, i) => (
@@ -58,7 +61,7 @@ export default function TestimonialsSection() {
                     </span>
                     <span className="flex-1">
                       <span
-                        className={`block font-serif text-lead transition-colors duration-base ${
+                        className={`block text-lead transition-colors duration-base ${
                           i === active ? 'text-ink' : 'text-muted group-hover:text-ink'
                         }`}
                       >

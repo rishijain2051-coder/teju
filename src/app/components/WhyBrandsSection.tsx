@@ -14,7 +14,6 @@ export default function WhyBrandsSection() {
     <section ref={ref} id="factory" className="relative bg-teal text-paper grain py-20 lg:py-32">
       <div className="shell relative z-10">
         <header className="flex items-baseline gap-5 pt-6 border-t border-line-invert rise">
-          <span className="text-manifest-sm text-paper/45 numeral">02</span>
           <h2 className="font-serif text-display font-light -mt-2">
             Why brands <span className="italic text-timber">stay</span>
           </h2>
@@ -35,7 +34,7 @@ export default function WhyBrandsSection() {
               />
             </div>
             <p className="text-manifest-sm text-paper/50 mt-4 rise">
-              Boranada Industrial Area — Jodhpur
+              Boranada Industrial Area · Jodhpur
             </p>
           </div>
 
@@ -57,7 +56,7 @@ export default function WhyBrandsSection() {
                     {capability.index}
                   </span>
                   <div>
-                    <h3 className="font-serif text-title font-light">{capability.title}</h3>
+                    <h3 className="text-title">{capability.title}</h3>
                     <p className="text-body text-paper/65 mt-2 max-w-measure">
                       {capability.detail}
                     </p>

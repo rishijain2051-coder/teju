@@ -51,7 +51,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3 shrink-0 group py-2">
             <AppLogo size={30} />
             <span className="font-serif text-[1.15rem] lg:text-[1.35rem] leading-none tracking-tight">
-              Vardhman <span className="italic">Impex</span>
+              Vardhman Impex
             </span>
           </Link>
 

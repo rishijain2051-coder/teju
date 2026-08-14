@@ -120,7 +120,7 @@ export default async function ArticlePage({ params }: Params) {
                   {article.body.map((block, i) => (
                     <section key={i} className={i > 0 ? 'mt-12 lg:mt-16' : ''}>
                       {block.heading && (
-                        <h2 className="font-serif text-title font-light mb-5 rise">
+                        <h2 className="text-title mb-5 rise">
                           {block.heading}
                         </h2>
                       )}
@@ -146,7 +146,7 @@ export default async function ArticlePage({ params }: Params) {
 
                   <div className="rule mt-16 pt-6 rise">
                     <p className="text-manifest-sm text-muted">
-                      Written at the works, Boranada — {article.date}
+                      Written at the works, Boranada · {article.date}
                     </p>
                   </div>
                 </div>
@@ -193,7 +193,7 @@ export default async function ArticlePage({ params }: Params) {
                         </div>
                         <div className="pt-4 mt-4 border-t border-line-strong group-hover:border-ink transition-colors duration-base">
                           <span className="text-manifest-sm text-clay">{entry.category}</span>
-                          <h3 className="font-serif text-title font-light mt-2.5 group-hover:text-clay transition-colors duration-base">
+                          <h3 className="text-title mt-2.5 group-hover:text-clay transition-colors duration-base">
                             {entry.title}
                           </h3>
                         </div>

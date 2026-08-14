@@ -44,9 +44,9 @@ export default function FactoryPage() {
       <Header />
       <main id="main">
         <PageHeader
-          eyebrow={`${brand.origin} — since ${brand.established}`}
+          eyebrow={`${brand.origin} · since ${brand.established}`}
           title="Nine thousand square metres."
-          lead="We are a factory, not a trading desk. Every stage from rough stock to the packed container happens on one floor at Boranada, and this page is what is on it — the areas, the timeline, the markets, and the paperwork that goes with them."
+          lead="We are a factory, not a trading desk. Every stage from rough stock to the packed container happens on one floor at Boranada, and this page is what is on it: the areas, the timeline, the markets, and the paperwork that goes with them."
           meta={META}
         />
 
@@ -82,14 +82,14 @@ export default function FactoryPage() {
               </div>
             </div>
             <p className="text-manifest-sm text-muted mt-4 rise">
-              {brand.address.line1} — {brand.address.line2}
+              {brand.address.line1} · {brand.address.line2}
             </p>
           </section>
 
           {/* The floor, area by area. A plan, set as a manifest. */}
           <section className="py-20 lg:py-32">
             <div className="shell">
-              <SectionHead index="01" title={<>The <span className="italic">floor</span></>} />
+              <SectionHead title={<>The <span className="italic">floor</span></>} />
 
               <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-12 lg:mt-16">
                 <div className="lg:col-span-7">
@@ -100,7 +100,7 @@ export default function FactoryPage() {
                         className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-1.5 py-5 border-t border-line rise"
                       >
                         <div>
-                          <h3 className="font-serif text-title font-light">{area.name}</h3>
+                          <h3 className="text-title">{area.name}</h3>
                           <p className="text-body text-muted mt-1">{area.detail}</p>
                         </div>
                         <span className="text-manifest text-clay numeral shrink-0">{area.size}</span>
@@ -137,12 +137,11 @@ export default function FactoryPage() {
           <section className="py-20 lg:py-32 bg-paper-deep">
             <div className="shell">
               <SectionHead
-                index="02"
                 title={<>Order to <span className="italic">container</span></>}
               />
               <p className="text-lead text-ink-soft max-w-measure mt-8 rise">
                 Forty-five to sixty days is the figure we quote, and this is where it goes. Buyers
-                usually see two moments — the sample and the delivery — so here is the middle.
+                usually see two moments: the sample and the delivery. Here is the middle.
               </p>
 
               <ol data-reveal-group className="mt-12 lg:mt-16">
@@ -154,7 +153,7 @@ export default function FactoryPage() {
                     <span className="sm:col-span-2 text-manifest-sm text-clay numeral">
                       {step.when}
                     </span>
-                    <h3 className="sm:col-span-4 font-serif text-title font-light">{step.title}</h3>
+                    <h3 className="sm:col-span-4 text-title">{step.title}</h3>
                     <p className="sm:col-span-6 text-body text-muted max-w-measure">{step.detail}</p>
                   </li>
                 ))}
@@ -166,7 +165,6 @@ export default function FactoryPage() {
           <section className="py-20 lg:py-32 bg-teal text-paper grain">
             <div className="shell relative z-10">
               <SectionHead
-                index="03"
                 invert
                 title={<>What the floor <span className="italic text-timber">gives you</span></>}
               />
@@ -181,7 +179,7 @@ export default function FactoryPage() {
                       {capability.index}
                     </span>
                     <div>
-                      <h3 className="font-serif text-title font-light">{capability.title}</h3>
+                      <h3 className="text-title">{capability.title}</h3>
                       <p className="text-body text-paper/65 mt-2 max-w-measure">
                         {capability.detail}
                       </p>
@@ -208,12 +206,12 @@ export default function FactoryPage() {
           {/* Export */}
           <section className="py-20 lg:py-32">
             <div className="shell">
-              <SectionHead index="04" title={<>Export &amp; <span className="italic">logistics</span></>} />
+              <SectionHead title={<>Export &amp; <span className="italic">logistics</span></>} />
 
               <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-12 lg:mt-16">
                 <div className="lg:col-span-6">
                   <p className="text-manifest-sm text-muted rise">
-                    Active destinations — {exportMarkets.length} markets
+                    Active destinations · {exportMarkets.length} markets
                   </p>
                   <ul data-reveal-group className="mt-4">
                     {exportMarkets.map((market, i) => (
@@ -235,7 +233,7 @@ export default function FactoryPage() {
                   <SpecList className="mt-4 rise" rows={logistics} />
                   <p className="text-body text-muted mt-6 max-w-measure rise">
                     Lead times we quote are lead times we hold. If a date cannot be met it is not
-                    offered — a slipped shipment costs a buyer more than a longer honest one.
+                    offered. A slipped shipment costs a buyer more than a longer honest one.
                   </p>
                 </div>
               </div>
@@ -253,7 +251,7 @@ export default function FactoryPage() {
                   </h2>
                   <p className="text-body text-muted mt-5 max-w-measure rise">
                     We hold chain-of-custody certification and keep certified stock tagged
-                    separately in the yard. Ask at the quote stage rather than the shipping stage —
+                    separately in the yard. Ask at the quote stage rather than the shipping stage:
                     it is a sourcing decision, and sourcing happens in week one.
                   </p>
                   <Link href="/craft#fsc" className="btn btn-ghost mt-8 rise">

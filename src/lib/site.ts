@@ -90,7 +90,7 @@ export const stats = [
 export const testimonials = [
   {
     quote:
-      'Working with Vardhman Impex transformed our buying process. The consistency of quality across three containers was remarkable — every piece arrived exactly as specified. Their willingness to accommodate custom finishes is rare at this scale.',
+      'Working with Vardhman Impex transformed our buying process. The consistency of quality across three containers was remarkable: every piece arrived exactly as specified. Their willingness to accommodate custom finishes is rare at this scale.',
     author: 'Matthias Brandt',
     title: 'Procurement Director',
     company: 'Haus & Raum GmbH',
@@ -106,7 +106,7 @@ export const testimonials = [
   },
   {
     quote:
-      'Their hospitality range is exceptional. We furnished two boutique hotels with their custom programme — 340 pieces across both properties — and received zero complaints from guests about quality. The private label service was seamless.',
+      'Their hospitality range is exceptional. We furnished two boutique hotels with their custom programme, 340 pieces across both properties, and received zero complaints from guests about quality. The private label service was seamless.',
     author: 'Luca Ferrara',
     title: 'Operations Director',
     company: 'Ferrara Hospitality Group',

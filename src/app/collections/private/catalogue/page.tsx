@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import PrivateCatalogue from './components/PrivateCatalogue';
 
 export const metadata: Metadata = {
-  title: 'Private Catalogue — Vardhman Impex',
+  title: 'Private Catalogue · Vardhman Impex',
   description: 'Full private catalogue for verified trade buyers.',
   robots: {
     index: false,

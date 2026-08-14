@@ -53,7 +53,7 @@ export default function AccessCodeEntry() {
         <Link href="/" className="inline-flex items-center gap-3 self-start">
           <AppLogo size={30} />
           <span className="font-serif text-[1.35rem] leading-none tracking-tight">
-            Vardhman <span className="italic">Impex</span>
+            Vardhman Impex
           </span>
         </Link>
 

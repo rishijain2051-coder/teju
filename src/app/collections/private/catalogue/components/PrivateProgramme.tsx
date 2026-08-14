@@ -17,7 +17,7 @@ const PRIVATE_LABEL = [
     index: '02',
     title: 'Your finish',
     detail:
-      'Any finish in the house range, or matched to a physical sample you post us. Colour is signed off against a retained sample, not a code — two batches of timber take the same stain differently.',
+      'Any finish in the house range, or matched to a physical sample you post us. Colour is signed off against a retained sample, not a code, because two batches of timber take the same stain differently.',
   },
   {
     index: '03',
@@ -54,7 +54,6 @@ export default function PrivateProgramme() {
       <section className="mt-20 lg:mt-28 py-20 lg:py-28 bg-paper-deep">
         <div className="shell">
           <header className="rule-label rise" style={{ borderColor: 'var(--line-strong)' }}>
-            <span className="text-manifest-sm text-muted numeral">01</span>
             <div className="flex-1">
               <h2 className="font-serif text-display font-light -mt-2">
                 Private <span className="italic">label</span>
@@ -64,7 +63,7 @@ export default function PrivateProgramme() {
 
           <p className="text-lead text-ink-soft max-w-measure mt-8 rise">
             Roughly half of what leaves this factory ships under someone else&apos;s name. The
-            programme is not a service bolted on — it is how most of the floor already works.
+            programme is not a service bolted on: it is how most of the floor already works.
           </p>
 
           <ol data-reveal-group className="grid lg:grid-cols-2 gap-x-16 mt-12">
@@ -74,7 +73,7 @@ export default function PrivateProgramme() {
                   {step.index}
                 </span>
                 <div>
-                  <h3 className="font-serif text-title font-light">{step.title}</h3>
+                  <h3 className="text-title">{step.title}</h3>
                   <p className="text-body text-muted mt-2 max-w-measure">{step.detail}</p>
                 </div>
               </li>
@@ -88,7 +87,6 @@ export default function PrivateProgramme() {
       <section className="py-20 lg:py-28 bg-teal text-paper grain">
         <div className="shell relative z-10">
           <header className="rule-label rise" style={{ borderColor: 'var(--line-invert)' }}>
-            <span className="text-manifest-sm text-paper/45 numeral">02</span>
             <div className="flex-1">
               <h2 className="font-serif text-display font-light -mt-2">
                 Certification &amp; <span className="italic text-timber">paperwork</span>
@@ -134,7 +132,7 @@ export default function PrivateProgramme() {
               </h2>
               <p className="text-body text-muted mt-5 max-w-measure rise">
                 The catalogue is what we have photographed, not the limit of what we make. Send a
-                drawing, a reference photograph or a sketch on a napkin — all three have started
+                drawing, a reference photograph or a sketch on a napkin. All three have started
                 programmes here.
               </p>
               <div className="flex flex-wrap gap-3 mt-8 rise">

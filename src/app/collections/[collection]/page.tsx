@@ -27,10 +27,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!collection) return { title: 'Collections' };
 
   return {
-    title: `${collection.name} — Collections`,
+    title: `${collection.name} · Collections`,
     description: `${collection.tagline} ${collection.story[0]}`.slice(0, 300),
     openGraph: {
-      title: `${collection.name} — Vardhman Impex`,
+      title: `${collection.name} · Vardhman Impex`,
       description: collection.tagline,
       images: [{ url: img(collection.image).src }],
     },
@@ -55,7 +55,7 @@ export default async function CollectionPage({ params }: Params) {
       <Header />
       <main id="main">
         <PageHeader
-          eyebrow={`Collection ${collection.index} — ${collection.range}`}
+          eyebrow={`Collection ${collection.index} · ${collection.range}`}
           title={collection.name}
           lead={collection.tagline}
           meta={collection.spec}
@@ -100,7 +100,6 @@ export default async function CollectionPage({ params }: Params) {
             <section className="py-20 lg:py-32">
               <div className="shell">
                 <SectionHead
-                  index="01"
                   title={<>How a programme <span className="italic">runs</span></>}
                 />
 
@@ -117,13 +116,16 @@ export default async function CollectionPage({ params }: Params) {
                   {reference && (
                     <div className="lg:col-span-5 lg:col-start-8 rise">
                       <blockquote className="border-t border-line-strong pt-6">
-                        <p className="font-serif text-title font-light italic">
+                        {/* Upright, matching the home page pull quote. The
+                            quotation marks mark it as speech; italic on top of
+                            them is the same signal twice. */}
+                        <p className="text-title leading-[1.45]">
                           &ldquo;{reference.quote}&rdquo;
                         </p>
                         <footer className="mt-5">
                           <p className="text-manifest text-ink">{reference.author}</p>
                           <p className="text-manifest-sm text-muted mt-1">
-                            {reference.title}, {reference.company} — {reference.country}
+                            {reference.title}, {reference.company} · {reference.country}
                           </p>
                         </footer>
                       </blockquote>
@@ -134,7 +136,7 @@ export default async function CollectionPage({ params }: Params) {
                 {shown.length > 0 && (
                   <div className="mt-20 lg:mt-28">
                     <p className="text-manifest-sm text-muted rise">
-                      Representative builds — specified, not stocked
+                      Representative builds, specified rather than stocked
                     </p>
                     <div
                       data-reveal-group
@@ -157,7 +159,6 @@ export default async function CollectionPage({ params }: Params) {
             <section className="py-20 lg:py-32">
               <div className="shell">
                 <SectionHead
-                  index="01"
                   title={<>In this <span className="italic">collection</span></>}
                   href="/collections"
                   linkLabel="All collections"
@@ -196,7 +197,7 @@ export default async function CollectionPage({ params }: Params) {
           {/* Sideways navigation between collections. */}
           <section className="pb-20 lg:pb-32 bg-paper-deep pt-20 lg:pt-28">
             <div className="shell">
-              <SectionHead index="02" title={<>Other <span className="italic">collections</span></>} />
+              <SectionHead title={<>Other <span className="italic">collections</span></>} />
 
               <ul data-reveal-group className="mt-10">
                 {others.map((entry) => (

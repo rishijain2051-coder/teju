@@ -14,7 +14,7 @@ import {
 
 type FormState = 'idle' | 'sending' | 'success' | 'error';
 
-const SUBJECT = 'Trade catalogue access request — vardhman-impex.com';
+const SUBJECT = 'Trade catalogue access request · vardhman-impex.com';
 
 /* Counted rather than written out, so the claim on this panel cannot drift from
    the two catalogues it is comparing. */
@@ -79,7 +79,7 @@ export default function ExclusiveAccess() {
               The rest of the <span className="italic">catalogue</span>
             </h2>
             <p className="text-lead text-paper/70 mt-6 max-w-measure rise" style={{ transitionDelay: '160ms' }}>
-              What is shown publicly is an introduction — {publicCount} designs of{' '}
+              What is shown publicly is an introduction: {publicCount} designs of{' '}
               {facts.designs}+ in the range. The trade catalogue carries {privateCount} live
               designs and the figures you need to plan a container.
             </p>
@@ -115,7 +115,7 @@ export default function ExclusiveAccess() {
               /* `filter-swap`, not `rise` — mounts on submit; see ContactSplit. */
               <div className="border border-line-invert p-8 lg:p-10 filter-swap">
                 <p className="text-manifest text-timber">Request sent</p>
-                <h3 className="font-serif text-title font-light mt-4">
+                <h3 className="text-title mt-4">
                   We verify each trade account by hand.
                 </h3>
                 <p className="text-body text-paper/70 mt-4">
@@ -257,7 +257,7 @@ export default function ExclusiveAccess() {
                 )}
 
                 <p className="text-manifest-sm text-paper/45 mt-6 max-w-measure leading-relaxed">
-                  We use these details only to verify your business — no marketing lists.
+                  We use these details only to verify your business, never a marketing list.
                 </p>
               </form>
             )}

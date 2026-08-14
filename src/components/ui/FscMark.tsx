@@ -25,14 +25,14 @@ const MARKS = {
     src: '/assets/fsc/fsc-c229285-portrait-white-green.svg',
     width: 300,
     height: 490,
-    alt: `FSC certified — licence code ${fsc.code}. Ask for our FSC-certified materials.`,
+    alt: `FSC certified, licence code ${fsc.code}. Ask for our FSC-certified materials.`,
   },
   /** The tree alone, for placements where the panel is too tall. */
   tree: {
     src: '/assets/fsc/fsc-tree-white-green.svg',
     width: 360,
     height: 400,
-    alt: 'FSC — Forest Stewardship Council',
+    alt: 'FSC · Forest Stewardship Council',
   },
 } as const;
 

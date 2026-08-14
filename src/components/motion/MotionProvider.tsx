@@ -133,7 +133,10 @@ export default function MotionProvider() {
       fresh('.wipe-inner').forEach((el) => {
         gsap.fromTo(
           el,
-          { yPercent: 105, y: 0 },
+          // Matches `.wipe-inner`'s CSS start offset. It clears the inner's own
+          // height plus the descender allowance `.wipe` pads itself with; at the
+          // old 105% the tails sat visible in that allowance on the first frame.
+          { yPercent: 135, y: 0 },
           {
             yPercent: 0,
             duration: 0.9,

@@ -33,7 +33,6 @@ export default function FeaturedCollections() {
     <section ref={ref} id="collections" className="py-20 lg:py-32">
       <div className="shell">
         <header className="rule-label rise">
-          <span className="text-manifest-sm text-muted numeral">01</span>
           <div className="flex-1">
             <h2 className="font-serif text-display font-light -mt-2">
               The <span className="italic">collections</span>
@@ -76,7 +75,7 @@ export default function FeaturedCollections() {
                   <span className="text-manifest-sm text-muted numeral">{collection.index}</span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline justify-between gap-4">
-                      <h3 className="font-serif text-title font-light group-hover:text-clay transition-colors duration-base">
+                      <h3 className="text-title group-hover:text-clay transition-colors duration-base">
                         {collection.name}
                       </h3>
                       <span className="text-manifest-sm text-muted shrink-0">{collection.range}</span>

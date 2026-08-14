@@ -9,7 +9,7 @@ import { facts } from '@/lib/site';
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Speak to the factory directly. Vardhman Impex, Boranada Industrial Area, Jodhpur — furniture manufacturing and export enquiries.',
+    'Speak to the factory directly. Vardhman Impex, Boranada Industrial Area, Jodhpur. Furniture manufacturing and export enquiries.',
 };
 
 const META = [

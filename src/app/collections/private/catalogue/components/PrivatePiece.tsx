@@ -88,7 +88,7 @@ function Dossier({ piece }: { piece: Piece }) {
 
   return (
     <div className="bg-paper-warm border border-line p-5 lg:p-6 filter-swap">
-      <p className="text-manifest-sm text-clay">Trade dossier — {piece.ref}</p>
+      <p className="text-manifest-sm text-clay">Trade dossier · {piece.ref}</p>
 
       <dl className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 mt-4">
         {rows.map((row) => (
@@ -132,7 +132,7 @@ export default function PrivatePiece({
       : state === 'sent'
         ? 'Enquiry sent'
         : state === 'error'
-          ? 'Failed — retry'
+          ? 'Failed · retry'
           : 'Enquire';
 
   if (view === 'manifest') {
@@ -149,7 +149,7 @@ export default function PrivatePiece({
               onClick={onToggle}
               aria-expanded={open}
               aria-controls={dossierId}
-              className="text-left font-serif text-[1.05rem] leading-snug text-ink hover:text-clay transition-colors duration-base"
+              className="text-left text-[1.0625rem] font-medium leading-snug tracking-tight text-ink hover:text-clay transition-colors duration-base"
             >
               {piece.name}
             </button>
@@ -161,10 +161,10 @@ export default function PrivatePiece({
             {piece.dimensions}
           </td>
           <td className="py-3 pr-4 text-manifest-sm text-ink numeral whitespace-nowrap">
-            {carton ? carton.cbm.toFixed(2) : '—'}
+            {carton ? carton.cbm.toFixed(2) : '–'}
           </td>
           <td className="py-3 pr-4 text-manifest-sm text-muted numeral whitespace-nowrap">
-            {carton ? `${carton.per20} / ${carton.per40}` : '—'}
+            {carton ? `${carton.per20} / ${carton.per40}` : '–'}
           </td>
           <td className="py-3 pr-4">
             <Quantity value={quantity} onChange={onQuantity} pieceRef={piece.ref} />
@@ -180,7 +180,7 @@ export default function PrivatePiece({
                 {enquiryLabel}
               </button>
               <a
-                href={whatsappUrl(`Private catalogue enquiry — ${piece.name}`, pieceFields(piece))}
+                href={whatsappUrl(`Private catalogue enquiry: ${piece.name}`, pieceFields(piece))}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Message on WhatsApp about ${piece.name}`}
@@ -219,14 +219,14 @@ export default function PrivatePiece({
         />
         {piece.season && (
           <span className="absolute top-0 left-0 bg-clay text-paper text-manifest-sm px-3 py-1.5">
-            New — {piece.season}
+            New · {piece.season}
           </span>
         )}
       </div>
 
       <div className="pt-4 mt-4 border-t border-line flex flex-col flex-1">
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="font-serif text-title font-light">{piece.name}</h2>
+          <h2 className="text-title">{piece.name}</h2>
           <span className="text-manifest-sm text-muted numeral shrink-0">{piece.ref}</span>
         </div>
         <p className="text-manifest-sm text-clay mt-2">{piece.collection}</p>
@@ -236,7 +236,7 @@ export default function PrivatePiece({
             ['Material', piece.material],
             ['Finish', piece.finish],
             ['Dimensions', piece.dimensions],
-            ['Volume', carton ? `${carton.cbm.toFixed(2)} CBM · ${carton.per40}/40ft` : '—'],
+            ['Volume', carton ? `${carton.cbm.toFixed(2)} CBM · ${carton.per40}/40ft` : '–'],
           ].map(([key, value]) => (
             <div key={key} className="flex gap-3">
               <dt className="text-manifest-sm text-muted w-24 shrink-0">{key}</dt>
@@ -275,7 +275,7 @@ export default function PrivatePiece({
             {state ? enquiryLabel : `Enquire on ${piece.ref}`}
           </button>
           <a
-            href={whatsappUrl(`Private catalogue enquiry — ${piece.name}`, pieceFields(piece))}
+            href={whatsappUrl(`Private catalogue enquiry: ${piece.name}`, pieceFields(piece))}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Message on WhatsApp about ${piece.name}`}

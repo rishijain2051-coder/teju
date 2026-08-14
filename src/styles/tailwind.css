@@ -107,10 +107,17 @@
     margin: 0;
   }
 
-  /* Fraunces is variable: drive its optical size and softness rather than
-     leaving it at defaults, which is what makes it read generic. */
+  /* Fraunces is variable: drive its softness and wonk rather than leaving them
+     at defaults, which is what makes it read generic.
+
+     `opsz` is deliberately NOT pinned any more. It was fixed at 144 — the
+     display end of the axis — so the 21px wordmark and every small serif on the
+     site rendered with display forms: hairline strokes, high stroke contrast,
+     and the wonk exaggerated at a size that cannot carry it. Left to
+     `font-optical-sizing: auto` the axis tracks the rendered size, so large type
+     keeps the sharp display cut and small type gets the sturdier text cut. */
   .font-serif {
-    font-variation-settings: 'SOFT' 0, 'WONK' 1, 'opsz' 144;
+    font-variation-settings: 'SOFT' 0, 'WONK' 1;
   }
 
   ::selection {
@@ -161,10 +168,25 @@
     letter-spacing: -0.025em;
   }
 
+  /*
+   * The family split: Fraunces owns the display roles above — mega, display,
+   * display-sm — and DM Sans owns title and everything below it.
+   *
+   * Fraunces between 22 and 34px was the weakest type on the site. WONK and the
+   * soft axis read as character at 100px and as a wobble at 24px, which is what
+   * made every card title, capability heading and pull quote look unresolved.
+   * The serif now appears only where it is genuinely display-sized.
+   *
+   * Capped at 1.75rem rather than 2.125rem so it clears `display-sm`'s 2rem
+   * floor: the two roles used to overlap, so a title and a section heading could
+   * render at the same size and stop reading as different jobs.
+   */
   .text-title {
-    font-size: clamp(1.375rem, 1.1rem + 1.3vw, 2.125rem);
-    line-height: 1.12;
-    letter-spacing: -0.015em;
+    font-family: var(--font-sans);
+    font-size: clamp(1.25rem, 1.05rem + 0.95vw, 1.75rem);
+    line-height: 1.28;
+    letter-spacing: -0.02em;
+    font-weight: 400;
   }
 
   .text-lead {
@@ -280,14 +302,40 @@
   }
 
   /* Type that wipes up from behind a mask — the editorial reveal. */
+
+  /*
+   * The mask has to clear the ink, not the line box.
+   *
+   * The display roles run a line-height below 1 (0.9–0.98), so descenders hang
+   * outside the content box. `overflow: hidden` was slicing them off flat: the
+   * g in "something lasting." and every y, p and j inside a wipe lost its tail.
+   * Padding extends the clip region past the baseline; the matching negative
+   * margin gives the borrowed space back, so stacked lines keep their rhythm and
+   * nothing below the heading moves.
+   */
   .wipe {
     overflow: hidden;
     display: block;
+    padding-bottom: 0.22em;
+    margin-bottom: -0.22em;
   }
 
+  /*
+   * 135%, not 105%. The start offset has to exceed the inner's own height plus
+   * that padding, or the first frame shows the descenders sitting in the
+   * allowance below the baseline before the tween starts. Kept in step with
+   * `yPercent` in MotionProvider, which owns the same transform once GSAP loads.
+   *
+   * Headroom check, measured rather than guessed: Fraunces puts its deepest ink
+   * 0.25em below the baseline, and at a 0.92 line-height the baseline sits far
+   * enough down the box that the ink lands ~0.15em past its bottom edge. 0.16em
+   * of padding cleared that by 0.4px — technically not clipping, and far too
+   * tight to survive a different face or a leading change. 0.22em gives it real
+   * room while staying well inside the 135% travel.
+   */
   .wipe-inner {
     display: block;
-    transform: translate3d(0, 105%, 0);
+    transform: translate3d(0, 135%, 0);
     transition: transform var(--dur-reveal) var(--ease-out);
   }
 

@@ -131,7 +131,7 @@ export async function POST(request: Request) {
       <table style="max-width:640px;margin:0 auto;background:#fff;border-collapse:collapse">
         <tr><td style="padding:28px 32px;border-bottom:1px solid #D6CCBC">
           <div style="color:#973F24;font:12px/1.5 monospace;text-transform:uppercase;letter-spacing:.18em">${escapeHtml(subject)}</div>
-          <div style="color:#17130F;font:22px/1.3 Georgia,serif;margin-top:8px">New enquiry — ${escapeHtml(brand.name)}</div>
+          <div style="color:#17130F;font:22px/1.3 Georgia,serif;margin-top:8px">New enquiry · ${escapeHtml(brand.name)}</div>
         </td></tr>
         <tr><td style="padding:24px 32px">
           <table style="border-collapse:collapse;width:100%">${rows}</table>
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
 
   const delivered = await sendMail({
     to: brand.email,
-    subject: `${subject} — ${clean[0]?.value ?? 'enquiry'}`,
+    subject: `${subject} · ${clean[0]?.value ?? 'enquiry'}`,
     html,
     replyTo,
   });

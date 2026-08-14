@@ -42,8 +42,8 @@ const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: {
-    default: 'Vardhman Impex — Furniture Manufacturer & Exporter, Jodhpur',
-    template: '%s — Vardhman Impex',
+    default: 'Vardhman Impex · Furniture Manufacturer & Exporter, Jodhpur',
+    template: '%s · Vardhman Impex',
   },
   description:
     'Solid mango and reclaimed timber furniture, made in Jodhpur and shipped to nine countries. Eighteen years of in-house manufacturing, low minimums, a catalogue of over a thousand designs.',
@@ -65,13 +65,13 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: SITE,
     siteName: 'Vardhman Impex',
-    title: 'Vardhman Impex — Furniture Manufacturer & Exporter, Jodhpur',
+    title: 'Vardhman Impex · Furniture Manufacturer & Exporter, Jodhpur',
     description:
       'Solid mango and reclaimed timber furniture, made in Jodhpur and shipped to nine countries.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vardhman Impex — Furniture Manufacturer & Exporter, Jodhpur',
+    title: 'Vardhman Impex · Furniture Manufacturer & Exporter, Jodhpur',
     description:
       'Solid mango and reclaimed timber furniture, made in Jodhpur and shipped to nine countries.',
   },

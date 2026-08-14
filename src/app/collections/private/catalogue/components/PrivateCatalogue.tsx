@@ -107,7 +107,7 @@ export default function PrivateCatalogue() {
     setPieceState((prev) => ({ ...prev, [piece.ref]: 'sending' }));
 
     const result = await submitEnquiry(
-      `Private catalogue enquiry — ${piece.name}`,
+      `Private catalogue enquiry: ${piece.name}`,
       pieceFields(piece)
     );
 
@@ -149,7 +149,7 @@ export default function PrivateCatalogue() {
           <Link href="/" className="flex items-center gap-3">
             <AppLogo size={26} className="brightness-0 invert" />
             <span className="font-serif text-[1.15rem] leading-none tracking-tight">
-              Vardhman <span className="italic">Impex</span>
+              Vardhman Impex
             </span>
           </Link>
 
@@ -232,9 +232,8 @@ export default function PrivateCatalogue() {
                     }`}
                   >
                     {entry}
-                    <span className="ml-2 text-manifest-sm text-muted numeral">
-                      {String(count).padStart(2, '0')}
-                    </span>
+                    {/* Quantity, not an index — see CollectionsGrid. */}
+                    <span className="ml-2 text-manifest-sm text-muted numeral">{count}</span>
                   </button>
                 );
               })}
@@ -307,7 +306,7 @@ export default function PrivateCatalogue() {
           {/* ── The range ───────────────────────────────────────────────────── */}
           {visible.length === 0 ? (
             <p className="text-lead text-muted mt-12">
-              Nothing matches that. Clear the search, or ask us — the drawing floor produces to
+              Nothing matches that. Clear the search, or ask us: the drawing floor produces to
               specification.
             </p>
           ) : view === 'gallery' ? (

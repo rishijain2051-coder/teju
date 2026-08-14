@@ -93,7 +93,7 @@ export default function FscPanel({
             <dd className={`text-body numeral text-right ${fsc.code ? (invert ? 'text-paper' : 'text-ink') : lead}`}>
               {/* Never invented: an FSC claim without the holder's own code is
                   one the buyer cannot verify. */}
-              {fsc.code || 'On the certificate — quoted with each claim'}
+              {fsc.code || 'On the certificate, quoted with each claim'}
             </dd>
           </div>
         </dl>

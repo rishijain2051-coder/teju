@@ -16,7 +16,6 @@ export default function FeaturedProducts() {
     <section ref={ref} id="pieces" className="py-20 lg:py-32 bg-paper-deep">
       <div className="shell">
         <SectionHead
-          index="03"
           title={<>Selected <span className="italic">pieces</span></>}
           href="/collections"
           linkLabel="Full catalogue"

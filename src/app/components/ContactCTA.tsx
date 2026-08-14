@@ -29,7 +29,7 @@ export default function ContactCTA() {
           </h2>
 
           <p className="text-lead text-paper/70 max-w-measure mt-8 rise" style={{ transitionDelay: '260ms' }}>
-            Retailer, interior designer, or hospitality buyer — send us the
+            Retailer, interior designer, or hospitality buyer: send us the
             specification and we will come back with honest lead times and a price
             that holds.
           </p>

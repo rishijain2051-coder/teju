@@ -48,7 +48,7 @@ export default function PieceCard({
 
         <div className="pt-4 mt-4 border-t border-line group-hover:border-ink transition-colors duration-base">
           <div className="flex items-baseline justify-between gap-4">
-            <h3 className="font-serif text-title font-light group-hover:text-clay transition-colors duration-base">
+            <h3 className="text-title group-hover:text-clay transition-colors duration-base">
               {piece.name}
             </h3>
             <span className="text-manifest-sm text-muted numeral shrink-0">{piece.ref}</span>

@@ -57,7 +57,7 @@ const COLLECTIONS = [
     image: 'col-living',
     story: [
       'The living room is where a buyer’s taste is on show, so it is where a range earns or loses its reputation. Sideboards, consoles and bar cabinets carry more surface area than anything else we make, which means a finish has nowhere to hide.',
-      'Everything here is built on a framed carcass in solid mango or reclaimed hardwood — no veneered board, no edge banding. The fronts are where the work goes: chevron, parquet, fretwork and carved relief, all cut and laid on our own benches.',
+      'Everything here is built on a framed carcass in solid mango or reclaimed hardwood: no veneered board, no edge banding. The fronts are where the work goes: chevron, parquet, fretwork and carved relief, all cut and laid on our own benches.',
     ],
     spec: [
       { key: 'Timber', value: 'Solid mango, reclaimed hardwood' },
@@ -90,7 +90,7 @@ const COLLECTIONS = [
     range: '40 designs',
     image: 'col-dining',
     story: [
-      'Dining pieces get looked at for the length of a meal, which is longer than most furniture is ever studied. The patterned fronts in this collection — parquet, tile, checkerboard — are here because they hold up to that kind of attention.',
+      'Dining pieces get looked at for the length of a meal, which is longer than most furniture is ever studied. The patterned fronts in this collection (parquet, tile, checkerboard) are here because they hold up to that kind of attention.',
       'Tile work is painted and fired in Jodhpur, then set into a rebate so it finishes flush with the frame. Parquet fronts are laid piece by piece and sanded as a single face, which is the only way the joints disappear.',
     ],
     spec: [
@@ -107,7 +107,7 @@ const COLLECTIONS = [
     range: '30 designs',
     image: 'col-bedroom',
     story: [
-      'Bedroom furniture is judged by its drawers. Everything else can be right, and one drawer that drops or binds still comes back as a complaint — so this is the collection where the fitting bench does the most work.',
+      'Bedroom furniture is judged by its drawers. Everything else can be right, and one drawer that drops or binds still comes back as a complaint, so this is the collection where the fitting bench does the most work.',
       'Runners are wooden and waxed rather than metal-slid, and every drawer is fitted to its own opening and numbered to it. The finishes run quieter here: whitewash thinned to let the grain through, natural matt, pale stains.',
     ],
     spec: [
@@ -142,7 +142,7 @@ const COLLECTIONS = [
     range: '25 designs',
     image: 'col-occasional',
     story: [
-      'The smaller commissions — mirrors, side tables, long shallow consoles. They are what a buyer adds to load a container properly, and they are also where we try something before it reaches a full range.',
+      'The smaller commissions: mirrors, side tables, long shallow consoles. They are what a buyer adds to load a container properly, and they are also where we try something before it reaches a full range.',
       'Because they are small, proportionally more of each one is handwork: a stone top cut to size here, a frame pieced from offcuts kept back off the floor. Variation across a run is higher, and on one or two designs that is the entire point.',
     ],
     spec: [
@@ -239,7 +239,7 @@ export const pieces: Piece[] = withSlugs([
     finish: 'Carved relief',
     dimensions: 'L170 × D42 × H78 cm',
     image: 'pr-wave-carved',
-    note: 'The relief is carved across all four doors as one continuous run, then split — so the pattern reads through when they are closed.',
+    note: 'The relief is carved across all four doors as one continuous run, then split, so the pattern reads through when they are closed.',
   },
 
   // ── Storage ─────────────────────────────────────────────────────────────
@@ -345,7 +345,7 @@ export const pieces: Piece[] = withSlugs([
     finish: 'Pale natural',
     dimensions: 'L150 × D42 × H80 cm',
     image: 'pr-barn-drawers',
-    note: 'Half sliding door, half drawer stack — for rooms where a full run of hinged doors would have nowhere to open.',
+    note: 'Half sliding door, half drawer stack, for rooms where a full run of hinged doors would have nowhere to open.',
   },
 
   // ── Hospitality ─────────────────────────────────────────────────────────
@@ -451,7 +451,7 @@ const PRIVATE_SEED: Omit<Piece, 'slug' | 'private'>[] = [
     finish: 'Checker parquet',
     dimensions: 'L180 × D45 × H80 cm',
     image: 'pr-checkerboard',
-    note: 'Two tones taken from the same log run — one steamed, one not — rather than one of them stained to match.',
+    note: 'Two tones taken from the same log run, one steamed and one not, rather than one of them stained to match.',
   },
   {
     ref: 'VI-1644',
@@ -590,7 +590,7 @@ const PRIVATE_SEED: Omit<Piece, 'slug' | 'private'>[] = [
     finish: 'Natural on slim legs',
     dimensions: 'L165 × D42 × H78 cm',
     image: 'pr-mango-terracotta',
-    note: 'Four doors carried on a raised leg — the version buyers ask for when a room needs to feel lighter than it is.',
+    note: 'Four doors carried on a raised leg: the version buyers ask for when a room needs to feel lighter than it is.',
   },
 
   // ── Occasional ────────────────────────────────────────────────────────

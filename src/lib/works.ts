@@ -43,7 +43,7 @@ export const craftStages: CraftStage[] = [
     title: 'Milling',
     place: 'Machine shop',
     detail:
-      'Cut oversize on purpose. Timber released from a stack will move once it is opened up, so final dimensions are taken later — cutting to size on day one guarantees planing a bow out of it on day twenty.',
+      'Cut oversize on purpose. Timber released from a stack will move once it is opened up, so final dimensions are taken later: cutting to size on day one guarantees planing a bow out of it on day twenty.',
   },
   {
     index: '04',
@@ -201,10 +201,10 @@ export const certification = {
     /** As named on the agreement. */
     signatory: 'Pradeep Kumar Jain',
     licensor: 'FSC Global Development GmbH, Bonn',
-    scope: 'Chain of custody — solid wood furniture and casegoods',
+    scope: 'Chain of custody · solid wood furniture and casegoods',
     /** Why it is offered on request rather than claimed across the board. */
     position:
-      'Certified stock costs more and is not always available in the volume a given order needs, so quoting every piece as certified regardless would be a false claim. We hold the certification, keep certified stock tagged in the yard, and supply against it when a buyer asks — with the claim and our certificate code on the invoice and the packing list.',
+      'Certified stock costs more and is not always available in the volume a given order needs, so quoting every piece as certified regardless would be a false claim. We hold the certification, keep certified stock tagged in the yard, and supply against it when a buyer asks, with the claim and our certificate code on the invoice and the packing list.',
     claims: [
       {
         claim: 'FSC 100%',
@@ -214,7 +214,7 @@ export const certification = {
       {
         claim: 'FSC Mix',
         detail:
-          'Certified and controlled inputs combined under a percentage or credit system. The usual claim on multi-material designs — a timber carcass, an iron frame and a stone top rarely share one source.',
+          'Certified and controlled inputs combined under a percentage or credit system. The usual claim on multi-material designs: a timber carcass, an iron frame and a stone top rarely share one source.',
       },
       {
         claim: 'FSC Recycled',
@@ -241,7 +241,7 @@ export const certification = {
       {
         index: '04',
         detail:
-          'The claim transfers onto your invoice and packing list with our certificate code — which is what your broker and your own buyers will ask to see.',
+          'The claim transfers onto your invoice and packing list with our certificate code, which is what your broker and your own buyers will ask to see.',
       },
       {
         index: '05',

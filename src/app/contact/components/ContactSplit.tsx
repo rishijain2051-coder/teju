@@ -81,7 +81,7 @@ export default function ContactSplit() {
                  invisible. */
               <div className="border border-line-strong p-8 lg:p-10 filter-swap">
                 <p className="text-manifest text-clay">Enquiry sent</p>
-                <h2 className="font-serif text-title font-light mt-4">
+                <h2 className="text-title mt-4">
                   It&apos;s in our inbox. We reply within two working days.
                 </h2>
                 <button
@@ -190,7 +190,7 @@ export default function ContactSplit() {
                       required
                       value={form.message}
                       onChange={handleChange}
-                      placeholder="Ranges, volumes, timelines — as much or as little as you have."
+                      placeholder="Ranges, volumes, timelines. As much or as little as you have."
                       className={`${field} resize-none`}
                     />
                   </div>

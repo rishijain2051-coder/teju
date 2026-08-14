@@ -42,9 +42,11 @@ export default function CollectionsGrid() {
                 }`}
               >
                 {category}
-                <span className="ml-2 text-manifest-sm text-muted numeral">
-                  {String(count).padStart(2, '0')}
-                </span>
+                {/* Not zero-padded. A leading zero says "fixed-width
+                    identifier", so `02` beside a tab read as an index and
+                    collided with the collection indices further up the page.
+                    A count is a quantity. */}
+                <span className="ml-2 text-manifest-sm text-muted numeral">{count}</span>
               </button>
             );
           })}

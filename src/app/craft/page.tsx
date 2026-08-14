@@ -56,7 +56,7 @@ export default function CraftPage() {
         <PageHeader
           eyebrow="The making"
           title="Eight stages, one roof."
-          lead="Nothing here is subcontracted. A board is graded in our own yard, cut on our own saws, framed, carved, finished and packed by people on our own payroll — which is the only reliable way to promise a buyer that the third container matches the first."
+          lead="Nothing here is subcontracted. A board is graded in our own yard, cut on our own saws, framed, carved, finished and packed by people on our own payroll, which is the only reliable way to promise a buyer that the third container matches the first."
           meta={META}
         />
 
@@ -76,7 +76,7 @@ export default function CraftPage() {
               />
             </div>
             <p className="text-manifest-sm text-muted mt-4 rise">
-              Sliding barn-door cabinet, iron track fitted at the frame bench — Boranada
+              Sliding barn-door cabinet, iron track fitted at the frame bench · Boranada
             </p>
           </section>
 
@@ -84,7 +84,7 @@ export default function CraftPage() {
               images in a column reads as a gallery, and the copy is the point. */}
           <section className="py-20 lg:py-32">
             <div className="shell">
-              <SectionHead index="01" title={<>From board to <span className="italic">carton</span></>} />
+              <SectionHead title={<>From board to <span className="italic">carton</span></>} />
 
               <ol data-reveal-group className="mt-12 lg:mt-16">
                 {craftStages.map((stage) => {
@@ -97,7 +97,7 @@ export default function CraftPage() {
                       <div className="lg:col-span-3 flex items-baseline gap-5">
                         <span className="text-manifest-sm text-clay numeral">{stage.index}</span>
                         <div>
-                          <h3 className="font-serif text-title font-light">{stage.title}</h3>
+                          <h3 className="text-title">{stage.title}</h3>
                           <p className="text-manifest-sm text-muted mt-1.5">{stage.place}</p>
                         </div>
                       </div>
@@ -131,12 +131,12 @@ export default function CraftPage() {
           {/* Materials */}
           <section className="py-20 lg:py-32 bg-paper-deep">
             <div className="shell">
-              <SectionHead index="02" title={<>What we <span className="italic">build with</span></>} />
+              <SectionHead title={<>What we <span className="italic">build with</span></>} />
 
               <div data-reveal-group className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mt-12 lg:mt-16">
                 {MATERIALS.map((material) => (
                   <div key={material.name} className="py-6 border-t border-line-strong rise">
-                    <h3 className="font-serif text-title font-light">{material.name}</h3>
+                    <h3 className="text-title">{material.name}</h3>
                     <p className="text-body text-muted mt-2.5 max-w-measure">{material.detail}</p>
                   </div>
                 ))}
@@ -149,7 +149,6 @@ export default function CraftPage() {
           <section id="fsc" className="py-20 lg:py-32 bg-teal text-paper grain">
             <div className="shell relative z-10">
               <SectionHead
-                index="03"
                 invert
                 title={<>Certified <span className="italic text-timber">timber</span></>}
               />

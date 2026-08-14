@@ -23,7 +23,7 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
   const [honeypot, setHoneypot] = useState('');
   const [form, setForm] = useState({ email: '', quantity: '', message: '' });
 
-  const subject = `Enquiry — ${piece.ref} ${piece.name}`;
+  const subject = `Enquiry: ${piece.ref} ${piece.name}`;
 
   const fields = (): EnquiryField[] => [
     ...pieceFields(piece),
@@ -65,7 +65,7 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
     return (
       <div className="border border-line-strong p-6 lg:p-8 filter-swap">
         <p className="text-manifest text-clay">Enquiry sent</p>
-        <h3 className="font-serif text-title font-light mt-3">
+        <h3 className="text-title mt-3">
           {piece.ref} is with us. We reply within two working days.
         </h3>
         <button type="button" onClick={() => setState('idle')} className="btn btn-ghost mt-6">

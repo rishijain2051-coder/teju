@@ -82,7 +82,6 @@ export default function TrustSection() {
     <section ref={ref} className="py-20 lg:py-32">
       <div className="shell">
         <header className="flex items-baseline gap-5 rise">
-          <span className="text-manifest-sm text-muted numeral">04</span>
           <h2 className="font-serif text-display font-light">
             By the <span className="italic">numbers</span>
           </h2>

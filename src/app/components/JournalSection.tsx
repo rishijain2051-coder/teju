@@ -13,7 +13,6 @@ export default function JournalSection() {
     <section ref={ref} id="journal" className="py-20 lg:py-32">
       <div className="shell">
         <header className="rule-label rise">
-          <span className="text-manifest-sm text-muted numeral">06</span>
           <div className="flex-1">
             <h2 className="font-serif text-display font-light -mt-2">
               From the <span className="italic">workshop</span>
@@ -53,7 +52,7 @@ export default function JournalSection() {
                       <span className="text-manifest-sm text-clay">{article.category}</span>
                       <span className="text-manifest-sm text-muted">{article.date}</span>
                     </div>
-                    <h3 className="font-serif text-title font-light mt-3 group-hover:text-clay transition-colors duration-base">
+                    <h3 className="text-title mt-3 group-hover:text-clay transition-colors duration-base">
                       {article.title}
                     </h3>
                     <p className="text-body text-muted mt-2">{article.excerpt}</p>

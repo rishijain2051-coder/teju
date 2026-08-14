@@ -2,40 +2,32 @@ import React from 'react';
 import Link from 'next/link';
 
 interface SectionHeadProps {
-  /** Filed-document numbering. Two digits, set in the manifest face. Omitted on
-   *  sections that are not part of a page's sequence, like "related pieces". */
-  index?: string;
   title: React.ReactNode;
   /** Optional trailing link, hidden on small screens where it crowds the rule. */
   href?: string;
   linkLabel?: string;
-  /** On a dark ground the rule and the numeral both have to lighten. */
+  /** On a dark ground the rule has to lighten. */
   invert?: boolean;
 }
 
 /**
- * The section masthead used across every page: a numbered rule with the heading
- * hung off it. Eight sections had hand-rolled copies of this markup, which is
- * why three of them had drifted to different rule colours and two had lost the
- * optical `-mt-2` that sits the serif on the rule properly.
+ * The section masthead used across every page: a ruled heading. Eight sections
+ * had hand-rolled copies of this markup, which is why three of them had drifted
+ * to different rule colours and two had lost the optical `-mt-2` that sits the
+ * serif on the rule properly.
+ *
+ * No section numbering. Every section used to open with 01 / 02 / 03, which
+ * collided with the numbered sequences *inside* several of them — the home page
+ * showed "01 The collections" directly above the card marked 01, and the factory
+ * page put "03" above capability 03. Numerals now mean one thing on this site:
+ * position in a sequence the reader actually needs to follow.
  */
-export default function SectionHead({
-  index,
-  title,
-  href,
-  linkLabel,
-  invert = false,
-}: SectionHeadProps) {
+export default function SectionHead({ title, href, linkLabel, invert = false }: SectionHeadProps) {
   return (
     <header
       className="rule-label rise"
       style={invert ? { borderColor: 'var(--line-invert)' } : undefined}
     >
-      {index && (
-        <span className={`text-manifest-sm numeral ${invert ? 'text-paper/45' : 'text-muted'}`}>
-          {index}
-        </span>
-      )}
       <div className="flex-1">
         <h2 className="font-serif text-display font-light -mt-2">{title}</h2>
       </div>

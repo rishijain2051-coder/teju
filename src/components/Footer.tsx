@@ -15,7 +15,7 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <AppLogo size={30} />
               <span className="font-serif text-[1.35rem] leading-none tracking-tight">
-                Vardhman <span className="italic">Impex</span>
+                Vardhman Impex
               </span>
             </div>
             <p className="text-body text-muted mt-5 max-w-[34ch]">

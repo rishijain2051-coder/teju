@@ -55,7 +55,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
     { label: 'Container', value: `${twenty.toFixed(2)} × 20 ft, or ${forty.toFixed(2)} × 40 ft HQ` },
     ...selection.rows.map((row) => ({
       label: row.piece.ref,
-      value: `${row.qty} × ${row.piece.name} (${row.piece.collection}) — ${row.cbm.toFixed(2)} CBM`,
+      value: `${row.qty} × ${row.piece.name} (${row.piece.collection}) · ${row.cbm.toFixed(2)} CBM`,
     })),
     { label: 'Email', value: email },
   ];
@@ -65,7 +65,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
     setErrorMsg('');
 
     const result = await submitEnquiry(
-      `Private catalogue — container plan, ${selection.units} pieces`,
+      `Private catalogue container plan · ${selection.units} pieces`,
       fields(),
       { email }
     );
@@ -156,19 +156,19 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
             <dl className="lg:col-span-5 grid grid-cols-3 gap-x-6">
               <div>
                 <dt className="text-manifest-sm text-paper/45">Designs</dt>
-                <dd className="font-serif text-[1.6rem] leading-none font-light numeral mt-1.5">
+                <dd className="text-[1.75rem] leading-none font-normal tracking-tight numeral mt-1.5">
                   {selection.rows.length}
                 </dd>
               </div>
               <div>
                 <dt className="text-manifest-sm text-paper/45">Pieces</dt>
-                <dd className="font-serif text-[1.6rem] leading-none font-light numeral mt-1.5">
+                <dd className="text-[1.75rem] leading-none font-normal tracking-tight numeral mt-1.5">
                   {selection.units}
                 </dd>
               </div>
               <div>
                 <dt className="text-manifest-sm text-paper/45">Volume</dt>
-                <dd className="font-serif text-[1.6rem] leading-none font-light numeral mt-1.5">
+                <dd className="text-[1.75rem] leading-none font-normal tracking-tight numeral mt-1.5">
                   {cbm.toFixed(2)}
                   <span className="text-manifest-sm text-timber ml-1.5">CBM</span>
                 </dd>
@@ -234,7 +234,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                   {errorMsg}{' '}
                   <a
                     href={whatsappUrl(
-                      `Private catalogue — container plan, ${selection.units} pieces`,
+                      `Private catalogue container plan · ${selection.units} pieces`,
                       fields()
                     )}
                     target="_blank"

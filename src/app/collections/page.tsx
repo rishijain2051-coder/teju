@@ -31,7 +31,7 @@ export default function CollectionsPage() {
         <PageHeader
           eyebrow="The catalogue"
           title="Everything we make."
-          lead="A working selection from the range — casegoods in solid mango, reclaimed hardwood and iron. The full catalogue runs deeper, and opens to verified trade buyers."
+          lead="A working selection from the range: casegoods in solid mango, reclaimed hardwood and iron. The full catalogue runs deeper, and opens to verified trade buyers."
           meta={META}
         />
 
@@ -69,7 +69,7 @@ export default function CollectionsPage() {
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h2 className="font-serif text-title font-light group-hover:text-clay transition-colors duration-base">
+                          <h2 className="text-title group-hover:text-clay transition-colors duration-base">
                             {collection.name}
                           </h2>
                           <p className="text-body text-muted mt-1 hidden sm:block">

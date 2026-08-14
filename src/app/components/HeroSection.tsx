@@ -28,7 +28,7 @@ export default function HeroSection() {
         <div className="lg:col-span-7 flex flex-col justify-between pt-24 pb-8 lg:pt-32 lg:pb-10 px-gutter">
           <div className="max-w-[46rem]">
             <p className="text-manifest text-clay veil" style={{ transitionDelay: '80ms' }}>
-              Est. {brand.established} — {brand.origin}
+              Est. {brand.established} · {brand.origin}
             </p>
 
             <h1 className="font-serif text-mega font-light mt-6 lg:mt-8">
@@ -49,7 +49,7 @@ export default function HeroSection() {
               style={{ transitionDelay: '520ms' }}
             >
               Solid mango and reclaimed hardwood, cut, carved and finished on our own
-              floor in Boranada — then packed into containers bound for nine countries.
+              floor in Boranada, then packed into containers bound for nine countries.
               Low minimums. Honest lead times. One set of hands from log to lorry.
             </p>
 
@@ -83,20 +83,17 @@ export default function HeroSection() {
                 aria-current={i === active}
                 className="group flex items-center gap-2.5 py-3.5"
               >
-                {/* Scales rather than resizing: `width` is a layout property and
-                    this re-runs every 7s for the life of the page. */}
+                {/* Rules alone, no numerals. The plate caption already reads
+                    "Plate 01 / 03", and these three sat within a screen of the
+                    collection card indices below — the same digits meaning two
+                    different things. Scales rather than resizing: `width` is a
+                    layout property and this re-runs every 7s for the life of the
+                    page. The `aria-label` still names each plate. */}
                 <span
-                  className={`block h-px w-14 origin-left transition-[transform,background-color] duration-base ease-out ${
-                    i === active ? 'scale-x-100 bg-ink' : 'scale-x-50 bg-line-strong group-hover:bg-ink'
+                  className={`block h-px w-16 origin-left transition-[transform,background-color] duration-base ease-out ${
+                    i === active ? 'scale-x-100 bg-ink' : 'scale-x-[0.45] bg-line-strong group-hover:bg-ink'
                   }`}
                 />
-                <span
-                  className={`text-manifest-sm numeral transition-colors duration-base ${
-                    i === active ? 'text-ink' : 'text-muted group-hover:text-ink'
-                  }`}
-                >
-                  {String(i + 1).padStart(2, '0')}
-                </span>
               </button>
             ))}
           </div>
