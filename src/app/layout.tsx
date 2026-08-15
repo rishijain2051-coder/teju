@@ -1,35 +1,31 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, Fraunces, IBM_Plex_Mono } from 'next/font/google';
 import MotionProvider from '@/components/motion/MotionProvider';
+import '../styles/fonts.css';
 import '../styles/tailwind.css';
 
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  weight: ['300', '400', '500'],
-  variable: '--font-dm-sans',
-  display: 'swap',
-});
-
-// Variable axes are requested explicitly. Left at defaults Fraunces reads like
-// any other serif; driven at high optical size with WONK on, it carries the
-// display voice for the whole site.
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  axes: ['SOFT', 'WONK', 'opsz'],
-  style: ['normal', 'italic'],
-  variable: '--font-fraunces',
-  display: 'swap',
-});
-
-// The manifest layer. Previously every `font-mono` class on the site fell back
-// to whatever monospace the browser happened to have.
-const plexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-plex-mono',
-  display: 'swap',
-});
+/*
+ * The three families — DM Sans, Fraunces with its SOFT/WONK/opsz axes, and IBM
+ * Plex Mono — are self-hosted from `public/fonts/` and declared in
+ * `src/styles/fonts.css`, rather than requested through `next/font/google`.
+ *
+ * `next/font/google` fetches from fonts.gstatic.com during compilation. When a
+ * build machine cannot reach it, next/font retries three times and then fails the
+ * build — which is what took CI down, with nothing wrong in the code. The files in
+ * `public/fonts/` are the exact bytes that loader was producing, lifted out of the
+ * build output, so the rendered type, the unicode-range splitting and the
+ * metric-adjusted fallbacks are unchanged. Nothing here touches the network.
+ *
+ * The latin faces are preloaded below, which is the one thing next/font did for us
+ * that a plain stylesheet does not.
+ */
+const PRELOADED_FONTS = [
+  '/fonts/dm-sans-300-latin.woff2',
+  '/fonts/fraunces-latin.woff2',
+  '/fonts/fraunces-latin-italic.woff2',
+  '/fonts/ibm-plex-mono-400-latin.woff2',
+  '/fonts/ibm-plex-mono-500-latin.woff2',
+];
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -83,7 +79,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${fraunces.variable} ${plexMono.variable}`}>
+    <html lang="en">
+      <head>
+        {PRELOADED_FONTS.map((href) => (
+          <link
+            key={href}
+            rel="preload"
+            href={href}
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+        ))}
+      </head>
       <body className="bg-paper text-ink antialiased">
         <MotionProvider />
         {children}
