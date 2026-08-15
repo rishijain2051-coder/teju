@@ -879,16 +879,26 @@
 }
 
 
-/* The rest of the page crossfades under the travelling plate. Shorter than the
-   morph so the incoming page has settled by the time the plate lands — derived
-   from it rather than pinned, so the two can never drift apart. Both sides are
-   now full of type (see COMPOSE_FIRST_FOLD in layout.tsx), and a long crossfade
-   of one page of writing over another is legible as double exposure, so the
-   shorter this is the cleaner it reads. */
+/*
+ * Everything that is not the photograph is replaced outright, not crossfaded.
+ *
+ * The browser's default crossfades the two root snapshots, and a frozen frame of
+ * it on a phone is a printing error: the outgoing headline sits straight through
+ * the incoming one, and two spec lists overlap word for word. Composing the first
+ * fold made it worse rather than better, because it gave the incoming page a full
+ * complement of type to double-expose against. Nothing is gained by dissolving
+ * one page of writing into another — the eye is on the plate, which is the one
+ * thing that genuinely persists across the two documents.
+ *
+ * `animation: none` on both halves also drops the UA's `plus-lighter` blend, so
+ * the incoming snapshot simply paints opaque over the outgoing one: no ghost, no
+ * gap, and two full-viewport textures fewer to composite every frame — which is
+ * the phone's problem far more than the desktop's.
+ */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: calc(var(--dur-morph) * 0.6);
-  animation-timing-function: var(--ease-out);
+  animation: none;
+  opacity: 1;
 }
 
 /*
