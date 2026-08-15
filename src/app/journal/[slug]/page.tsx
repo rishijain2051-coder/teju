@@ -99,7 +99,7 @@ export default async function ArticlePage({ params }: Params) {
         <Reveal>
           <div className="shell">
             {/* Destination of the journal-card morph — see PlateLink. */}
-            <div data-plate="active" className="plate aspect-[16/9] lg:aspect-[21/9] rise">
+            <div data-plate="active" className="plate aspect-[16/9] lg:aspect-[21/9]">
               <AppImage
                 src={plate.src}
                 alt={plate.alt}

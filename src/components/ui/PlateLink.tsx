@@ -1,108 +1,67 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useTransition } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import React, { useCallback } from 'react';
 
 /**
  * A link that carries its photograph across the navigation.
  *
  * Clicking a catalogue card morphs its plate into the plate at the top of the
- * page it opens: the photograph is continuous, so the two pages read as one
+ * page it opens, so the photograph is continuous and the two pages read as one
  * object being approached rather than two documents being swapped.
  *
- * Why this is hand-driven rather than `@view-transition { navigation: auto }`:
- * that rule only fires on a real document navigation, and the App Router does
- * soft navigations. Next 15.5 does expose `experimental.viewTransition`, but it
- * delegates to React's `<ViewTransition>`, which does not exist in the stable
- * React 19.0.3 this project is pinned to — moving the site to a React
- * experimental build to get a page transition would be a bad trade.
+ * This is a plain anchor on purpose, and the transition is the browser's.
  *
- * Progressive enhancement, in three layers:
- *   1. No `startViewTransition` (Firefox today) — the click is not intercepted
- *      at all and `next/link` behaves exactly as it did before.
- *   2. Reduced motion — same, no transition is started.
- *   3. A navigation that stalls — the promise resolves on a timeout so the
- *      transition can never leave the page frozen mid-capture.
+ * The first build of this drove `document.startViewTransition` by hand around
+ * `router.push`, because `@view-transition { navigation: auto }` only fires on a
+ * real document navigation and the App Router soft-navigates. It worked, and it
+ * was slow in a way no amount of easing could fix: `startViewTransition` holds
+ * the page on the outgoing snapshot until the new DOM exists, and the same
+ * navigation that takes ~30ms on its own took ~870ms inside that hold. The
+ * scheduler was not starved — a frozen document runs *more* timer callbacks, not
+ * fewer — so there was nothing to tune. Measured against it, a full document
+ * navigation to these prerendered pages is 26ms to DOMContentLoaded and 39ms to
+ * load, and the browser runs the morph itself with no promise to resolve, no
+ * timeout to guard, and no frozen frame at all.
+ *
+ * So the client-side router is given up for these five links, and the platform
+ * does the work. Everything else on the site still soft-navigates through
+ * `next/link`; `navigation: auto` only applies to real document loads, so those
+ * are untouched.
+ *
+ * Degrades in one step: a browser without cross-document view transitions
+ * (Firefox today) simply navigates, which is what it did before any of this.
+ * Reduced motion is handled in CSS, where the transition's animations are
+ * switched off but the navigation still happens.
  */
 
-/** Both sides of a morph share this one name. Never two on a page at once — see
- *  `claimPlate`, which clears every other before naming the clicked one. */
-const ACTIVE = 'active';
-
-interface PlateLinkProps extends Omit<React.ComponentProps<typeof Link>, 'onClick'> {
+interface PlateLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  href: string;
   children: React.ReactNode;
 }
 
-/**
- * Exactly one element may carry the shared name when the "old" snapshot is
- * taken, or the browser aborts the whole transition. Destination plates are
- * marked `active` server-side, so a page that is itself a destination (a product
- * page, which also lists related pieces) has to be neutralised before the card
- * that was clicked can claim the name.
- */
-function claimPlate(link: HTMLElement) {
-  document.querySelectorAll<HTMLElement>('[data-plate]').forEach((el) => {
-    el.dataset.plate = 'idle';
-  });
-  const plate = link.querySelector<HTMLElement>('[data-plate]');
-  if (plate) plate.dataset.plate = ACTIVE;
-}
-
-export default function PlateLink({ children, href, ...rest }: PlateLinkProps) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const resolveRef = useRef<(() => void) | null>(null);
-  const timeoutRef = useRef<number | null>(null);
-
-  const settle = useCallback(() => {
-    if (timeoutRef.current !== null) {
-      window.clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-    resolveRef.current?.();
-    resolveRef.current = null;
-  }, []);
-
-  /* The router gives no promise to await, so the pending flag is the signal that
-     the destination has committed and the "new" snapshot can be taken. */
-  useEffect(() => {
-    if (!isPending) settle();
-  }, [isPending, settle]);
-
-  useEffect(() => () => settle(), [settle]);
-
-  const onClick = useCallback(
+export default function PlateLink({ children, href, onClick, ...rest }: PlateLinkProps) {
+  /*
+   * Exactly one element may carry the shared name when the outgoing snapshot is
+   * taken, or the browser abandons the transition. Destination plates are marked
+   * `active` server-side, so a page that is itself a destination — a product page,
+   * which also lists related pieces — already has one named before you click a
+   * card. Clear them all, then name the one being opened.
+   */
+  const claim = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
-      const modified =
-        event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
-      const supported = typeof document !== 'undefined' && 'startViewTransition' in document;
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      // Any of these and the browser's own navigation is the right answer.
-      if (modified || !supported || reduced) return;
-
-      event.preventDefault();
-      claimPlate(event.currentTarget);
-
-      document.startViewTransition(
-        () =>
-          new Promise<void>((resolve) => {
-            resolveRef.current = resolve;
-            /* A stalled navigation must not hold the page under a frozen
-               snapshot. 1.2s is far past a prerendered route and short enough
-               that the fallback still reads as a page change. */
-            timeoutRef.current = window.setTimeout(settle, 1200);
-            startTransition(() => router.push(href.toString()));
-          })
-      );
+      document.querySelectorAll<HTMLElement>('[data-plate]').forEach((el) => {
+        el.dataset.plate = 'idle';
+      });
+      const plate = event.currentTarget.querySelector<HTMLElement>('[data-plate]');
+      if (plate) plate.dataset.plate = 'active';
+      onClick?.(event);
     },
-    [href, router, settle, startTransition]
+    [onClick]
   );
 
   return (
-    <Link href={href} onClick={onClick} {...rest}>
+    <a href={href} onClick={claim} {...rest}>
       {children}
-    </Link>
+    </a>
   );
 }

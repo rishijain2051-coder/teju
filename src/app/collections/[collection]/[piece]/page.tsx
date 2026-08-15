@@ -105,7 +105,7 @@ export default async function PiecePage({ params }: Params) {
                   {/* The destination of the card morph — see PlateLink. Marked
                       `active` from the server so it already carries the shared
                       name when the incoming snapshot is taken. */}
-                  <div data-plate="active" className="plate aspect-[4/3] rise">
+                  <div data-plate="active" className="plate aspect-[4/3]">
                     <AppImage
                       src={plate.src}
                       alt={plate.alt}

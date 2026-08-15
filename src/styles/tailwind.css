@@ -75,6 +75,12 @@
      here rather than as an arbitrary value in one class list, so the whole motion
      scale is visible in one place. */
   --dur-crossfade: 1400ms;
+  /* The page morph. Shorter than --dur-base because a plate travelling half a
+     screen reads as slow long before a colour change does — the eye tracks the
+     photograph the whole way, so every millisecond is visible. Paired with
+     --ease-inout rather than --ease-out: the reveal curve spends its last third
+     crawling toward rest, which on a travelling element reads as hesitation. */
+  --dur-morph: 240ms;
 
   /* The editorial measure */
   --gutter: 1.5rem;
@@ -820,13 +826,37 @@
  * Card plates and destination plates are both `aspect-[4/3]`, so the morph is
  * position and scale only — no aspect distortion to disguise.
  */
+@view-transition {
+  navigation: auto;
+}
+
 [data-plate='active'] {
   view-transition-name: vi-plate;
 }
 
 ::view-transition-group(*) {
-  animation-duration: var(--dur-base);
-  animation-timing-function: var(--ease-out);
+  animation-duration: var(--dur-morph);
+  animation-timing-function: var(--ease-inout);
+}
+
+/*
+ * No crossfade between the two plates.
+ *
+ * They are the same photograph — but not the same file: the card asks srcset for
+ * a 33vw source and the destination for 58vw, so dissolving one into the other
+ * double-exposes a picture over itself at two resolutions, and if the larger one
+ * is still decoding the morph lands on a blur. Holding the incoming plate at full
+ * opacity for the whole travel leaves a single sharp image whose frame changes
+ * shape, which is what a photograph moving on a page should look like.
+ */
+::view-transition-old(vi-plate) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(vi-plate) {
+  animation: none;
+  opacity: 1;
 }
 
 /*
@@ -843,11 +873,6 @@
   object-fit: cover;
 }
 
-/* The outgoing snapshot is a picture of the smaller box. Held at full opacity
-   it reads as a ghost stretched under the new one, so it leaves early. */
-::view-transition-old(vi-plate) {
-  animation-duration: var(--dur-fast);
-}
 
 /* The rest of the page crossfades under the travelling plate. Shorter than the
    morph so the incoming page has settled by the time the plate lands. */
