@@ -66,7 +66,8 @@ export default async function CollectionPage({ params }: Params) {
           <section className="shell">
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
               <div className="lg:col-span-7">
-                <div className="plate aspect-[4/3] rise">
+                {/* Destination of the collection-card morph — see PlateLink. */}
+                <div data-plate="active" className="plate aspect-[4/3] rise">
                   <AppImage
                     src={plate.src}
                     alt={plate.alt}

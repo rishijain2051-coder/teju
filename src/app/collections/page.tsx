@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import PlateLink from '@/components/ui/PlateLink';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PageHeader from '@/components/ui/PageHeader';
@@ -48,7 +48,7 @@ export default function CollectionsPage() {
                   const shown = piecesIn(collection.name).length;
                   return (
                     <li key={collection.slug} className="rise">
-                      <Link
+                      <PlateLink
                         href={collection.href}
                         className="group flex items-center gap-5 sm:gap-8 py-4 border-t border-line"
                       >
@@ -56,7 +56,10 @@ export default function CollectionsPage() {
                           {collection.index}
                         </span>
 
-                        <div className="plate w-16 h-16 sm:w-20 sm:h-20 shrink-0">
+                        {/* The square thumbnail opens into the collection page's
+                            4:3 plate. The crop widens rather than the image
+                            squashing — see the morph rules in tailwind.css. */}
+                        <div data-plate="idle" className="plate w-16 h-16 sm:w-20 sm:h-20 shrink-0">
                           <AppImage
                             src={plate.src}
                             alt={plate.alt}
@@ -93,7 +96,7 @@ export default function CollectionsPage() {
                         >
                           <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
-                      </Link>
+                      </PlateLink>
                     </li>
                   );
                 })}

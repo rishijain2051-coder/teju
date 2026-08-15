@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import PlateLink from '@/components/ui/PlateLink';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -97,7 +98,8 @@ export default async function ArticlePage({ params }: Params) {
 
         <Reveal>
           <div className="shell">
-            <div className="plate aspect-[16/9] lg:aspect-[21/9] rise">
+            {/* Destination of the journal-card morph — see PlateLink. */}
+            <div data-plate="active" className="plate aspect-[16/9] lg:aspect-[21/9] rise">
               <AppImage
                 src={plate.src}
                 alt={plate.alt}
@@ -183,8 +185,8 @@ export default async function ArticlePage({ params }: Params) {
                   const cover = img(entry.image);
                   return (
                     <article key={entry.slug} className="group rise">
-                      <Link href={`/journal/${entry.slug}`} className="block">
-                        <div className="plate aspect-[3/2] bg-paper">
+                      <PlateLink href={`/journal/${entry.slug}`} className="block">
+                        <div data-plate="idle" className="plate aspect-[3/2] bg-paper">
                           <AppImage
                             src={cover.src}
                             alt={cover.alt}
@@ -201,7 +203,7 @@ export default async function ArticlePage({ params }: Params) {
                             {entry.title}
                           </h3>
                         </div>
-                      </Link>
+                      </PlateLink>
                     </article>
                   );
                 })}

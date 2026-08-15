@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import PlateLink from '@/components/ui/PlateLink';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { journal, img } from '@/lib/site';
@@ -42,8 +43,8 @@ export default function JournalSection() {
             const plate = img(article.image);
             return (
               <article key={article.slug} className="group rise">
-                <Link href={`/journal/${article.slug}`} className="block">
-                  <div className="plate aspect-[3/2]">
+                <PlateLink href={`/journal/${article.slug}`} className="block">
+                  <div data-plate="idle" className="plate aspect-[3/2]">
                     <AppImage
                       src={plate.src}
                       alt={plate.alt}
@@ -65,7 +66,7 @@ export default function JournalSection() {
                     </h3>
                     <p className="text-body text-muted mt-2">{article.excerpt}</p>
                   </div>
-                </Link>
+                </PlateLink>
               </article>
             );
           })}

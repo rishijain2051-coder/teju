@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useMemo, useState } from 'react';
+import { flushSync } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AppLogo from '@/components/ui/AppLogo';
@@ -131,6 +132,30 @@ export default function PrivateCatalogue() {
     setOpenDossiers((prev) => ({ ...prev, [pieceRef]: !prev[pieceRef] }));
   }, []);
 
+  /*
+   * Gallery and manifest are the same thirty-nine designs in two presentations,
+   * so the switch is a change of state rather than of content — the one place on
+   * this page where a morph tells the truth. Everything else here is a filter,
+   * and `.filter-swap` is right for those.
+   *
+   * Falls straight through to a plain setState when the API is missing or the
+   * reader has asked for reduced motion.
+   */
+  const switchView = useCallback(
+    (next: 'gallery' | 'manifest') => {
+      if (next === view) return;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced || !('startViewTransition' in document)) {
+        setView(next);
+        return;
+      }
+      document.startViewTransition(() => {
+        flushSync(() => setView(next));
+      });
+    },
+    [view]
+  );
+
   const control =
     'text-manifest py-2 transition-colors duration-fast ease-out tap disabled:opacity-40';
 
@@ -140,8 +165,14 @@ export default function PrivateCatalogue() {
      re-order is the same items in a new sequence, so there is nothing for an
      entrance to explain, and a closed native <select> fires `change` on every
      arrow keypress — three restarted keyframes over 39 rows to get from Reference
-     to Newest. `filter` and `view` stay: those genuinely change what is on screen. */
-  const gridKey = `${filter}-${onlyNew}-${view}`;
+     to Newest.
+
+     `view` is out too, and for a different reason: switching gallery/manifest now
+     runs a view transition in `switchView`, so leaving it in the key would fire the
+     260ms entrance underneath the morph — two animations arguing over one event.
+     The filters remain, because those genuinely change which pieces are on screen
+     and a swap is the honest way to say so. */
+  const gridKey = `${filter}-${onlyNew}`;
 
   /* The planner is a sticky bar, so while scrolling it covers whatever is
      underneath it. Reserving the space only once a selection exists keeps the
@@ -295,7 +326,7 @@ export default function PrivateCatalogue() {
                   <button
                     key={option}
                     type="button"
-                    onClick={() => setView(option)}
+                    onClick={() => switchView(option)}
                     aria-pressed={view === option}
                     className={`${control} ${
                       view === option ? 'text-clay' : 'text-muted hover:text-ink'

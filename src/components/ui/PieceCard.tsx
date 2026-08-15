@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import PlateLink from '@/components/ui/PlateLink';
 import AppImage from '@/components/ui/AppImage';
 import SpecList from '@/components/ui/SpecList';
 import { img, pieceHref, type Piece } from '@/lib/site';
@@ -32,8 +32,10 @@ export default function PieceCard({
 
   return (
     <article className={`group ${reveal ? 'rise' : ''} ${className}`}>
-      <Link href={pieceHref(piece)} className="block">
-        <div className="plate aspect-[4/3]">
+      <PlateLink href={pieceHref(piece)} className="block">
+        {/* `data-plate` marks the element that travels. PlateLink flips it to
+            `active` on click, which is what names it for the morph. */}
+        <div data-plate="idle" className="plate aspect-[4/3]">
           <AppImage
             src={plate.src}
             alt={plate.alt}
@@ -67,7 +69,7 @@ export default function PieceCard({
             ]}
           />
         </div>
-      </Link>
+      </PlateLink>
     </article>
   );
 }

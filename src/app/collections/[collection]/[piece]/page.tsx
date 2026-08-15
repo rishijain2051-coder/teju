@@ -102,7 +102,10 @@ export default async function PiecePage({ params }: Params) {
               <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-8 lg:mt-10">
                 {/* Plate */}
                 <div className="lg:col-span-7">
-                  <div className="plate aspect-[4/3] rise">
+                  {/* The destination of the card morph — see PlateLink. Marked
+                      `active` from the server so it already carries the shared
+                      name when the incoming snapshot is taken. */}
+                  <div data-plate="active" className="plate aspect-[4/3] rise">
                     <AppImage
                       src={plate.src}
                       alt={plate.alt}

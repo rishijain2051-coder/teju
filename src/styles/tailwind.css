@@ -808,3 +808,64 @@
     scrollbar-width: none;
   }
 }
+
+/* ── Page morphs ───────────────────────────────────────────────────────── */
+/*
+ * The photograph carries the visitor across a navigation: a catalogue card's
+ * plate becomes the plate at the top of the page it opens, so two documents
+ * read as one object being approached. Driven from `PlateLink`, which starts
+ * the transition by hand because the App Router soft-navigates and
+ * `@view-transition { navigation: auto }` only fires on real document loads.
+ *
+ * Card plates and destination plates are both `aspect-[4/3]`, so the morph is
+ * position and scale only — no aspect distortion to disguise.
+ */
+[data-plate='active'] {
+  view-transition-name: vi-plate;
+}
+
+::view-transition-group(*) {
+  animation-duration: var(--dur-base);
+  animation-timing-function: var(--ease-out);
+}
+
+/*
+ * Both snapshots fill the morphing box and crop rather than letter-box, so a
+ * source and destination with different aspect ratios do not squash on the way
+ * across — the 64px square thumbnail on the collections index opens into a 4:3
+ * plate by widening its crop, which is what the eye expects a photograph to do.
+ * Piece cards already match their destination at 4:3 and are unaffected.
+ */
+::view-transition-old(vi-plate),
+::view-transition-new(vi-plate) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The outgoing snapshot is a picture of the smaller box. Held at full opacity
+   it reads as a ghost stretched under the new one, so it leaves early. */
+::view-transition-old(vi-plate) {
+  animation-duration: var(--dur-fast);
+}
+
+/* The rest of the page crossfades under the travelling plate. Shorter than the
+   morph so the incoming page has settled by the time the plate lands. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--dur-fast);
+  animation-timing-function: var(--ease-out);
+}
+
+/*
+ * A morph is a position change, which is exactly what reduced motion asks us
+ * to drop. `PlateLink` already declines to start one, so this is the belt to
+ * that braces: a transition begun before the setting changed still ends flat.
+ */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

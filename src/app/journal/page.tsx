@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import PlateLink from '@/components/ui/PlateLink';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PageHeader from '@/components/ui/PageHeader';
@@ -33,8 +34,8 @@ export default function JournalPage() {
           {/* Lead article, given the room it deserves. */}
           <section className="shell">
             <article className="group">
-              <Link href={`/journal/${lead.slug}`} className="block">
-                <div className="plate aspect-[16/9] lg:aspect-[21/9] rise">
+              <PlateLink href={`/journal/${lead.slug}`} className="block">
+                <div data-plate="idle" className="plate aspect-[16/9] lg:aspect-[21/9] rise">
                   <AppImage
                     src={leadPlate.src}
                     alt={leadPlate.alt}
@@ -62,7 +63,7 @@ export default function JournalPage() {
                     </p>
                   </div>
                 </div>
-              </Link>
+              </PlateLink>
             </article>
           </section>
 
@@ -74,8 +75,8 @@ export default function JournalPage() {
                   const plate = img(article.image);
                   return (
                     <article key={article.slug} className="group rise">
-                      <Link href={`/journal/${article.slug}`} className="block">
-                        <div className="plate aspect-[3/2]">
+                      <PlateLink href={`/journal/${article.slug}`} className="block">
+                        <div data-plate="idle" className="plate aspect-[3/2]">
                           <AppImage
                             src={plate.src}
                             alt={plate.alt}
@@ -100,7 +101,7 @@ export default function JournalPage() {
                             {article.readTime}
                           </p>
                         </div>
-                      </Link>
+                      </PlateLink>
                     </article>
                   );
                 })}
