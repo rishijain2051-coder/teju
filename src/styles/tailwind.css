@@ -79,8 +79,13 @@
      screen reads as slow long before a colour change does — the eye tracks the
      photograph the whole way, so every millisecond is visible. Paired with
      --ease-inout rather than --ease-out: the reveal curve spends its last third
-     crawling toward rest, which on a travelling element reads as hesitation. */
-  --dur-morph: 240ms;
+     crawling toward rest, which on a travelling element reads as hesitation.
+
+     180ms, not 240: the navigation behind it measures ~45ms to the transition
+     being ready, so this number is very nearly the whole of what a visitor feels.
+     Below about 150ms a travelling photograph stops reading as movement and
+     starts reading as a cut, which loses the one thing the morph is for. */
+  --dur-morph: 180ms;
 
   /* The editorial measure */
   --gutter: 1.5rem;
@@ -875,11 +880,28 @@
 
 
 /* The rest of the page crossfades under the travelling plate. Shorter than the
-   morph so the incoming page has settled by the time the plate lands. */
+   morph so the incoming page has settled by the time the plate lands — derived
+   from it rather than pinned, so the two can never drift apart. Both sides are
+   now full of type (see COMPOSE_FIRST_FOLD in layout.tsx), and a long crossfade
+   of one page of writing over another is legible as double exposure, so the
+   shorter this is the cleaner it reads. */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: var(--dur-fast);
+  animation-duration: calc(var(--dur-morph) * 0.6);
   animation-timing-function: var(--ease-out);
+}
+
+/*
+ * Set on in-view reveal elements by the incoming document, which marks them
+ * `shown` before the morph snapshot is taken so the photograph lands on a
+ * composed page instead of a blank one. Unlayered on purpose: `.rise` and its
+ * transition live in `@layer utilities`, and an unlayered rule outranks a
+ * layered one whatever the specificity. Without it the elements would be mid
+ * fade-in at the instant the snapshot is captured, which is the same blank page
+ * by another route.
+ */
+[data-morph-settled] {
+  transition: none;
 }
 
 /*

@@ -28,6 +28,13 @@ import React, { useCallback } from 'react';
  * `next/link`; `navigation: auto` only applies to real document loads, so those
  * are untouched.
  *
+ * Two things elsewhere finish the job. `COMPOSE_FIRST_FOLD` in the root layout
+ * marks the destination's opening copy as revealed before the incoming snapshot
+ * is taken, so the photograph lands on a written page rather than an empty one
+ * that then fades its own text in — the same double-entrance defect the plate
+ * itself had. And speculation rules there prefetch these targets on hover, which
+ * is invisible on localhost and is most of the wait on a real connection.
+ *
  * Degrades in one step: a browser without cross-document view transitions
  * (Firefox today) simply navigates, which is what it did before any of this.
  * Reduced motion is handled in CSS, where the transition's animations are
@@ -59,8 +66,10 @@ export default function PlateLink({ children, href, onClick, ...rest }: PlateLin
     [onClick]
   );
 
+  /* `data-morph` is what the speculation rules in the root layout match on, so
+     the destination is fetched on hover rather than on click. */
   return (
-    <a href={href} onClick={claim} {...rest}>
+    <a href={href} data-morph="" onClick={claim} {...rest}>
       {children}
     </a>
   );
