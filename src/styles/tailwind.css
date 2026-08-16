@@ -929,7 +929,7 @@
  * fade-in at the instant the snapshot is captured, which is the same blank page
  * by another route.
  */
-/* The rule itself is below `.reveal-now`, which it has to outrank — see there. */
+/* The morph-arrival rule is below `.reveal-now`, which it has to outrank. */
 
 /*
  * The first viewport enters on its own, without waiting for JavaScript.
@@ -1027,22 +1027,26 @@
 }
 
 /*
- * Set by the incoming document on a morph arrival, which marks the first fold
- * `shown` before the snapshot is taken so the photograph lands on a composed page
- * rather than a blank one. A morph is already an entrance; replaying one on top
- * of it is the double entrance this whole mechanism exists to prevent.
+ * A morph arrival. `<html>` carries `morph-in` from the incoming document before
+ * the snapshot is taken (see COMPOSE_FIRST_FOLD in layout.tsx), and the first fold
+ * resolves straight to its end state: the photograph lands on a written page
+ * instead of an empty one, and nothing replays an entrance the morph already gave.
  *
- * Both the selector weight and the position are load-bearing. `.rise` and its
- * transition are in `@layer utilities`, so a bare attribute selector outranks
- * them wherever it sits — but `.reveal-now .rise` directly above is unlayered too,
- * and at 0-2-0 it beat a lone `[data-morph-settled]`. The morph arrived on a page
- * whose first fold measured `0 1 0 0 1`. Matching the weight and coming last is
- * what settles it.
+ * The end state is written out here rather than leaning on `shown`, because the
+ * flag is on `<html>` and never touches a node React owns — adding classes to the
+ * elements themselves is what caused a hydration mismatch React refused to patch.
+ *
+ * Position and weight are both load-bearing. `.rise` is in `@layer utilities`, so
+ * anything unlayered outranks it wherever it sits — but `.reveal-now .rise` above
+ * is unlayered too, so this has to carry more weight and come after it.
  */
-.reveal-now [data-morph-settled],
-[data-morph-settled] {
+.morph-in .reveal-now .rise,
+.morph-in .reveal-now .veil,
+.morph-in .reveal-now .wipe-inner {
   transition: none;
   animation: none;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
 }
 
 /*

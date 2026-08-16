@@ -53,10 +53,20 @@ const PRELOADED_FONTS = [
  * own clip. The photograph was travelling onto a blank page, and the writing
  * arrived about a second later on a separate 640ms wave. Two events, not one.
  *
- * So anything in view is marked `shown` here, with its transition suppressed via
- * `data-morph-settled` so it is simply present rather than fading in. `shown` is
- * already the site-wide "leave this alone" flag — both the GSAP path and the
- * observer fallback filter on it — so nothing downstream animates it twice.
+ * So it raises one flag on `<html>` and CSS does the rest: inside `.reveal-now`,
+ * the first-fold entrance resolves to its end state with no animation at all.
+ *
+ * One flag, and specifically not a class on each element. The first version of
+ * this walked the fold adding `shown` and `data-morph-settled` to every match,
+ * and that is a DOM mutation before hydration on nodes React owns — React found
+ * `veil shown` where it had rendered `veil` and reported a hydration mismatch it
+ * explicitly would not patch, leaving its own tree believing the class was absent.
+ * The next render touching that element would have written `veil` back and taken
+ * the content off the page. `<html>` is the one element React does not diff
+ * attributes on, which is why the theme-flash scripts everywhere use it.
+ *
+ * The flag is never cleared. A morph arrival *is* the first fold's entrance, for
+ * the life of that document; there is nothing to hand back to later.
  *
  * It has to be raw markup at the top of `<body>`, and neither of the two obvious
  * homes works. A `<script>` inside `<head>` in the App Router is serialised into
@@ -70,17 +80,7 @@ const PRELOADED_FONTS = [
  */
 const COMPOSE_FIRST_FOLD = `
 addEventListener('pagereveal', function (e) {
-  if (!e.viewTransition) return;
-  var settled = [];
-  document.querySelectorAll('.rise, .veil, .wipe-inner').forEach(function (el) {
-    if (el.getBoundingClientRect().top >= innerHeight) return;
-    el.dataset.morphSettled = '';
-    el.classList.add('shown');
-    settled.push(el);
-  });
-  e.viewTransition.finished.finally(function () {
-    settled.forEach(function (el) { delete el.dataset.morphSettled; });
-  });
+  if (e.viewTransition) document.documentElement.classList.add('morph-in');
 });
 `.trim();
 
@@ -145,9 +145,16 @@ export const metadata: Metadata = {
   },
 };
 
+/*
+ * `suppressHydrationWarning` on `<html>` because COMPOSE_FIRST_FOLD puts
+ * `morph-in` there before React hydrates, and React diffs `<html>`'s attributes
+ * like any other element's — which is the same reason a theme script needs it.
+ * It applies to this element's own attributes and text, one level deep, so
+ * nothing in the tree below stops being checked.
+ */
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {PRELOADED_FONTS.map((href) => (
           <link

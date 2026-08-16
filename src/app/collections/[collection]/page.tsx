@@ -61,7 +61,11 @@ export default async function CollectionPage({ params }: Params) {
           meta={collection.spec}
         />
 
-        <Reveal>
+        {/* `immediate`, because this is the first fold and the plate in it is the
+            destination of the card morph. Left to scroll it entered after the
+            photograph had already landed, which is the one thing the morph is
+            meant to avoid. */}
+        <Reveal immediate>
           {/* Plate and story, side by side. */}
           <section className="shell">
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
