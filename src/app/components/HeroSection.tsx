@@ -5,6 +5,7 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, img } from '@/lib/site';
+import { delay } from '@/lib/reveal';
 import type { CatalogueKey } from '@/lib/imagery';
 
 /** Three portrait plates, held long enough to actually be looked at. */
@@ -28,12 +29,12 @@ export default function HeroSection() {
   }, [active]);
 
   return (
-    <section ref={ref} className="relative grain">
+    <section ref={ref} className="reveal-now relative grain">
       <div className="grid lg:grid-cols-12 min-h-[100svh]">
         {/* ── Type column ──────────────────────────────────────────────── */}
         <div className="lg:col-span-7 flex flex-col justify-between pt-24 pb-8 lg:pt-28 lg:pb-10 px-gutter">
           <div className="max-w-[46rem]">
-            <p className="text-manifest text-clay veil" style={{ transitionDelay: '80ms' }}>
+            <p className="text-manifest text-clay veil" style={delay(80)}>
               Est. {brand.established} · {brand.origin}
             </p>
 
@@ -42,17 +43,17 @@ export default function HeroSection() {
                 a sentence being assembled. */}
             <h1 className="font-serif text-mega font-light mt-5 lg:mt-6">
               <span className="wipe">
-                <span className="wipe-inner" style={{ transitionDelay: '160ms' }}>
+                <span className="wipe-inner" style={delay(160)}>
                   Raw
                 </span>
               </span>
               <span className="wipe">
-                <span className="wipe-inner" style={{ transitionDelay: '260ms' }}>
+                <span className="wipe-inner" style={delay(260)}>
                   Real
                 </span>
               </span>
               <span className="wipe">
-                <span className="wipe-inner italic text-clay" style={{ transitionDelay: '360ms' }}>
+                <span className="wipe-inner italic text-clay" style={delay(360)}>
                   Remarkable
                 </span>
               </span>
@@ -60,17 +61,14 @@ export default function HeroSection() {
 
             <p
               className="text-lead text-ink-soft max-w-measure mt-5 lg:mt-7 rise"
-              style={{ transitionDelay: '520ms' }}
+              style={delay(520)}
             >
               Solid mango and reclaimed hardwood, cut, carved and finished on our own floor in
               Boranada, then packed into containers bound for nine countries. Low minimums. Honest
               lead times. One set of hands from log to lorry.
             </p>
 
-            <div
-              className="flex flex-wrap gap-3 mt-7 lg:mt-8 rise"
-              style={{ transitionDelay: '640ms' }}
-            >
+            <div className="flex flex-wrap gap-3 mt-7 lg:mt-8 rise" style={delay(640)}>
               <Link href="/collections" className="btn btn-solid">
                 View the collections
                 <svg
@@ -92,10 +90,7 @@ export default function HeroSection() {
           </div>
 
           {/* Plate index, set like a contact sheet. */}
-          <div
-            className="hidden lg:flex items-center gap-5 mt-8 rise"
-            style={{ transitionDelay: '760ms' }}
-          >
+          <div className="hidden lg:flex items-center gap-5 mt-8 rise" style={delay(760)}>
             {PLATES.map((plate, i) => (
               <button
                 key={plate}

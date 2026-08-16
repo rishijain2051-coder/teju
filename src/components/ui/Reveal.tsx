@@ -23,8 +23,14 @@ interface RevealProps {
 export default function Reveal({ children, className, immediate = false }: RevealProps) {
   const ref = useReveal<HTMLDivElement>({ immediate });
 
+  /*
+   * `immediate` means above the fold, and above the fold must not wait for
+   * hydration to become visible — that cost ~2s of LCP on a throttled phone.
+   * `reveal-now` is server-rendered, so the entrance is a CSS animation running
+   * at first paint; the hook still runs, to tell GSAP this section is done.
+   */
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={[immediate && 'reveal-now', className].filter(Boolean).join(' ')}>
       {children}
     </div>
   );

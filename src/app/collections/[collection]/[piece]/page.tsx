@@ -10,6 +10,7 @@ import SpecList from '@/components/ui/SpecList';
 import PieceCard from '@/components/ui/PieceCard';
 import PieceEnquiry from '@/components/ui/PieceEnquiry';
 import AppImage from '@/components/ui/AppImage';
+import { delay } from '@/lib/reveal';
 import {
   findCollection,
   findPiece,
@@ -128,16 +129,13 @@ export default async function PiecePage({ params }: Params) {
 
                   <h1 className="font-serif text-display font-light mt-5">
                     <span className="wipe">
-                      <span className="wipe-inner" style={{ transitionDelay: '90ms' }}>
+                      <span className="wipe-inner" style={delay(90)}>
                         {piece.name}
                       </span>
                     </span>
                   </h1>
 
-                  <p
-                    className="text-lead text-ink-soft max-w-measure mt-6 rise"
-                    style={{ transitionDelay: '260ms' }}
-                  >
+                  <p className="text-lead text-ink-soft max-w-measure mt-6 rise" style={delay(260)}>
                     {piece.note}
                   </p>
 
@@ -238,7 +236,10 @@ export default async function PiecePage({ params }: Params) {
                       { key: 'Carcass', value: 'Framed, not slab-built' },
                       { key: 'Moisture at joint', value: '8–10%' },
                       { key: 'Private label', value: 'Available' },
-                      { key: 'Custom finish', value: 'Sampled before production' },
+                      {
+                        key: 'Custom finish',
+                        value: 'Sampled before production',
+                      },
                       { key: 'Packing', value: '3 cm protection per face' },
                     ]}
                   />

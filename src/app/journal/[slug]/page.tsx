@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import PlateLink from '@/components/ui/PlateLink';
+import { delay } from '@/lib/reveal';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -62,22 +63,19 @@ export default async function ArticlePage({ params }: Params) {
 
               <h1 className="font-serif text-display font-light mt-6 lg:mt-8 max-w-[26ch]">
                 <span className="wipe">
-                  <span className="wipe-inner" style={{ transitionDelay: '90ms' }}>
+                  <span className="wipe-inner" style={delay(90)}>
                     {article.title}
                   </span>
                 </span>
               </h1>
 
-              <p
-                className="text-lead text-ink-soft max-w-measure mt-7 rise"
-                style={{ transitionDelay: '300ms' }}
-              >
+              <p className="text-lead text-ink-soft max-w-measure mt-7 rise" style={delay(300)}>
                 {article.standfirst}
               </p>
 
               <dl
                 className="flex flex-wrap items-baseline gap-x-10 gap-y-3 mt-10 pt-6 border-t border-line rise"
-                style={{ transitionDelay: '400ms' }}
+                style={delay(400)}
               >
                 <div>
                   <dt className="text-manifest-sm text-muted">Filed under</dt>

@@ -26,7 +26,27 @@ const nextConfig = {
 
   images: {
     remotePatterns: imageHosts,
-    minimumCacheTTL: 60,
+
+    /*
+     * AVIF first, WebP behind it. This is a furniture catalogue — photographs are
+     * the payload, 1.4 MB of them on the home page alone at mobile sizes — and
+     * AVIF carries the same picture in roughly a third less. Content negotiation
+     * means a browser without it silently gets the WebP, so nothing degrades.
+     */
+    formats: ['image/avif', 'image/webp'],
+
+    /*
+     * Thirty-one days, not sixty seconds. The optimiser re-encoded every size
+     * after a minute, so a returning visitor paid for the work again and any CDN
+     * in front of it could barely hold anything.
+     *
+     * The trade is real and worth stating: this caches by request path, so
+     * replacing a photograph at an existing filename can serve the old one for up
+     * to a month. Give a replacement a new filename — `process-images.mjs` picks
+     * it up from the directory and rewrites `imagery.ts` either way — or purge.
+     */
+    minimumCacheTTL: 2678400,
+
     qualities: [75, 85, 100],
   },
 

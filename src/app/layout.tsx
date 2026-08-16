@@ -19,10 +19,22 @@ import '../styles/tailwind.css';
  * The latin faces are preloaded below, which is the one thing next/font did for us
  * that a plain stylesheet does not.
  */
+/*
+ * Four faces, not five. The italic Fraunces is 146 kB — the largest single file
+ * on the site — and preloading it put that on the critical path of every route at
+ * highest priority, ahead of the photograph. On the Slow 4G profile the five
+ * preloads were 321 kB, which is about 1.6 seconds of a 1.6 Mbps pipe spent
+ * before an image can have any of it.
+ *
+ * Dropping it costs nothing measurable. Every face is `font-display: swap`, so
+ * text paints in the fallback immediately either way, and the metric-adjusted
+ * fallbacks hold CLS at 0 — the swap moves no layout. Italic is a secondary face
+ * here, usually one word inside a heading, so it is the one that can afford to
+ * arrive at normal priority with everything else.
+ */
 const PRELOADED_FONTS = [
   '/fonts/dm-sans-300-latin.woff2',
   '/fonts/fraunces-latin.woff2',
-  '/fonts/fraunces-latin-italic.woff2',
   '/fonts/ibm-plex-mono-400-latin.woff2',
   '/fonts/ibm-plex-mono-500-latin.woff2',
 ];

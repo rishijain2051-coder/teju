@@ -18,26 +18,26 @@
 
 :root {
   /* Grounds */
-  --paper: #EFE9DF;        /* warm bone — the primary ground */
-  --paper-deep: #E3DACB;   /* secondary ground, section alternation */
-  --paper-warm: #F6F2EA;   /* lifted surfaces, cards */
+  --paper: #efe9df; /* warm bone — the primary ground */
+  --paper-deep: #e3dacb; /* secondary ground, section alternation */
+  --paper-warm: #f6f2ea; /* lifted surfaces, cards */
 
   /* Ink */
-  --ink: #17130F;          /* near-black, warmed — 15.30:1 on paper */
-  --ink-soft: #3A332B;     /* 10.30:1 */
-  --muted: #655B4E;        /* 5.50:1 on paper, 4.80:1 on paper-deep */
+  --ink: #17130f; /* near-black, warmed — 15.30:1 on paper */
+  --ink-soft: #3a332b; /* 10.30:1 */
+  --muted: #655b4e; /* 5.50:1 on paper, 4.80:1 on paper-deep */
 
   /* Material accents, straight off the product walls */
-  --clay: #973F24;         /* terracotta — the action colour, 5.70:1 */
-  --clay-soft: #C0674A;    /* decorative only, never text on teal */
-  --teal: #1B443F;         /* deep teal — inverted section ground */
-  --teal-soft: #2E625D;
-  --timber: #B98A52;       /* mango tan — display numerals on dark */
-  --sand: #CBB89A;
+  --clay: #973f24; /* terracotta — the action colour, 5.70:1 */
+  --clay-soft: #c0674a; /* decorative only, never text on teal */
+  --teal: #1b443f; /* deep teal — inverted section ground */
+  --teal-soft: #2e625d;
+  --timber: #b98a52; /* mango tan — display numerals on dark */
+  --sand: #cbb89a;
 
   /* Structure */
-  --line: #D6CCBC;         /* hairline rules — the editorial skeleton */
-  --line-strong: #B9AC98;
+  --line: #d6ccbc; /* hairline rules — the editorial skeleton */
+  --line-strong: #b9ac98;
   --line-invert: rgba(239, 233, 223, 0.18);
 
   /* Legacy semantic aliases — kept so every surface stays coherent */
@@ -55,7 +55,7 @@
   --border: var(--line);
   --input: var(--paper-deep);
   --ring: var(--clay);
-  --radius: 0px;           /* editorial work is square. No soft corners. */
+  --radius: 0px; /* editorial work is square. No soft corners. */
 
   --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
@@ -114,13 +114,22 @@
     background-color: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
-    font-feature-settings: 'kern' 1, 'liga' 1;
+    font-feature-settings:
+      'kern' 1,
+      'liga' 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, h4, h5, h6, p, figure {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  figure {
     margin: 0;
   }
 
@@ -134,7 +143,9 @@
      `font-optical-sizing: auto` the axis tracks the rendered size, so large type
      keeps the sharp display cut and small type gets the sturdier text cut. */
   .font-serif {
-    font-variation-settings: 'SOFT' 0, 'WONK' 1;
+    font-variation-settings:
+      'SOFT' 0,
+      'WONK' 1;
   }
 
   ::selection {
@@ -162,7 +173,9 @@
     html {
       scroll-behavior: auto;
     }
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-delay: 0s !important;
       animation-iteration-count: 1 !important;
@@ -322,7 +335,9 @@
 
   .numeral {
     font-variant-numeric: tabular-nums lining-nums;
-    font-feature-settings: 'tnum' 1, 'lnum' 1;
+    font-feature-settings:
+      'tnum' 1,
+      'lnum' 1;
   }
 
   /*
@@ -394,6 +409,9 @@
     transition:
       opacity var(--dur-slow) var(--ease-out),
       transform var(--dur-slow) var(--ease-out);
+    /* Both entrance paths read the same stagger, so a delay can never mean one
+       thing on scroll and another at first paint. See `.reveal-now` below. */
+    transition-delay: var(--reveal-delay, 0ms);
   }
 
   .rise.shown {
@@ -485,6 +503,7 @@
     display: block;
     transform: translate3d(0, 135%, 0);
     transition: transform var(--dur-reveal) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
   }
 
   .wipe-inner.shown {
@@ -494,6 +513,7 @@
   .veil {
     opacity: 0;
     transition: opacity var(--dur-slow) var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
   }
 
   .veil.shown {
@@ -878,7 +898,6 @@
   object-fit: cover;
 }
 
-
 /*
  * Everything that is not the photograph is replaced outright, not crossfaded.
  *
@@ -910,8 +929,120 @@
  * fade-in at the instant the snapshot is captured, which is the same blank page
  * by another route.
  */
+/* The rule itself is below `.reveal-now`, which it has to outrank — see there. */
+
+/*
+ * The first viewport enters on its own, without waiting for JavaScript.
+ *
+ * `.rise` / `.veil` / `.wipe-inner` are transitions switched on by a `shown`
+ * class, and that class arrives after hydration — so above-the-fold copy renders
+ * at opacity 0 and stays there until the page is interactive. On a mid-range
+ * phone that is not a detail. Measured on a throttled Pixel 7, the LCP element on
+ * /collections and /contact was PageHeader's lead paragraph, painting at ~2.9s
+ * against a first paint of ~1.0s; on /journal the hero photograph finished
+ * downloading at 1.67s and did not render until 3.87s. Two seconds of a blank,
+ * fully-downloaded page, on every first visit.
+ *
+ * So the components that already declare themselves above the fold — PageHeader,
+ * HeroSection, and `Reveal immediate` — carry `reveal-now`, and their entrance
+ * becomes a CSS animation that starts at first paint. The scroll-driven system is
+ * untouched for everything below the fold, which is what it was written for.
+ *
+ * Unlayered, like the morph rules: `.rise` and its transition live in
+ * `@layer utilities`, and an unlayered rule outranks a layered one at any
+ * specificity. `both` fill holds the end state, which matches what `shown` sets,
+ * so the JavaScript path can still run afterwards and change nothing.
+ */
+@keyframes vi-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.75rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes vi-veil {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vi-wipe {
+  from {
+    transform: translate3d(0, 135%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/*
+ * The first fold runs the same entrance, briskly. Below the fold it stays as
+ * authored: this block is the only place the two diverge.
+ *
+ * Both numbers are here because above the fold the entrance *is* the LCP. Largest
+ * Contentful Paint is defined as the moment the largest element becomes visible,
+ * so an opening beat that waits 300ms and then fades over 640ms is charged in
+ * full, and Chrome does not credit an element animating up from `opacity: 0`
+ * until well after it settles. Measured on the Slow 4G / 4x CPU profile with the
+ * animation neutralised, /collections went 2868ms -> 1196ms and /contact
+ * 2344ms -> 1068ms. That gap was the fade, not the network and not the work.
+ *
+ * A quarter of the authored delay, and --dur-base rather than --dur-slow. The
+ * cadence survives as a cadence — the hero's three words still land on separate
+ * beats, 100ms apart becomes 25ms apart — while the paragraph that is usually the
+ * LCP element starts at 75ms instead of 300ms and is done 395ms after first paint.
+ */
+.reveal-now .rise,
+.reveal-now .veil,
+.reveal-now .wipe-inner {
+  animation-delay: calc(var(--reveal-delay, 0ms) * 0.25);
+  animation-fill-mode: both;
+}
+
+.reveal-now .rise {
+  animation-name: vi-rise;
+  animation-duration: var(--dur-base);
+  animation-timing-function: var(--ease-out);
+}
+
+.reveal-now .veil {
+  animation-name: vi-veil;
+  animation-duration: var(--dur-base);
+  animation-timing-function: var(--ease-out-soft);
+}
+
+/* The wipe keeps more of its length: it is a mask travelling, not a fade, and it
+   is never the LCP element — the heading is a fraction of the lead's area. */
+.reveal-now .wipe-inner {
+  animation-name: vi-wipe;
+  animation-duration: var(--dur-slow);
+  animation-timing-function: var(--ease-out);
+}
+
+/*
+ * Set by the incoming document on a morph arrival, which marks the first fold
+ * `shown` before the snapshot is taken so the photograph lands on a composed page
+ * rather than a blank one. A morph is already an entrance; replaying one on top
+ * of it is the double entrance this whole mechanism exists to prevent.
+ *
+ * Both the selector weight and the position are load-bearing. `.rise` and its
+ * transition are in `@layer utilities`, so a bare attribute selector outranks
+ * them wherever it sits — but `.reveal-now .rise` directly above is unlayered too,
+ * and at 0-2-0 it beat a lone `[data-morph-settled]`. The morph arrived on a page
+ * whose first fold measured `0 1 0 0 1`. Matching the weight and coming last is
+ * what settles it.
+ */
+.reveal-now [data-morph-settled],
 [data-morph-settled] {
   transition: none;
+  animation: none;
 }
 
 /*

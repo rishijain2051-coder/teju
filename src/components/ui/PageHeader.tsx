@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useReveal } from '@/components/ui/useReveal';
+import { delay } from '@/lib/reveal';
 
 interface PageHeaderProps {
   eyebrow: string;
@@ -16,34 +17,38 @@ interface PageHeaderProps {
  * The interior-page masthead. Interior pages previously each opened with a
  * dark photo behind a scrim and low-contrast type; this puts them on paper and
  * lets the typography carry the page.
+ *
+ * `reveal-now` is the load-bearing class here. This is the first viewport on
+ * seven routes, and on a throttled phone its lead paragraph was the LCP element
+ * on two of them — painting at ~2.9s against a first paint of ~1.0s, because
+ * `useReveal` cannot add `shown` until the page has hydrated. The class hands the
+ * entrance to a CSS animation that starts at first paint instead. `useReveal`
+ * stays: it is what tells GSAP this section is already done.
  */
 export default function PageHeader({ eyebrow, title, lead, meta, children }: PageHeaderProps) {
   const ref = useReveal<HTMLElement>({ immediate: true });
 
   return (
-    <header ref={ref} className="pt-32 lg:pt-44 pb-12 lg:pb-16">
+    <header ref={ref} className="reveal-now pt-32 lg:pt-44 pb-12 lg:pb-16">
       <div className="shell">
         <p className="text-manifest text-clay veil">{eyebrow}</p>
 
         <h1 className="font-serif text-display font-light mt-6 lg:mt-8 max-w-[18ch]">
           <span className="wipe">
-            <span className="wipe-inner" style={{ transitionDelay: '90ms' }}>
+            <span className="wipe-inner" style={delay(90)}>
               {title}
             </span>
           </span>
         </h1>
 
         {lead && (
-          <p
-            className="text-lead text-ink-soft max-w-measure mt-7 rise"
-            style={{ transitionDelay: '300ms' }}
-          >
+          <p className="text-lead text-ink-soft max-w-measure mt-7 rise" style={delay(300)}>
             {lead}
           </p>
         )}
 
         {children && (
-          <div className="mt-8 rise" style={{ transitionDelay: '380ms' }}>
+          <div className="mt-8 rise" style={delay(380)}>
             {children}
           </div>
         )}
@@ -51,7 +56,7 @@ export default function PageHeader({ eyebrow, title, lead, meta, children }: Pag
         {meta && (
           <dl
             className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5 mt-12 pt-6 border-t border-line rise"
-            style={{ transitionDelay: '440ms' }}
+            style={delay(440)}
           >
             {meta.map((entry) => (
               <div key={entry.key}>
