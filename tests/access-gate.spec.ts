@@ -135,6 +135,138 @@ test.describe('signing in', () => {
   });
 });
 
+/**
+ * The gate reported every failure as a wrong code.
+ *
+ * `/api/verify-access` answers 503 when ACCESS_SECRET is missing or under 32
+ * characters, and 503 when ACCESS_CODES is unset — both deployment faults. The
+ * client showed "That code was not recognised" for all of them, so a broken
+ * environment variable on the host was indistinguishable from a mistyped code:
+ * verified buyers sat re-typing a correct code while we went looking for a bug in
+ * the code list. These tests pin the three outcomes apart.
+ */
+test.describe('a server fault does not masquerade as a wrong code', () => {
+  test('a wrong code is a bare 401 with no message of its own', async ({ request }) => {
+    const res = await request.post('/api/verify-access', { data: { code: 'not-the-code' } });
+    expect(res.status()).toBe(401);
+    /* No `error` string: 401 is the one status the client is allowed to word
+       itself. If the route starts sending one here, the client shows it instead
+       and the wrong-code copy silently dies. */
+    expect(await res.json()).not.toHaveProperty('error');
+  });
+
+  test('the gate shows the server’s own message for a 503, not the wrong-code copy', async ({
+    page,
+  }) => {
+    /* Stubbed rather than driven through a misconfigured server: the suite pins
+       ACCESS_CODES and ACCESS_SECRET for one shared `next start`, so the only way
+       to exercise the unconfigured contract is to answer as it would. */
+    await page.route('**/api/verify-access', (route) =>
+      route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          error: 'Access is temporarily unavailable. Please contact us directly.',
+          reason: 'access-secret',
+        }),
+      })
+    );
+
+    await page.goto(GATE);
+    await page.getByLabel('Access code').fill(TEST_ACCESS_CODE);
+    await page.getByRole('button', { name: /enter/i }).click();
+
+    const error = page.locator('p#code-error');
+    await expect(error).toContainText(/temporarily unavailable/i);
+    // The whole point: a deployment fault must not be blamed on the buyer.
+    await expect(error).not.toContainText(/not recognised/i);
+  });
+
+  test('an unexpected status still says something other than “wrong code”', async ({ page }) => {
+    // 500 with no body at all — the client has to fall back on its own wording.
+    await page.route('**/api/verify-access', (route) =>
+      route.fulfill({ status: 500, contentType: 'text/plain', body: '' })
+    );
+
+    await page.goto(GATE);
+    await page.getByLabel('Access code').fill(TEST_ACCESS_CODE);
+    await page.getByRole('button', { name: /enter/i }).click();
+
+    const error = page.locator('p#code-error');
+    await expect(error).toContainText(/could not be checked/i);
+    await expect(error).not.toContainText(/not recognised/i);
+  });
+});
+
+/**
+ * Two runtimes, one secret.
+ *
+ * `/api/verify-access` runs on Node and signs the cookie; `middleware.ts` runs on
+ * the Edge runtime and verifies it. If the Edge side cannot read ACCESS_SECRET,
+ * the flow is: correct code accepted, cookie set, middleware rejects it, and the
+ * middleware DELETES the cookie on the way out — so a buyer who signed in
+ * successfully lands back on the gate with no error and no way to tell why.
+ *
+ * `x-vi-gate: unavailable` is exactly that condition. On a correctly configured
+ * deployment the bounce must read `denied`, meaning "no valid cookie" and nothing
+ * worse. This is the check to run against production first:
+ *   curl -sI https://…/collections/private/catalogue | grep x-vi-gate
+ */
+test.describe('the bounce says why', () => {
+  test('reads “denied”, proving the Edge runtime can read ACCESS_SECRET', async ({ request }) => {
+    const res = await request.get(GATED, { maxRedirects: 0 });
+    expect(res.status()).toBe(307);
+    expect(res.headers()['x-vi-gate']).toBe('denied');
+  });
+
+  test('and the header says nothing about the codes', async ({ request }) => {
+    const res = await request.get(GATED, { maxRedirects: 0 });
+    const header = res.headers()['x-vi-gate'];
+    expect(['denied', 'unavailable']).toContain(header);
+    expect(header).not.toContain(TEST_ACCESS_CODE);
+  });
+});
+
+/**
+ * ACCESS_CODES is read per request, not captured once at module scope, and a
+ * dashboard-pasted value keeps its quotes because Vercel and Netlify store the
+ * string literally. Both faults refused a correct code and looked identical to a
+ * typo. The comparison is trimmed, lower-cased and quote-stripped, so the forms
+ * an operator is likely to paste all resolve to the same code.
+ */
+test.describe('a code survives the ways it gets typed', () => {
+  for (const [label, variant] of [
+    ['as issued', TEST_ACCESS_CODE],
+    ['upper-cased', TEST_ACCESS_CODE.toUpperCase()],
+    ['with surrounding whitespace', `  ${TEST_ACCESS_CODE}  `],
+  ] as const) {
+    test(`${label} is accepted and issues a signed cookie`, async ({ request }) => {
+      const res = await request.post('/api/verify-access', { data: { code: variant } });
+      expect(res.status()).toBe(200);
+
+      const cookie = res.headers()['set-cookie'] ?? '';
+      expect(cookie).toContain(`${COOKIE}=`);
+      // `<expiry>.<signature>`, never the old literal `granted`.
+      expect(cookie).toMatch(new RegExp(`${COOKIE}=\\d{10,}\\.[A-Za-z0-9_-]{20,}`));
+    });
+  }
+
+  test('a quoted code is not a second way in', async ({ request }) => {
+    /* Quote stripping applies to the configured ACCESS_CODES value, never to what
+       the visitor submits — otherwise `"code"` would be a free alias for `code`.  */
+    const res = await request.post('/api/verify-access', {
+      data: { code: `"${TEST_ACCESS_CODE}"` },
+    });
+    expect(res.status()).toBe(401);
+  });
+
+  test('an empty submission is refused without being called a wrong code', async ({ request }) => {
+    const res = await request.post('/api/verify-access', { data: { code: '' } });
+    expect(res.status()).toBe(400);
+  });
+});
+
 test('the private range is not reachable from the sitemap', async ({ request }) => {
   const sitemap = await (await request.get('/sitemap.xml')).text();
   expect(sitemap).not.toContain('/collections/private');

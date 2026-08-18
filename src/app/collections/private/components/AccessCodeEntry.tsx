@@ -45,8 +45,41 @@ export default function AccessCodeEntry() {
         return;
       }
 
+      /*
+       * 401 is the ONLY status that means the code was wrong.
+       *
+       * Every non-ok response used to read "That code was not recognised", so a
+       * missing ACCESS_SECRET or an unset ACCESS_CODES on the host reported a
+       * deployment fault as a wrong code: buyers re-typed a code that had been
+       * correct all along, and we went looking for a bug in the code list. A
+       * server fault has to say it is a server fault.
+       *
+       * The route's own `error` string is shown verbatim when it sends one — it
+       * is written for display, and deliberately reveals nothing about whether a
+       * code exists or what one looks like.
+       */
+      const payload = (await res.json().catch(() => null)) as {
+        error?: unknown;
+        reason?: unknown;
+      } | null;
+
       setState('error');
-      setErrorMsg('That code was not recognised. Check it and try again.');
+      setErrorMsg(
+        res.status === 401
+          ? 'That code was not recognised. Check it and try again.'
+          : typeof payload?.error === 'string' && payload.error
+            ? payload.error
+            : 'Access could not be checked just now. Please try again in a moment.'
+      );
+
+      /* One line in the console so a non-401 is diagnosable without opening the
+         Network tab. `reason` names the misconfigured variable, never a value. */
+      if (res.status !== 401) {
+        console.warn(
+          `[access] /api/verify-access returned ${res.status}` +
+            (typeof payload?.reason === 'string' ? ` (${payload.reason})` : '')
+        );
+      }
     } catch {
       setState('error');
       setErrorMsg('Could not reach the server. Check your connection and try again.');
