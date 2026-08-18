@@ -7,12 +7,16 @@ import Footer from '@/components/Footer';
 import PageHeader from '@/components/ui/PageHeader';
 import Reveal from '@/components/ui/Reveal';
 import AppImage from '@/components/ui/AppImage';
-import { img, journal } from '@/lib/site';
+import { facts, img, journal } from '@/lib/site';
 
+/*
+ * Named subjects rather than the categories, because "materials, manufacturing,
+ * certification" describes any furniture blog. The four things listed are the four
+ * articles, so the description and the page cannot get out of step.
+ */
 export const metadata: Metadata = {
-  title: 'Journal',
-  description:
-    'Notes from the workshop floor at Boranada: materials, manufacturing, certification and what the export order book is actually saying.',
+  title: 'Journal · Notes From the Workshop Floor',
+  description: `Notes from the floor at Boranada: how mango behaves, what FSC chain of custody certifies, how a piece reaches a container, and what ${facts.countries} markets are ordering.`,
 };
 
 const [lead, ...rest] = journal;
@@ -108,9 +112,14 @@ export default function JournalPage() {
               </div>
 
               <div className="rule mt-16 lg:mt-20 pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rise">
+                {/* Most of these notes began as a buyer's question about something
+                    in the range, so the range is the link that belongs here. */}
                 <p className="text-body text-muted max-w-measure">
-                  Something you would like us to write about, or a question the site does not
-                  answer? Ask it directly.
+                  Every note here started as a question from someone looking at{' '}
+                  <Link href="/collections" className="text-clay link-draw tap">
+                    the collections
+                  </Link>
+                  . If yours is not answered above, ask it directly.
                 </p>
                 <Link href="/contact" className="btn btn-ghost shrink-0">
                   Send an enquiry

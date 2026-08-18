@@ -9,9 +9,20 @@ import Reveal from '@/components/ui/Reveal';
 import SectionHead from '@/components/ui/SectionHead';
 import SpecList from '@/components/ui/SpecList';
 import PieceCard from '@/components/ui/PieceCard';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import AppImage from '@/components/ui/AppImage';
 import FscPanel from '@/components/ui/FscPanel';
-import { collections, findCollection, img, piecesIn, testimonials } from '@/lib/site';
+import JsonLd from '@/components/seo/JsonLd';
+import { breadcrumbSchema, type Crumb } from '@/lib/schema';
+import {
+  collections,
+  findCollection,
+  img,
+  piecesIn,
+  testimonials,
+  type Collection,
+  type CollectionName,
+} from '@/lib/site';
 
 interface Params {
   params: Promise<{ collection: string }>;
@@ -21,14 +32,71 @@ export function generateStaticParams() {
   return collections.map((collection) => ({ collection: collection.slug }));
 }
 
+/*
+ * The product words a buyer types, one line per collection.
+ *
+ * A `Record` over `CollectionName` rather than nouns pulled out of the tagline by
+ * regex: the union *is* the list of collections, so a seventh one fails the type
+ * check here instead of shipping a title with no product word in it. Every noun
+ * below is one the collection's own tagline or story already uses — this is the
+ * search phrasing of the copy on the page, not a new claim about the range.
+ */
+const CATEGORY: Record<CollectionName, string> = {
+  Living: 'Sideboards, Consoles & Bar Cabinets',
+  Storage: 'Vitrines, Almirahs & Cabinets',
+  Dining: 'Dressers, Servers & Glazed Hutches',
+  Bedroom: 'Chests & Nightstands',
+  Hospitality: 'Contract-Grade Casegoods',
+  Occasional: 'Coffee Tables, Side Tables & Mirrors',
+};
+
+/* The spec rows are content, so their keys differ by collection — the five ranges
+   carry Timber, the contract programme carries Programme and Volume instead. Read
+   by key and absent rather than assumed: a description that names a timber the
+   page does not list is a fact we invented. */
+const specValue = (collection: Collection, key: string) =>
+  collection.spec.find((row) => row.key === key)?.value;
+
+/**
+ * The longest line that still fits a result snippet, as on the journal.
+ *
+ * One template cannot land inside 160 characters for all six: the taglines run 50
+ * to 60 and the timber lists 11 to 33, which is a 40-character spread before any
+ * of the trade terms. So the trade clause is what gives — mixed containers first,
+ * then the FSC line that only the shortest of them has room for.
+ */
+const describe = (collection: Collection) => {
+  const lead = (specValue(collection, 'Lead time') ?? '45–60 days').toLowerCase();
+  const timber = specValue(collection, 'Timber')?.toLowerCase();
+  const stock = timber ? `${collection.range} in ${timber}` : collection.range;
+
+  const candidates = collection.bespoke
+    ? [
+        `${collection.tagline} Built to your drawings in Jodhpur, one approval sample before production, ${lead}.`,
+        `${collection.tagline} Built to your drawings in Jodhpur, one approval sample before production.`,
+      ]
+    : [
+        `${collection.tagline} ${stock}, made in Jodhpur. Low MOQ, mixed containers, ${lead}. FSC timber on request.`,
+        `${collection.tagline} ${stock}, made in Jodhpur. Low MOQ, mixed containers, ${lead}.`,
+        `${collection.tagline} ${stock}, made in Jodhpur. Low MOQ, ${lead}.`,
+      ];
+
+  return candidates.find((line) => line.length <= 160) ?? candidates[candidates.length - 1];
+};
+
+const trailFor = (collection: Collection): Crumb[] => [
+  { name: 'Collections', href: '/collections' },
+  { name: collection.name },
+];
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { collection: slug } = await params;
   const collection = findCollection(slug);
   if (!collection) return { title: 'Collections' };
 
   return {
-    title: `${collection.name} · Collections`,
-    description: `${collection.tagline} ${collection.story[0]}`.slice(0, 300),
+    title: `${collection.name} · ${CATEGORY[collection.name]}`,
+    description: describe(collection),
     openGraph: {
       title: `${collection.name} · Vardhman Impex`,
       description: collection.tagline,
@@ -49,9 +117,12 @@ export default async function CollectionPage({ params }: Params) {
   /* The contract collection carries the hospitality reference rather than a
      grid — a programme is sold on evidence it has been delivered before. */
   const reference = testimonials.find((entry) => /hospitality/i.test(entry.company));
+  const trail = trailFor(collection);
 
   return (
     <>
+      <JsonLd data={breadcrumbSchema(trail)} />
+
       <Header />
       <main id="main">
         <PageHeader
@@ -68,6 +139,13 @@ export default async function CollectionPage({ params }: Params) {
         <Reveal immediate>
           {/* Plate and story, side by side. */}
           <section className="shell">
+            {/* Pulled up into the gap the masthead already leaves, rather than
+                laid on top of it. The plate below is the destination of the
+                collection-card morph, so every pixel added above it comes off the
+                landing the photograph was aimed at — a line of 12px mono inside
+                PageHeader's 64px of bottom padding costs 18 of them. */}
+            <Breadcrumbs trail={trail} className="veil -mt-5 lg:-mt-8 mb-6 lg:mb-8" />
+
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-16">
               <div className="lg:col-span-7">
                 {/* Destination of the collection-card morph — see PlateLink. */}
@@ -195,6 +273,23 @@ export default async function CollectionPage({ params }: Params) {
               <div className="rise">
                 <FscPanel variant="brief" />
               </div>
+
+              {/* The two routes that substantiate the claim this panel makes.
+                  A buyer who reads "certified on request" next asks who did the
+                  work, and the answer is a floor and a sequence, not a paragraph
+                  repeated here. */}
+              <p className="text-body text-muted max-w-measure mt-6 rise">
+                Timber for this collection is sawn, dried, joined and finished on one floor, and
+                nothing in it is subcontracted.{' '}
+                <Link href="/craft" className="text-clay link-draw tap">
+                  The eight stages
+                </Link>{' '}
+                set out what happens at each bench, and{' '}
+                <Link href="/factory" className="text-clay link-draw tap">
+                  the works at Boranada
+                </Link>{' '}
+                gives the floor area by area.
+              </p>
             </div>
           </section>
 

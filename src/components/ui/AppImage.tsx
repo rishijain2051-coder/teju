@@ -71,10 +71,14 @@ const AppImage = memo(function AppImage({
     return classes.filter(Boolean).join(' ');
   }, [className, isLoading, onClick]);
 
+  /* `alt` is deliberately not in here. It is passed as its own attribute on the
+     two <Image>s below, because a11y linting cannot see an attribute that arrives
+     through a spread — every call site was passing real alt text and the rule
+     still reported both branches as missing it. An explicit attribute is also the
+     one prop a later spread must not be able to overwrite. */
   const imageProps = useMemo(() => {
     const baseProps: any = {
       src: imageSrc,
-      alt,
       className: imageClassName,
       quality,
       placeholder,
@@ -97,7 +101,6 @@ const AppImage = memo(function AppImage({
     return baseProps;
   }, [
     imageSrc,
-    alt,
     imageClassName,
     quality,
     placeholder,
@@ -119,13 +122,21 @@ const AppImage = memo(function AppImage({
           sizes={sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
           style={{ objectFit: 'cover' }}
           {...props}
+          alt={alt}
         />
       </div>
     );
   }
 
   return (
-    <Image {...imageProps} width={width || 400} height={height || 300} sizes={sizes} {...props} />
+    <Image
+      {...imageProps}
+      width={width || 400}
+      height={height || 300}
+      sizes={sizes}
+      {...props}
+      alt={alt}
+    />
   );
 });
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, img } from '@/lib/site';
@@ -15,6 +16,24 @@ import {
 type FormState = 'idle' | 'sending' | 'success' | 'error';
 
 const SUBJECT = 'New enquiry from vardhman-impex.com';
+
+/*
+ * Google's Maps URLs API: a plain link, no key and no SDK, resolved by Google
+ * from the address string when the buyer follows it. Deliberately not an embed —
+ * an iframe would hand Google the IP and user agent of every visitor who merely
+ * opened this page, before anyone asked for a map, and cost a third-party frame
+ * and its scripts on the route with the site's most important form on it.
+ *
+ * Built from `brand.address` rather than a pasted URL so a correction there
+ * cannot leave the directions pointing at the previous works.
+ */
+const DIRECTIONS = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+  [brand.address.line1, brand.address.line2, brand.address.country].join(', ')
+)}`;
+
+/** Matches the hero's prose links: underlined at rest, so colour is never the signal. */
+const PROSE_LINK =
+  'text-ink underline decoration-line-strong decoration-1 underline-offset-4 hover:decoration-clay hover:text-clay transition-colors duration-fast ease-out';
 
 export default function ContactSplit() {
   const ref = useReveal<HTMLElement>();
@@ -84,13 +103,18 @@ export default function ContactSplit() {
                 <h2 className="text-title mt-4">
                   It&apos;s in our inbox. We reply within two working days.
                 </h2>
-                <button
-                  type="button"
-                  onClick={() => setState('idle')}
-                  className="btn btn-ghost mt-8"
-                >
-                  Send another
-                </button>
+                <div className="flex flex-wrap gap-3 mt-8">
+                  <button type="button" onClick={() => setState('idle')} className="btn btn-solid">
+                    Send another
+                  </button>
+                  {/* A destination, not a redirect. Sending does not navigate: the
+                      panel stays put so a failure can never be mistaken for success
+                      (tests/enquiry.spec.ts pins that), and /thank-you is offered
+                      rather than forced. */}
+                  <Link href="/thank-you" className="btn btn-ghost">
+                    What happens next
+                  </Link>
+                </div>
               </div>
             ) : (
               /* `filter-swap`, not `rise`, for the same reason as the panel above:
@@ -213,7 +237,15 @@ export default function ContactSplit() {
                   />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 mt-10">
+                {/* Above the button, not below it: the promise only does its work
+                    if it is read before the press. Same sentence as the hero, the
+                    trade-access form and the container plan — a buyer who meets two
+                    different figures believes neither. */}
+                <p className="text-note text-muted mt-10 max-w-measure">
+                  We reply within two working days.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-3 mt-4">
                   <button
                     type="submit"
                     disabled={state === 'sending'}
@@ -252,7 +284,10 @@ export default function ContactSplit() {
                 )}
 
                 <p className="text-note text-muted mt-6 max-w-measure">
-                  Sent straight to {brand.email}. We use your details only to reply.
+                  Sent straight to {brand.email}. We use your details only to reply.{' '}
+                  <Link href="/privacy" className="text-ink link-draw tap">
+                    How we handle it
+                  </Link>
                 </p>
               </form>
             )}
@@ -275,12 +310,41 @@ export default function ContactSplit() {
             <dl className="mt-8 rise">
               <div className="py-5 border-t border-line">
                 <dt className="text-manifest-sm text-muted">Works</dt>
-                <dd className="text-body text-ink mt-2 leading-relaxed">
-                  {brand.address.line1}
-                  <br />
-                  {brand.address.line2}
-                  <br />
-                  {brand.address.country}
+                <dd className="mt-2">
+                  {/* `<address>` so the postal address is machine-readable as one;
+                      `not-italic` because the element's default italic fights every
+                      other block of body copy on the page. */}
+                  <address className="text-body text-ink not-italic leading-relaxed">
+                    {brand.address.line1}
+                    <br />
+                    {brand.address.line2}
+                    <br />
+                    {brand.address.country}
+                  </address>
+
+                  <a
+                    href={DIRECTIONS}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-arrow tap inline-flex items-center gap-2.5 mt-5 text-manifest text-ink-soft hover:text-clay transition-colors duration-fast ease-out"
+                  >
+                    Get directions
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                  </a>
+
+                  {/* Said out loud rather than discovered on click: this is the one
+                      control on the page that hands a visitor to a third party. */}
+                  <p className="text-note text-muted mt-2">Opens Google Maps in a new tab.</p>
                 </dd>
               </div>
               <div className="py-5 border-t border-line">
@@ -304,6 +368,21 @@ export default function ContactSplit() {
                 <dd className="text-body text-ink mt-2 numeral">Mon–Sat, 09:30–18:30 IST</dd>
               </div>
             </dl>
+
+            {/* A buyer who reaches this column without a specification yet needs
+                somewhere to go that is not the back button. */}
+            <p className="text-body text-muted mt-8 rise">
+              Nothing specific to ask for yet? The{' '}
+              <Link href="/collections" className={PROSE_LINK}>
+                public collections
+              </Link>{' '}
+              show the ranges and the finishes, and the rest of the catalogue — packed sizes, CBM,
+              container counts — opens with{' '}
+              <Link href="/collections#access" className={PROSE_LINK}>
+                trade access
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </div>

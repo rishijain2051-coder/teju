@@ -5,12 +5,25 @@ import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, img } from '@/lib/site';
+import { whatsappUrl } from '@/lib/enquiry';
 import { delay } from '@/lib/reveal';
 import type { CatalogueKey } from '@/lib/imagery';
 
 /** Three portrait plates, held long enough to actually be looked at. */
 const PLATES: CatalogueKey[] = ['hero-mango-light', 'hero-starburst', 'hero-tall-chest'];
 const HOLD = 7000;
+
+/*
+ * The hero is the one conversion point on the site with no form behind it, so the
+ * thread has to open with its own provenance — otherwise the factory receives
+ * "hi" from a number it cannot place. Composed once at module scope: the fields
+ * are empty here, and `whatsappUrl` percent-encodes on every call.
+ */
+const WHATSAPP = whatsappUrl('Enquiry from vardhman-impex.com', []);
+
+/** Inline prose link: underlined at rest, because colour alone is not a signal. */
+const PROSE_LINK =
+  'text-ink underline decoration-line-strong decoration-1 underline-offset-4 hover:decoration-clay hover:text-clay transition-colors duration-fast ease-out';
 
 export default function HeroSection() {
   const ref = useReveal<HTMLElement>({ immediate: true });
@@ -59,18 +72,31 @@ export default function HeroSection() {
               </span>
             </h1>
 
+            {/* The two nouns a buyer arrived searching for carry the links, so the
+                browse path survives demoting it out of the button row. */}
             <p
               className="text-lead text-ink-soft max-w-measure mt-5 lg:mt-7 rise"
               style={delay(520)}
             >
-              Solid mango and reclaimed hardwood, cut, carved and finished on our own floor in
-              Boranada, then packed into containers bound for nine countries. Low minimums. Honest
-              lead times. One set of hands from log to lorry.
+              <Link href="/collections" className={PROSE_LINK}>
+                Solid mango and reclaimed hardwood
+              </Link>
+              , cut, carved and finished on{' '}
+              <Link href="/factory" className={PROSE_LINK}>
+                our own floor in Boranada
+              </Link>
+              , then packed into containers bound for nine countries. Low minimums. Honest lead
+              times. One set of hands from log to lorry.
             </p>
 
+            {/* Two actions, not three: at 412px each of these labels takes a row of
+                its own, and a third slab pushed the reply promise under the fold on
+                a 730px-tall phone once the sticky mobile bar takes its 64px. The
+                catalogue request is the deep conversion; WhatsApp is for the buyer
+                who would rather talk than fill in a form. */}
             <div className="flex flex-wrap gap-3 mt-7 lg:mt-8 rise" style={delay(640)}>
-              <Link href="/collections" className="btn btn-solid">
-                View the collections
+              <Link href="/collections#access" className="btn btn-solid">
+                Request catalogue access
                 <svg
                   width="13"
                   height="13"
@@ -83,10 +109,34 @@ export default function HeroSection() {
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
               </Link>
-              <Link href="/contact" className="btn btn-ghost">
-                Become a partner
-              </Link>
+              <a
+                href={WHATSAPP}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost"
+              >
+                WhatsApp the factory
+              </a>
             </div>
+
+            {/* Directly under the buttons rather than beside them: the promise is
+                what makes pressing either of them feel cheap, and it only does that
+                work if it is read before the press, not after.
+
+                The sentence is the one already quoted by the container plan, the
+                trade-access form and every enquiry panel. Word for word on purpose —
+                a buyer who meets two different figures believes neither. */}
+            <p className="text-note text-muted mt-4 lg:mt-5 rise" style={delay(700)}>
+              We reply within two working days. Or call{' '}
+              <a
+                href={`tel:${brand.phoneHref}`}
+                className={`numeral tap ${PROSE_LINK}`}
+                aria-label={`Call ${brand.name} on ${brand.phone}`}
+              >
+                {brand.phone}
+              </a>
+              .
+            </p>
           </div>
 
           {/* Plate index, set like a contact sheet. */}

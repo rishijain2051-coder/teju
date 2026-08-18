@@ -4,12 +4,22 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PageHeader from '@/components/ui/PageHeader';
 import ContactSplit from '@/app/contact/components/ContactSplit';
-import { facts } from '@/lib/site';
+import JsonLd from '@/components/seo/JsonLd';
+import { localBusinessSchema } from '@/lib/schema';
+import { brand, facts } from '@/lib/site';
 
+/*
+ * `title.absolute`, because the root layout's `%s · Vardhman Impex` template on
+ * top of a title that already carries the brand runs past 79 characters and gets
+ * truncated in the result. "Contact" alone was competing with every other
+ * contact page on the web; this one names the material, the trade and the city,
+ * which is how a buyer actually types the search.
+ */
 export const metadata: Metadata = {
-  title: 'Contact',
+  title: { absolute: `Contact ${brand.name} · Mango Wood Furniture Export, Jodhpur` },
   description:
-    'Speak to the factory directly. Vardhman Impex, Boranada Industrial Area, Jodhpur. Furniture manufacturing and export enquiries.',
+    'Send an enquiry straight to our Boranada works in Jodhpur: ranges, volumes, finishes, ' +
+    `container plans. We reply within two working days. Low MOQ, ${facts.countries} markets.`,
 };
 
 const META = [
@@ -23,6 +33,9 @@ export default function ContactPage() {
   return (
     <>
       <Header />
+      {/* Also on the home page. This is the location page, so it is the one a
+          "furniture manufacturer near Jodhpur" result would land on. */}
+      <JsonLd data={localBusinessSchema()} />
       <main id="main">
         <PageHeader
           eyebrow="Enquiries"

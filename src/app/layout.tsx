@@ -1,6 +1,10 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
 import MotionProvider from '@/components/motion/MotionProvider';
+import StickyCta from '@/components/ui/StickyCta';
+import JsonLd from '@/components/seo/JsonLd';
+import { organizationSchema } from '@/lib/schema';
 import '../styles/fonts.css';
 import '../styles/tailwind.css';
 
@@ -95,6 +99,33 @@ const PREFETCH_MORPH_TARGETS = JSON.stringify({
   prefetch: [{ where: { selector_matches: 'a[data-morph]' }, eagerness: 'moderate' }],
 });
 
+/*
+ * Analytics is opt-in by deployment, not by code: with no NEXT_PUBLIC_GA_ID set
+ * nothing below renders, so a local checkout and a preview build send no traffic
+ * to a property and there is no measurement ID committed to the repository. The
+ * variable has to be `NEXT_PUBLIC_` to be readable in the browser bundle at all,
+ * and it is inlined at build time — so changing it on Vercel needs a redeploy,
+ * not just a restart.
+ *
+ * `afterInteractive`, which is the strategy gtag is designed for: it loads once
+ * the page is interactive, off the critical path, and the queue in the second
+ * script means the calls made before it arrives are not lost. Explicitly not
+ * `beforeInteractive` — that renders as a client reference in this App Router
+ * setup (see COMPOSE_FIRST_FOLD below) and would put a third-party request ahead
+ * of the photograph that is the page.
+ *
+ * GA4 counts route changes itself through enhanced measurement's history events,
+ * so there is no pageview effect to wire up per navigation here.
+ */
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+
+const GA_INIT = `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');
+`.trim();
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -173,8 +204,28 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           type="speculationrules"
           dangerouslySetInnerHTML={{ __html: PREFETCH_MORPH_TARGETS }}
         />
+        {/* Site-wide, and not merely for completeness: `articleSchema` and
+            `productSchema` file their publisher, author and manufacturer as a
+            reference to this node's `@id`. Mounted anywhere less than the layout,
+            those references dangle on the pages that make them. */}
+        <JsonLd data={organizationSchema()} />
         <MotionProvider />
         {children}
+        {/* Last in the document on purpose — the bar is `position: sticky`, so
+            this is the slot it settles into at the foot of the page rather than
+            covering anything. See StickyCta. */}
+        <StickyCta />
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-init" strategy="afterInteractive">
+              {GA_INIT}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

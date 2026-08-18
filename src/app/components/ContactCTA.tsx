@@ -51,6 +51,10 @@ export default function ContactCTA() {
             </Link>
           </div>
 
+          {/* Quoted verbatim from the hero, the trade-access form and the container
+              plan. The last thing read before the last decision on the page. */}
+          <p className="text-note text-paper/70 mt-5 rise">We reply within two working days.</p>
+
           {/* Direct lines, set as a manifest block. */}
           <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mt-14 pt-8 border-t border-line-invert rise">
             <div>

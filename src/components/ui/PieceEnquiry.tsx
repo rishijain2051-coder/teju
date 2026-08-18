@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { type Piece } from '@/lib/site';
 import { submitEnquiry, whatsappUrl, type EnquiryField } from '@/lib/enquiry';
 
@@ -59,17 +60,37 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
   const label = 'block text-manifest-sm text-muted mb-1';
 
   if (state === 'success') {
-    /* `filter-swap`, not `rise`: this panel mounts on submit, long after the
-       scroll reveal was wired, so `.rise` would leave it invisible. */
+    /*
+     * Confirmed in place, not at /thank-you.
+     *
+     * A redirect would buy an analytics URL and cost the two things that matter
+     * more here. The buyer's context is the reason they enquired — the
+     * photograph, the dimensions, the finish — and a full navigation throws all
+     * of it away at the moment they are most likely to want the next design.
+     * That next design is the loop below, and it is the highest-value behaviour
+     * on a catalogue page: three enquiries in a row, without leaving the range.
+     *
+     * /thank-you exists as a real destination and is linked from here, so anyone
+     * who wants the reply commitment, the telephone and the onward routes can
+     * have them — by choosing to, rather than by being sent there.
+     *
+     * `filter-swap`, not `rise`: this panel mounts on submit, long after the
+     * scroll reveal was wired, so `.rise` would leave it invisible.
+     */
     return (
       <div className="border border-line-strong p-6 lg:p-8 filter-swap">
         <p className="text-manifest text-clay">Enquiry sent</p>
         <h3 className="text-title mt-3">
           {piece.ref} is with us. We reply within two working days.
         </h3>
-        <button type="button" onClick={() => setState('idle')} className="btn btn-ghost mt-6">
-          Enquire on something else
-        </button>
+        <div className="flex flex-wrap gap-3 mt-6">
+          <button type="button" onClick={() => setState('idle')} className="btn btn-solid">
+            Enquire on something else
+          </button>
+          <Link href="/thank-you" className="btn btn-ghost">
+            What happens next
+          </Link>
+        </div>
       </div>
     );
   }
@@ -175,6 +196,17 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
           {errorMsg}
         </p>
       )}
+
+      {/* The same line the contact form carries, for the same reason: the one
+          thing a buyer wants to know before typing a business address is where
+          it goes. */}
+      <p className="text-note text-muted mt-5 max-w-measure">
+        Sent straight to a person, used only to reply.{' '}
+        <Link href="/privacy" className="link-draw text-ink tap">
+          How we handle it
+        </Link>
+        .
+      </p>
     </form>
   );
 }

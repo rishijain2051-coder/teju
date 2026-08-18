@@ -8,7 +8,10 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Reveal from '@/components/ui/Reveal';
 import AppImage from '@/components/ui/AppImage';
-import { findArticle, img, journal } from '@/lib/site';
+import JsonLd from '@/components/seo/JsonLd';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import { articleSchema, breadcrumbSchema, type Crumb } from '@/lib/schema';
+import { findArticle, img, journal, pieceHref, pieces, type Article, type Piece } from '@/lib/site';
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -18,22 +21,157 @@ export function generateStaticParams() {
   return journal.map((article) => ({ slug: article.slug }));
 }
 
+/**
+ * The standfirsts run 101 to 146 characters and a result snippet has room for
+ * about 160, so the dateline is appended only where it fits: the longest candidate
+ * inside the limit wins, and the FSC note keeps its standfirst alone at 146. The
+ * excerpt is not used here — it is card copy, written to sit under a headline the
+ * reader can already see, and it repeats the title on three of the four.
+ */
+const describe = (article: Article) =>
+  [
+    `${article.standfirst} From the works at Boranada, ${article.date}.`,
+    `${article.standfirst} Boranada, ${article.date}.`,
+    article.standfirst,
+  ].find((line) => line.length <= 160) ?? article.standfirst;
+
+/* Opens at the section, not at Home. The hand-rolled trail this replaced started
+   at Collections, the masthead links home from every page, and a crumb whose only
+   job is to duplicate the logo is a link that costs a tap target and returns
+   nothing. Kept in step with the collections trails. */
+const trailFor = (article: Article): Crumb[] => [
+  { name: 'Journal', href: '/journal' },
+  { name: article.title },
+];
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const article = findArticle(slug);
   if (!article) return { title: 'Journal' };
 
+  const description = describe(article);
+
   return {
     title: article.title,
-    description: article.excerpt,
+    description,
     openGraph: {
       type: 'article',
       title: article.title,
-      description: article.excerpt,
+      description,
       images: [{ url: img(article.image).src }],
     },
   };
 }
+
+const designLink = (piece: Piece) => (
+  <Link href={pieceHref(piece)} className="text-clay link-draw tap">
+    {piece.name}
+  </Link>
+);
+
+/**
+ * ", the X and Y among them." — and just "." when nothing resolves, which is why
+ * the clause owns the full stop rather than the sentence it closes.
+ *
+ * Designs are resolved through `pieces` rather than written as paths: `pieceHref`
+ * derives the route from the collection, so a design that moves collection changes
+ * URL, and a design that goes private loses its public page altogether. A lookup
+ * is the only form of this that can neither 404 nor name a gated design.
+ */
+const among = (slugs: readonly string[]) => {
+  const found = slugs
+    .map((wanted) => pieces.find((piece) => piece.slug === wanted))
+    .filter((piece): piece is Piece => Boolean(piece));
+
+  if (found.length === 0) return '.';
+
+  return (
+    <>
+      , the{' '}
+      {found.map((piece, i) => (
+        <React.Fragment key={piece.slug}>
+          {i > 0 && ' and '}
+          {designLink(piece)}
+        </React.Fragment>
+      ))}{' '}
+      among them.
+    </>
+  );
+};
+
+/**
+ * Where each article sends a reader next, written per slug.
+ *
+ * Not derived from `category`, because the useful next step differs by subject
+ * rather than by filing: out of the mango note it is the drying stage on /craft,
+ * out of the FSC note it is the chain-of-custody panel, and a category map would
+ * have sent both back to the journal index. One paragraph of prose, because a
+ * buyer researching a supplier arrives on these pages from search and the four
+ * journal routes otherwise link nowhere but to each other.
+ */
+const ONWARD: Record<string, React.ReactNode> = {
+  'solid-mango-wood': (
+    <>
+      The drying this piece turns on is the second of eight stages.{' '}
+      <Link href="/craft" className="text-clay link-draw tap">
+        The rest of the sequence
+      </Link>{' '}
+      is set out bench by bench, and the mango casegoods that come off it run through the{' '}
+      <Link href="/collections/dining" className="text-clay link-draw tap">
+        dining range
+      </Link>
+      {among(['osian-barn-sideboard', 'marwar-parquet-sideboard'])}
+    </>
+  ),
+  'timber-to-container': (
+    <>
+      The benches in this account have addresses.{' '}
+      <Link href="/factory" className="text-clay link-draw tap">
+        The factory page
+      </Link>{' '}
+      gives the floor area by area and the same nine weeks as a dated timeline, and{' '}
+      <Link href="/craft" className="text-clay link-draw tap">
+        the eight stages
+      </Link>{' '}
+      describe what happens at each one. Everything in{' '}
+      <Link href="/collections" className="text-clay link-draw tap">
+        the collections
+      </Link>{' '}
+      goes through it.
+    </>
+  ),
+  'european-retail-2027': (
+    <>
+      An order book is easier to read against the pieces themselves. The painted, tiled and parquet
+      fronts it is moving towards are separate trades in this building —{' '}
+      <Link href="/craft" className="text-clay link-draw tap">
+        the carving, parquet and tile benches
+      </Link>{' '}
+      — and they run across{' '}
+      <Link href="/collections" className="text-clay link-draw tap">
+        the collections
+      </Link>
+      {among(['marwar-parquet-sideboard', 'pichola-tile-cabinet'])}
+    </>
+  ),
+  'what-fsc-actually-certifies': (
+    <>
+      <Link href="/craft#fsc" className="text-clay link-draw tap">
+        The chain-of-custody panel
+      </Link>{' '}
+      sets out which claim we hold and the certificate code it travels with, the tagged stacks it
+      describes are in{' '}
+      <Link href="/factory" className="text-clay link-draw tap">
+        the yard at Boranada
+      </Link>
+      , and every design in{' '}
+      <Link href="/collections" className="text-clay link-draw tap">
+        the collections
+      </Link>{' '}
+      states the claim it can be supplied under.
+    </>
+  ),
+};
 
 export default async function ArticlePage({ params }: Params) {
   const { slug } = await params;
@@ -41,10 +179,19 @@ export default async function ArticlePage({ params }: Params) {
   if (!article) notFound();
 
   const plate = img(article.image);
+  const trail = trailFor(article);
+  const onward = ONWARD[article.slug];
   const more = journal.filter((entry) => entry.slug !== article.slug).slice(0, 3);
 
   return (
     <>
+      <JsonLd data={breadcrumbSchema(trail)} />
+      {/* The records carry no byline — title, category, dateline, reading time and
+          nothing else — so `articleSchema` files both author and publisher as the
+          organisation. That is the same claim the dateline at the foot of the body
+          makes in prose: written at the works, not signed. */}
+      <JsonLd data={articleSchema(article, `/journal/${article.slug}`)} />
+
       <Header />
       <main id="main">
         {/* A bespoke masthead rather than PageHeader: an article needs its
@@ -52,14 +199,10 @@ export default async function ArticlePage({ params }: Params) {
         <Reveal immediate>
           <header className="pt-32 lg:pt-44 pb-10 lg:pb-14">
             <div className="shell">
-              <nav aria-label="Breadcrumb" className="veil">
-                <Link
-                  href="/journal"
-                  className="text-manifest-sm text-muted hover:text-clay transition-colors duration-fast ease-out tap"
-                >
-                  Journal
-                </Link>
-              </nav>
+              {/* One line, above the wipe, so the plate below keeps its place in
+                  the first viewport — this page is the destination of the journal
+                  card's morph and the photograph has to land where it was aimed. */}
+              <Breadcrumbs trail={trail} className="veil" />
 
               <h1 className="font-serif text-display font-light mt-6 lg:mt-8 max-w-[26ch]">
                 <span className="wipe">
@@ -140,8 +283,14 @@ export default async function ArticlePage({ params }: Params) {
                     </section>
                   ))}
 
+                  {/* Onward links first, dateline last: the reader who finished the
+                      piece is looking for the next thing, and one shared rule keeps
+                      that from reading as a second footer. */}
                   <div className="rule mt-16 pt-6 rise">
-                    <p className="text-manifest-sm text-muted">
+                    {/* One step down from the body measure's `text-lead`: this is
+                        apparatus, not the last paragraph of the argument. */}
+                    {onward && <p className="text-body text-ink-soft max-w-measure">{onward}</p>}
+                    <p className={`text-manifest-sm text-muted ${onward ? 'mt-10' : ''}`}>
                       Written at the works, Boranada · {article.date}
                     </p>
                   </div>

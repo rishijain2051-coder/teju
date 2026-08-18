@@ -9,16 +9,21 @@ import SectionHead from '@/components/ui/SectionHead';
 import SpecList from '@/components/ui/SpecList';
 import PieceCard from '@/components/ui/PieceCard';
 import PieceEnquiry from '@/components/ui/PieceEnquiry';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import AppImage from '@/components/ui/AppImage';
+import JsonLd from '@/components/seo/JsonLd';
+import { breadcrumbSchema, productSchema, type Crumb } from '@/lib/schema';
 import { delay } from '@/lib/reveal';
 import {
   findCollection,
   findPiece,
   fscClaimFor,
   img,
+  pieceHref,
   pieces,
   relatedTo,
   slugify,
+  type Piece,
 } from '@/lib/site';
 
 interface Params {
@@ -38,14 +43,49 @@ export function generateStaticParams() {
   }));
 }
 
+/**
+ * A buyer arriving here from search typed a reference, a timber or a room — not a
+ * design name — so the title carries the name, the reference and the material, and
+ * the description leads with the spec table rather than the editorial note. The
+ * note is written to sit beneath a photograph the reader can already see; in a
+ * result it explains a piece nobody has looked at yet.
+ *
+ * Candidates longest first, and the longest that fits a snippet wins, as on the
+ * journal: the names run 12 to 27 characters and the dimension strings 13 to 21,
+ * so the trade clause is what has to give.
+ */
+const describe = (piece: Piece, bespoke: boolean) => {
+  const spec = `${piece.material.toLowerCase()}, ${piece.finish.toLowerCase()}, ${piece.dimensions}`;
+
+  /* The contract collection is quoted from 50 pieces against a signed-off sample,
+     so the low-MOQ line is the wrong promise on those two references. */
+  const trade = bespoke
+    ? 'Contract-grade, built to drawing in Jodhpur.'
+    : 'Made in Jodhpur, low MOQ, 45–60 day lead time.';
+
+  const candidates = [
+    `${piece.name} (${piece.ref}), ${piece.collection} collection: ${spec}. ${trade}`,
+    `${piece.name} (${piece.ref}): ${spec}. ${trade}`,
+    `${piece.name} (${piece.ref}): ${spec}.`,
+  ];
+
+  return candidates.find((line) => line.length <= 160) ?? candidates[candidates.length - 1];
+};
+
+const trailFor = (piece: Piece, collectionName: string, collectionHref: string): Crumb[] => [
+  { name: 'Collections', href: '/collections' },
+  { name: collectionName, href: collectionHref },
+  { name: piece.ref },
+];
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { collection, piece: pieceSlug } = await params;
-  const piece = findPiece(collection, pieceSlug);
+  const { collection: collectionSlug, piece: pieceSlug } = await params;
+  const piece = findPiece(collectionSlug, pieceSlug);
   if (!piece) return { title: 'Collections' };
 
   return {
-    title: `${piece.name} · ${piece.ref}`,
-    description: `${piece.note} ${piece.material}, ${piece.finish.toLowerCase()}, ${piece.dimensions}.`,
+    title: `${piece.name} · ${piece.ref} · ${piece.material}`,
+    description: describe(piece, Boolean(findCollection(collectionSlug)?.bespoke)),
     openGraph: {
       title: `${piece.name} · Vardhman Impex`,
       description: piece.note,
@@ -65,40 +105,43 @@ export default async function PiecePage({ params }: Params) {
   const collection = findCollection(collectionSlug);
   if (!collection) notFound();
 
+  /*
+   * Read from the collection, not hardcoded.
+   *
+   * These two rows said `45–60 days` and `From two pieces` for every reference on
+   * the site, including the two Hospitality ones — whose own collection record
+   * says `60–90 days from sign-off` and `From 50 pieces`, and whose story says the
+   * programme has run at three hundred pieces and up. Both figures were on the
+   * same page, contradicting each other, in front of a contract buyer deciding
+   * whether we understood their job. The collection is the narrower fact, so it
+   * wins; the house terms remain the fallback for a collection that omits a row.
+   */
+  const specRow = (key: string) => collection.spec.find((row) => row.key === key)?.value;
+  const leadTime = specRow('Lead time') ?? '45–60 days';
+  const minimum = specRow('Minimum') ?? 'From two pieces';
+
   const plate = img(piece.image);
   const related = relatedTo(piece, 3);
   const fsc = fscClaimFor(piece);
+  const trail = trailFor(piece, collection.name, collection.href);
 
   return (
     <>
+      <JsonLd data={breadcrumbSchema(trail)} />
+
+      {/* No `offers` block. Every design here is quoted on enquiry, so there is no
+          price, no currency and no availability to state — and an `offers` node is
+          exactly where a rich result would publish whatever we put there as fact.
+          The spec is what we can substantiate: reference, material, finish and
+          dimensions, all read from the same record the table below renders. */}
+      <JsonLd data={productSchema(piece, pieceHref(piece))} />
+
       <Header />
       <main id="main">
         <Reveal immediate>
           <section className="pt-28 lg:pt-36 pb-16 lg:pb-24">
             <div className="shell">
-              <nav aria-label="Breadcrumb" className="veil">
-                <ol className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1 text-manifest-sm text-muted">
-                  <li>
-                    <Link
-                      href="/collections"
-                      className="hover:text-clay transition-colors duration-fast ease-out tap"
-                    >
-                      Collections
-                    </Link>
-                  </li>
-                  <li aria-hidden="true">/</li>
-                  <li>
-                    <Link
-                      href={collection.href}
-                      className="hover:text-clay transition-colors duration-fast ease-out tap"
-                    >
-                      {collection.name}
-                    </Link>
-                  </li>
-                  <li aria-hidden="true">/</li>
-                  <li className="text-ink-soft numeral">{piece.ref}</li>
-                </ol>
-              </nav>
+              <Breadcrumbs trail={trail} className="veil" />
 
               <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-8 lg:mt-10">
                 {/* Plate */}
@@ -147,8 +190,8 @@ export default async function PiecePage({ params }: Params) {
                       { key: 'Material', value: piece.material },
                       { key: 'Finish', value: piece.finish },
                       { key: 'Dimensions', value: piece.dimensions },
-                      { key: 'Lead time', value: '45–60 days' },
-                      { key: 'Minimum', value: 'From two pieces' },
+                      { key: 'Lead time', value: leadTime },
+                      { key: 'Minimum', value: minimum },
                     ]}
                   />
 
@@ -211,7 +254,11 @@ export default async function PiecePage({ params }: Params) {
                   <p className="text-body text-muted mt-5 max-w-measure rise">
                     Framed carcass, timber brought to 8–10% moisture before it reaches a joint,
                     finished against a retained sample rather than a colour code. Nothing in this
-                    piece was subcontracted.
+                    piece was subcontracted: it is sawn, joined, finished and packed in{' '}
+                    <Link href="/factory" className="text-clay link-draw tap">
+                      our own works at Boranada
+                    </Link>
+                    .
                   </p>
                   <Link href="/craft" className="btn btn-ghost mt-8 rise">
                     The eight stages

@@ -310,9 +310,21 @@ push and pull request. Two assertions beyond the obvious:
 
 ## Deployment
 
-Netlify, via `@netlify/plugin-nextjs`. Set every key from `.env.example` in the
-host's environment — particularly `ACCESS_SECRET`, which should differ from your
-local value.
+Vercel. `www.vardhman-impex.com` answers `Server: Vercel` with an `X-Vercel-Id`
+from the `bom1` region, and the domain's DNS points at Vercel (`216.198.79.1` at
+the apex, `vercel-dns-017.com` for `www`).
+
+`@netlify/plugin-nextjs` is still in `dependencies` and this section used to name
+Netlify. Nothing reads either — there is no `netlify.toml` — but the stale entry is
+worth removing, and it has already misled once: the privacy notice has to name the
+host that holds visitor request logs, and it named Netlify off the back of this
+line before the wire was checked.
+
+Set every key from `.env.example` in the host's environment — particularly
+`ACCESS_SECRET`, which should differ from your local value, and which the gate
+rejects below 32 characters. Vercel's dashboard stores values **literally**: quotes
+that `.env.local` would strip become part of the value, which is the likeliest way
+a correct access code gets refused.
 
 `plans/` holds the engineering notes for past changes, with before-and-after
 measurements. It is internal and safe to read but not part of the build.

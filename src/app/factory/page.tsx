@@ -22,10 +22,15 @@ import {
   stats,
 } from '@/lib/site';
 
+/*
+ * This is the page a supplier audit lands on, so the title states the two things
+ * such a search carries — a floor size and a place — rather than the word
+ * "Factory", which every trading desk also uses. Figures are interpolated from
+ * `facts` so the description cannot drift from the manifest the page renders.
+ */
 export const metadata: Metadata = {
-  title: 'Factory',
-  description:
-    'Nine thousand square metres at Boranada Industrial Area, Jodhpur. Floor layout, order timeline, export markets, logistics terms and FSC chain of custody.',
+  title: `Factory · ${facts.factory} sq.mt at Boranada, Jodhpur`,
+  description: `Inside the works at Boranada, Jodhpur: ${facts.factory} sq.mt from timber yard to container bay, ${facts.craftspeople}+ people on our own payroll, ${facts.countries} export markets, 45–60 day lead times.`,
 };
 
 const META = [

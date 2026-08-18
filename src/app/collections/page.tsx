@@ -8,12 +8,20 @@ import Reveal from '@/components/ui/Reveal';
 import AppImage from '@/components/ui/AppImage';
 import CollectionsGrid from '@/app/collections/components/CollectionsGrid';
 import ExclusiveAccess from '@/app/collections/components/ExclusiveAccess';
-import { collections, facts, img, piecesIn } from '@/lib/site';
+import { collections, facts, img, pieces, piecesIn } from '@/lib/site';
 
+/*
+ * Nobody searches for "collections", so the title spends its length on the three
+ * casegoods a buyer actually types and leaves the word in front only because it
+ * is what the navigation and the inbound links call this page.
+ *
+ * The description counts the catalogue rather than describing it — the two totals
+ * and the range figure are interpolated, so a design added at /keystatic cannot
+ * leave the snippet claiming a number the grid below no longer shows.
+ */
 export const metadata: Metadata = {
-  title: 'Collections',
-  description:
-    'Sideboards, cabinets, consoles, vitrines and chests in solid mango and reclaimed hardwood. Over a thousand designs, made at Boranada and exported worldwide.',
+  title: 'Collections · Sideboards, Cabinets & Chests',
+  description: `Sideboards, cabinets, consoles, vitrines and chests in solid mango and reclaimed hardwood, made in Jodhpur. ${collections.length} collections, ${pieces.length} designs shown of ${facts.designs}+.`,
 };
 
 const META = [

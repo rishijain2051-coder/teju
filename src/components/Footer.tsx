@@ -93,8 +93,22 @@ export default function Footer() {
 
         {/* Manifest footer line */}
         <div className="mt-14 pt-6 border-t border-line flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-5">
-          <p className="text-manifest-sm text-muted">
-            © {YEAR} {brand.name}
+          {/* The privacy link belongs on the colophon line rather than in the
+              Navigate column: it is a legal notice, not a place to go, and putting
+              it beside the nav would give it the same weight as the collections.
+              `.tap` for the hit area — this line is the smallest type on the page,
+              and there is nothing above or below for the outward area to overlap. */}
+          <p className="text-manifest-sm text-muted flex items-center gap-3">
+            <span>
+              © {YEAR} {brand.name}
+            </span>
+            <span aria-hidden="true">·</span>
+            <Link
+              href="/privacy"
+              className="tap hover:text-ink transition-colors duration-fast ease-out"
+            >
+              Privacy
+            </Link>
           </p>
           <p className="text-manifest-sm text-muted numeral">
             {brand.origin}, {brand.country} · Est. {brand.established} · {facts.countries}+ export

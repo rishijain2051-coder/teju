@@ -10,10 +10,17 @@ import AppImage from '@/components/ui/AppImage';
 import FscPanel from '@/components/ui/FscPanel';
 import { craftStages, img } from '@/lib/site';
 
+/*
+ * The title carries the question a buyer actually types. "Craft" alone competed
+ * with every furniture brand's craft page and told a search result nothing about
+ * what is on this one; the description is built from the four claims here that a
+ * sourcing team can verify on a visit — moisture at the joint, framed carcass, a
+ * retained finish sample, and nothing leaving the building to a subcontractor.
+ */
 export const metadata: Metadata = {
-  title: 'Craft',
+  title: 'Craft · How a Piece Is Made, Stage by Stage',
   description:
-    'How a piece is made at Boranada: timber selection and seasoning, joinery, hand carving, parquet and tile work, finishing, and inspection before the carton.',
+    'Eight stages, one roof, nothing subcontracted: timber to 8–10% moisture before it meets a joint, framed carcasses, finishes matched to a retained sample.',
 };
 
 const META = [
