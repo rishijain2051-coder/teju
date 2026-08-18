@@ -22,6 +22,15 @@ interface AppImageProps {
   [key: string]: any;
 }
 
+/*
+ * `fallbackSrc` is the house mark, which is what it always was.
+ *
+ * It used to point at `no_image.png` — a file with the same MD5 as `app_logo.png`,
+ * so the placeholder for a broken image was already the VI monogram, at 2572px and
+ * 1.71 MB. Two identical copies of the largest file in `public/`, one of them for a
+ * path that cannot fire while every image on the site is a committed local WebP.
+ * Same picture, 6.6 kB, one copy.
+ */
 const AppImage = memo(function AppImage({
   src,
   alt,
@@ -35,7 +44,7 @@ const AppImage = memo(function AppImage({
   fill = false,
   sizes,
   onClick,
-  fallbackSrc = '/assets/images/no_image.png',
+  fallbackSrc = '/assets/images/vi-mark-256.png',
   loading = 'lazy',
   unoptimized = false,
   ...props

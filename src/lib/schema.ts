@@ -93,7 +93,7 @@ export function organizationSchema(): object {
     name: brand.name,
     alternateName: brand.short,
     url: SITE,
-    logo: abs('/assets/images/app_logo.png'),
+    logo: abs('/assets/images/vi-mark-256.png'),
     email: brand.email,
     telephone: brand.phone,
     address: postalAddress(),
@@ -118,7 +118,7 @@ export function localBusinessSchema(): object {
     '@id': `${SITE}/#localbusiness`,
     name: brand.name,
     url: SITE,
-    logo: abs('/assets/images/app_logo.png'),
+    logo: abs('/assets/images/vi-mark-256.png'),
     /* The same plate the factory page opens on. There is no photograph of the
        premises in the catalogue — every image is of the work — so the honest
        stand-in is the work rather than a stock building. */
