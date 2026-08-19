@@ -312,13 +312,13 @@ const CLAUSES: Clause[] = [
           </div>
           <div className={row}>
             {/* Named from what production actually answers, not from the repo's
-                deploy config, which is stale: `package.json` still carries
-                `@netlify/plugin-nextjs` and the README still says Netlify, but
-                www.vardhman-impex.com responds `Server: Vercel` with an
-                `X-Vercel-Id` from the bom1 region, and the domain's DNS points at
-                Vercel's IPs. A privacy notice has to name the processor that holds
-                the data, so it follows the wire and not the manifest. If the site
-                is ever moved, this row moves with it. */}
+                deploy config: www.vardhman-impex.com responds `Server: Vercel`
+                with an `X-Vercel-Id` from the bom1 region, and the domain's DNS
+                points at Vercel's IPs. A privacy notice has to name the processor
+                that holds the data, so it follows the wire and not the manifest —
+                which is how this row came to say Netlify for a while, on the
+                strength of a `@netlify/plugin-nextjs` entry nothing read. That
+                entry is gone. If the site is ever moved, this row moves with it. */}
             <dt className={term}>Vercel</dt>
             <dd className={def}>
               Serves this site. It sees the requests that reach it, including your IP address, in

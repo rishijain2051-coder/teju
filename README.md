@@ -314,11 +314,11 @@ Vercel. `www.vardhman-impex.com` answers `Server: Vercel` with an `X-Vercel-Id`
 from the `bom1` region, and the domain's DNS points at Vercel (`216.198.79.1` at
 the apex, `vercel-dns-017.com` for `www`).
 
-`@netlify/plugin-nextjs` is still in `dependencies` and this section used to name
-Netlify. Nothing reads either — there is no `netlify.toml` — but the stale entry is
-worth removing, and it has already misled once: the privacy notice has to name the
-host that holds visitor request logs, and it named Netlify off the back of this
-line before the wire was checked.
+`@netlify/plugin-nextjs` is gone from `package.json`, and this section used to name
+Netlify. Nothing read either — there was never a `netlify.toml` — but a stale deploy
+dependency is not inert, because people read it: the privacy notice has to name the
+host that holds visitor request logs, and it named Netlify off the back of this line
+before the wire was checked. Keep this paragraph pointed at what production answers.
 
 Set every key from `.env.example` in the host's environment — particularly
 `ACCESS_SECRET`, which should differ from your local value, and which the gate
