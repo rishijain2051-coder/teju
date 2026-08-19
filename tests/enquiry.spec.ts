@@ -136,6 +136,64 @@ test('the rate limiter closes after five in a window', async ({ request }) => {
   expect(statuses.filter((s) => s === 429).length).toBeGreaterThanOrEqual(3);
 });
 
+test.describe('the body is bounded before it is parsed', () => {
+  /*
+   * App Router route handlers have no body size limit, so these pin the ceiling
+   * rather than the field caps — a 4 kB cap per field says nothing about the
+   * megabytes that had to be decoded to find them. Sent as a raw string so the
+   * request is genuinely oversized rather than merely claiming to be.
+   */
+  const raw = (request: APIRequestContext, body: string) =>
+    request.post('/api/enquiry', {
+      data: body,
+      headers: { 'content-type': 'application/json', 'x-forwarded-for': fromNewIp() },
+      failOnStatusCode: false,
+    });
+
+  test('refuses a body past the ceiling with 413, not 400', async ({ request }) => {
+    const huge = JSON.stringify({ subject: 'x', fields: [{ label: 'a', value: 'a'.repeat(200_000) }] });
+    const res = await raw(request, huge);
+    expect(res.status()).toBe(413);
+  });
+
+  test('an oversized body is refused before the mail check', async ({ request }) => {
+    /* 503 would mean it got as far as SMTP; 400 would mean it was parsed and then
+       rejected on shape. Neither is the contract. */
+    const res = await raw(request, JSON.stringify({ subject: 'x'.repeat(200_000), fields: [] }));
+    expect(res.status()).toBe(413);
+  });
+
+  test('too many fields is a size fault, not a shape fault', async ({ request }) => {
+    const fields = Array.from({ length: 500 }, () => ({ label: 'a', value: 'b' }));
+    const res = await post(request, { subject: 'Many', fields });
+    expect(res.status()).toBe(413);
+  });
+
+  test('a field count inside the ceiling still reaches the mail check', async ({ request }) => {
+    const fields = Array.from({ length: 8 }, (_, i) => ({ label: `L${i}`, value: `v${i}` }));
+    const res = await post(request, { subject: 'Few', fields });
+    expect(res.status()).toBe(503);
+  });
+
+  test('malformed JSON is 400 and never 413', async ({ request }) => {
+    const res = await raw(request, '{"subject": "x", fields');
+    expect(res.status()).toBe(400);
+  });
+});
+
+test('a newline in the reply address does not become a mail header', async ({ request }) => {
+  /* The value reaches Reply-To. A CR or LF in a header value is where the next
+     header begins, so this must be dropped rather than passed on. It cannot be
+     observed from outside with SMTP blanked, so what is pinned is that the request
+     is still handled on its merits and never crashes the route. */
+  const res = await post(request, {
+    subject: 'Injection',
+    fields: validFields,
+    email: 'buyer@example.com\r\nBcc: victim@example.com',
+  });
+  expect(res.status()).toBe(503);
+});
+
 test.describe('the contact form surfaces failure to the visitor', () => {
   test('shows an error instead of a false confirmation', async ({ page }) => {
     await page.goto('/contact');

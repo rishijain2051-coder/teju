@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { brand } from '@/lib/site';
 import { isMailConfigured, sendMail } from '@/lib/mail';
+import { clientKey, createRateLimit } from '@/lib/rate-limit';
+import { readJsonBounded, singleLine } from '@/lib/request-guard';
 
 /**
  * Enquiry intake for both forms: the contact form and the trade catalogue
@@ -15,6 +17,22 @@ interface Field {
   value: string;
 }
 
+/*
+ * Ceilings, in the order a hostile request meets them.
+ *
+ * MAX_BODY is the one that was missing: the per-field cap below runs after the
+ * whole body has been parsed, so it bounded the email and not the memory. 64 kB is
+ * about sixteen times the largest plausible enquiry — every field at its limit —
+ * and small enough that a flood of them costs the function nothing.
+ *
+ * MAX_FIELDS matters for the same reason. The array length was only checked for
+ * being non-empty, so a hundred thousand entries each inside MAX_FIELD passed every
+ * check and produced an email nobody could open. The forms send four to eight.
+ */
+const MAX_BODY = 64 * 1024;
+const MAX_FIELDS = 40;
+const MAX_SUBJECT = 200;
+const MAX_LABEL = 120;
 const MAX_FIELD = 4000;
 
 const escapeHtml = (value: string) =>
@@ -25,51 +43,26 @@ const escapeHtml = (value: string) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-/**
- * Very small fixed-window limiter, per instance. Not a substitute for a real
- * one behind a load balancer, but enough that a single client cannot loop the
- * form and empty the SMTP quota.
+/*
+ * Five a minute is generous for a form a person fills in by hand, and it is the
+ * SMTP quota being protected as much as the mailbox. Per instance — see
+ * `createRateLimit` for why that is the honest description and what to pair it with.
  */
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 5;
-const hits = new Map<string, { count: number; resetAt: number }>();
-
-function rateLimited(key: string): boolean {
-  const now = Date.now();
-  const entry = hits.get(key);
-
-  if (!entry || now > entry.resetAt) {
-    hits.set(key, { count: 1, resetAt: now + WINDOW_MS });
-    // Opportunistic sweep so the map cannot grow without bound.
-    if (hits.size > 500) {
-      for (const [k, v] of hits) if (now > v.resetAt) hits.delete(k);
-    }
-    return false;
-  }
-
-  entry.count += 1;
-  return entry.count > MAX_PER_WINDOW;
-}
+const limit = createRateLimit(60_000, 5);
 
 export async function POST(request: Request) {
-  const ip =
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    request.headers.get('x-real-ip') ||
-    'unknown';
-
-  if (rateLimited(ip)) {
+  if (limit.exceeded(clientKey(request))) {
     return NextResponse.json(
       { ok: false, error: 'Too many enquiries in a short time. Please try again shortly.' },
       { status: 429 }
     );
   }
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ ok: false, error: 'Malformed request.' }, { status: 400 });
+  const read = await readJsonBounded(request, MAX_BODY);
+  if (!read.ok) {
+    return NextResponse.json({ ok: false, error: read.error }, { status: read.status });
   }
+  const body = read.data;
 
   const { subject, fields, email, honeypot } = (body ?? {}) as {
     subject?: unknown;
@@ -88,8 +81,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Missing subject.' }, { status: 400 });
   }
 
+  /* The subject reaches a mail header, so it loses its control characters here
+     rather than being trusted to arrive without any. */
+  const safeSubject = singleLine(subject, MAX_SUBJECT);
+  if (!safeSubject) {
+    return NextResponse.json({ ok: false, error: 'Missing subject.' }, { status: 400 });
+  }
+
   if (!Array.isArray(fields) || fields.length === 0) {
     return NextResponse.json({ ok: false, error: 'Nothing to send.' }, { status: 400 });
+  }
+
+  if (fields.length > MAX_FIELDS) {
+    return NextResponse.json({ ok: false, error: 'That request is too large.' }, { status: 413 });
   }
 
   const clean: Field[] = [];
@@ -97,7 +101,7 @@ export async function POST(request: Request) {
     const { label, value } = (entry ?? {}) as { label?: unknown; value?: unknown };
     if (typeof label !== 'string' || typeof value !== 'string') continue;
     if (!value.trim()) continue;
-    clean.push({ label: label.slice(0, 120), value: value.slice(0, MAX_FIELD) });
+    clean.push({ label: singleLine(label, MAX_LABEL), value: value.slice(0, MAX_FIELD) });
   }
 
   if (clean.length === 0) {
@@ -130,7 +134,7 @@ export async function POST(request: Request) {
     <div style="background:#EFE9DF;padding:32px">
       <table style="max-width:640px;margin:0 auto;background:#fff;border-collapse:collapse">
         <tr><td style="padding:28px 32px;border-bottom:1px solid #D6CCBC">
-          <div style="color:#973F24;font:12px/1.5 monospace;text-transform:uppercase;letter-spacing:.18em">${escapeHtml(subject)}</div>
+          <div style="color:#973F24;font:12px/1.5 monospace;text-transform:uppercase;letter-spacing:.18em">${escapeHtml(safeSubject)}</div>
           <div style="color:#17130F;font:22px/1.3 Georgia,serif;margin-top:8px">New enquiry · ${escapeHtml(brand.name)}</div>
         </td></tr>
         <tr><td style="padding:24px 32px">
@@ -142,11 +146,19 @@ export async function POST(request: Request) {
       </table>
     </div>`;
 
-  const replyTo = typeof email === 'string' && email.includes('@') ? email.trim() : undefined;
+  /*
+   * A Reply-To has to be one address on one line. `includes('@')` accepted "a@" and,
+   * more to the point, accepted a value with a newline in it — which is where the
+   * next mail header begins. Shape-checked and stripped of control characters, and
+   * dropped entirely rather than guessed at if it does not hold up: a missing
+   * Reply-To costs a click, a forged header costs more.
+   */
+  const candidate = typeof email === 'string' ? singleLine(email, 254) : '';
+  const replyTo = /^[^\s@]+@[^\s@.]+\.[^\s@]+$/.test(candidate) ? candidate : undefined;
 
   const delivered = await sendMail({
     to: brand.email,
-    subject: `${subject} · ${clean[0]?.value ?? 'enquiry'}`,
+    subject: singleLine(`${safeSubject} · ${clean[0]?.value ?? 'enquiry'}`, MAX_SUBJECT),
     html,
     replyTo,
   });

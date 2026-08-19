@@ -5,6 +5,8 @@ import {
   accessSecretConfigured,
   issueAccessToken,
 } from '@/lib/access';
+import { clientKey, createRateLimit } from '@/lib/rate-limit';
+import { readJsonBounded } from '@/lib/request-guard';
 
 /**
  * Codes live ONLY here on the server — never sent to the browser.
@@ -49,13 +51,48 @@ const UNAVAILABLE = 'Access is temporarily unavailable. Please contact us direct
  */
 const WRONG_CODE_DELAY_MS = 400;
 
+/*
+ * The delay alone was the whole defence, and a delay is not a limit.
+ *
+ * 400ms per wrong code caps one client at about two and a half guesses a second,
+ * sustained, forever — which is a rate, not a ceiling. Against a short
+ * human-memorable code that is a real threat to the gated catalogue, and it was the
+ * only mutating endpoint on the site with no budget at all.
+ *
+ * Ten attempts per ten minutes. A buyer typing a code they were issued needs one,
+ * and three if they fumble it; ten leaves room for a shared office address behind
+ * one NAT without leaving room to enumerate anything. The refusal says it is a rate
+ * problem rather than a code problem — the gate's copy stopped blaming the buyer
+ * for the server's faults, and it should not start blaming them for their own
+ * colleagues either.
+ */
+const limit = createRateLimit(10 * 60_000, 10);
+
+/*
+ * A code is short. Comparing a multi-megabyte string against the list is work
+ * nobody asked for, and `equal()` in access.ts is deliberately length-dependent at
+ * its first branch, so an oversized value is cheap to reject and pointless to keep.
+ */
+const MAX_CODE = 200;
+const MAX_BODY = 2 * 1024;
+
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
-  const code = (body as { code?: unknown } | null)?.code;
+  if (limit.exceeded(clientKey(request))) {
+    return NextResponse.json(
+      { success: false, error: 'Too many attempts. Please wait a few minutes and try again.' },
+      { status: 429 }
+    );
+  }
 
-  if (!code || typeof code !== 'string') {
+  const read = await readJsonBounded(request, MAX_BODY);
+  if (!read.ok) {
+    return NextResponse.json({ success: false, error: read.error }, { status: read.status });
+  }
+  const code = (read.data as { code?: unknown } | null)?.code;
+
+  if (!code || typeof code !== 'string' || code.length > MAX_CODE) {
     return NextResponse.json({ success: false }, { status: 400 });
   }
 

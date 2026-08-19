@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type APIRequestContext, type Page } from '@playwright/test';
 import { createHmac } from 'node:crypto';
 import { TEST_ACCESS_CODE, TEST_ACCESS_SECRET } from '../playwright.config';
 
@@ -31,6 +31,34 @@ const setCookie = (page: Page, value: string) =>
        still rejected but could not clear — deletion must match name, domain and
        path exactly. */
     .addCookies([{ name: COOKIE, value, domain: 'localhost', path: '/' }]);
+
+/*
+ * Every test gets its own limiter bucket, and it has to be done twice.
+ *
+ * /api/verify-access is rate limited by client address. Playwright's `request`
+ * fixture is a *different* context from the browser's, so headers set on one do not
+ * reach the other — setting it only on the browser context left every header-less
+ * `request.post` in this file sharing one budget across the chromium and mobile
+ * projects, and the later ones were refused with a 429 that had nothing to do with
+ * their subject. So `page` navigations get it from the context below, and API calls
+ * go through `postCode`. Exactly the lesson enquiry.spec.ts already records.
+ */
+const freshIp = () =>
+  `10.${20 + Math.floor(Math.random() * 200)}.${Math.floor(Math.random() * 256)}.${
+    1 + Math.floor(Math.random() * 250)
+  }`;
+
+/** Pass `ip` to accumulate against one bucket on purpose; omit it to get a clean one. */
+const postCode = (request: APIRequestContext, code: unknown, ip = freshIp()) =>
+  request.post('/api/verify-access', {
+    data: { code },
+    headers: { 'x-forwarded-for': ip },
+    failOnStatusCode: false,
+  });
+
+test.beforeEach(async ({ context }) => {
+  await context.setExtraHTTPHeaders({ 'x-forwarded-for': freshIp() });
+});
 
 test.describe('the gate rejects', () => {
   test('a visitor with no cookie', async ({ page }) => {
@@ -147,7 +175,7 @@ test.describe('signing in', () => {
  */
 test.describe('a server fault does not masquerade as a wrong code', () => {
   test('a wrong code is a bare 401 with no message of its own', async ({ request }) => {
-    const res = await request.post('/api/verify-access', { data: { code: 'not-the-code' } });
+    const res = await postCode(request, 'not-the-code');
     expect(res.status()).toBe(401);
     /* No `error` string: 401 is the one status the client is allowed to word
        itself. If the route starts sending one here, the client shows it instead
@@ -242,7 +270,7 @@ test.describe('a code survives the ways it gets typed', () => {
     ['with surrounding whitespace', `  ${TEST_ACCESS_CODE}  `],
   ] as const) {
     test(`${label} is accepted and issues a signed cookie`, async ({ request }) => {
-      const res = await request.post('/api/verify-access', { data: { code: variant } });
+      const res = await postCode(request, variant);
       expect(res.status()).toBe(200);
 
       const cookie = res.headers()['set-cookie'] ?? '';
@@ -255,14 +283,12 @@ test.describe('a code survives the ways it gets typed', () => {
   test('a quoted code is not a second way in', async ({ request }) => {
     /* Quote stripping applies to the configured ACCESS_CODES value, never to what
        the visitor submits — otherwise `"code"` would be a free alias for `code`.  */
-    const res = await request.post('/api/verify-access', {
-      data: { code: `"${TEST_ACCESS_CODE}"` },
-    });
+    const res = await postCode(request, `"${TEST_ACCESS_CODE}"`);
     expect(res.status()).toBe(401);
   });
 
   test('an empty submission is refused without being called a wrong code', async ({ request }) => {
-    const res = await request.post('/api/verify-access', { data: { code: '' } });
+    const res = await postCode(request, '');
     expect(res.status()).toBe(400);
   });
 });
@@ -270,4 +296,73 @@ test.describe('a code survives the ways it gets typed', () => {
 test('the private range is not reachable from the sitemap', async ({ request }) => {
   const sitemap = await (await request.get('/sitemap.xml')).text();
   expect(sitemap).not.toContain('/collections/private');
+});
+
+test.describe('the gate is rate limited, not merely slowed', () => {
+  /*
+   * The 400ms wrong-code delay caps one client at about two and a half guesses a
+   * second, sustained, forever. Against a short human-memorable code that is a rate
+   * and not a ceiling, and this was the only mutating endpoint with no budget.
+   *
+   * A fresh address per test: the limiter buckets by IP, and the chromium and mobile
+   * projects run against one server.
+   */
+
+  test('a sustained burst of wrong codes is cut off with 429', async ({ request }) => {
+    const ip = freshIp();
+    const statuses: number[] = [];
+
+    for (let i = 0; i < 14; i += 1) {
+      const res = await postCode(request, `guess-${i}`, ip);
+      statuses.push(res.status());
+    }
+
+    // The limiter must not answer first — a wrong code is still a wrong code.
+    expect(statuses[0]).toBe(401);
+    expect(statuses).toContain(429);
+    expect(statuses.filter((s) => s === 429).length).toBeGreaterThanOrEqual(3);
+  });
+
+  test('a 429 says it is a rate problem, never a wrong code', async ({ request }) => {
+    const ip = freshIp();
+    let body: { error?: string } = {};
+
+    for (let i = 0; i < 14; i += 1) {
+      const res = await postCode(request, 'x', ip);
+      if (res.status() === 429) {
+        body = await res.json();
+        break;
+      }
+    }
+
+    expect(body.error).toMatch(/too many/i);
+    expect(body.error).not.toMatch(/recognis|invalid code|wrong/i);
+  });
+
+  test('an oversized code is refused without being compared', async ({ request }) => {
+    /* 500 characters: past the code cap, inside the body cap. At 5,000 the size
+       guard answered first with 413, which is correct behaviour and the wrong
+       thing to assert here — the two ceilings have to be tested separately. */
+    const res = await postCode(request, 'a'.repeat(500));
+    expect(res.status()).toBe(400);
+  });
+
+  test('an oversized request body is 413', async ({ request }) => {
+    const res = await request.post('/api/verify-access', {
+      data: JSON.stringify({ code: 'a'.repeat(50_000) }),
+      headers: { 'content-type': 'application/json', 'x-forwarded-for': freshIp() },
+      failOnStatusCode: false,
+    });
+    expect(res.status()).toBe(413);
+  });
+});
+
+test('the CMS is closed in production, with a real 404', async ({ request }) => {
+  /* `/keystatic` used to answer 200 with 404 body copy — a soft 404 Google indexes
+     as a real page. The API half was reachable too: /api/keystatic/tree returned
+     400, which is a handler processing a request, not a closed door. */
+  for (const path of ['/keystatic', '/keystatic/collection/pieces', '/api/keystatic/tree']) {
+    const res = await request.get(path, { failOnStatusCode: false });
+    expect(res.status(), path).toBe(404);
+  }
 });

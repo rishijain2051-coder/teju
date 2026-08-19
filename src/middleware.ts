@@ -40,7 +40,7 @@ export async function middleware(request: NextRequest) {
    * became unreachable locally. Production never saw it — the 404 returns first —
    * which is exactly the shape of bug that ships.
    */
-  if (request.nextUrl.pathname.startsWith('/keystatic')) {
+  if (/^\/(api\/)?keystatic(\/|$)/.test(request.nextUrl.pathname)) {
     return process.env.NODE_ENV === 'production'
       ? new NextResponse('Not Found', { status: 404 })
       : NextResponse.next();
@@ -80,5 +80,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/collections/private/catalogue/:path*', '/keystatic/:path*', '/keystatic'],
+  matcher: [
+    '/collections/private/catalogue/:path*',
+    '/keystatic',
+    '/keystatic/:path*',
+    '/api/keystatic',
+    '/api/keystatic/:path*',
+  ],
 };
