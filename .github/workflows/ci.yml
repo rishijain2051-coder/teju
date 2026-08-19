@@ -96,6 +96,32 @@ jobs:
             console.log('middleware entries:', entries.join(', '));
           "
 
+      # RFC 9116 makes `Expires` mandatory, and a security.txt past its own expiry
+      # is worse than none: researchers' tooling reads it as abandoned and the
+      # address stops being trusted. Nothing renews it automatically, so the date
+      # is asserted here — a warning while there is still time to act, a failure
+      # once it has actually lapsed.
+      - name: security.txt has not expired
+        run: |
+          node -e "
+            const fs = require('node:fs');
+            const file = 'public/.well-known/security.txt';
+            const text = fs.readFileSync(file, 'utf8');
+            const match = text.match(/^Expires:\s*(.+)$/mi);
+            if (!match) throw new Error(file + ' has no Expires field (RFC 9116 requires one)');
+            const expires = new Date(match[1].trim());
+            if (Number.isNaN(+expires)) throw new Error('unparseable Expires: ' + match[1]);
+            const days = Math.floor((expires - Date.now()) / 86400000);
+            if (days < 0) {
+              console.log('::error::' + file + ' expired ' + -days + ' days ago. Move Expires forward (under one year) and confirm the Contact address still reaches someone.');
+              process.exit(1);
+            }
+            if (days < 30) {
+              console.log('::warning::' + file + ' expires in ' + days + ' days. Move Expires forward before it lapses.');
+            }
+            console.log('security.txt expires in ' + days + ' days (' + expires.toISOString() + ')');
+          "
+
       # The trademark licence allows ten promotional placements before each
       # further use needs approval. The registry is typed against that limit, so
       # the typecheck already fails at eleven; this counts what actually rendered.

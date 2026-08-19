@@ -1,0 +1,20 @@
+# Vardhman Impex — security contact
+# https://www.rfc-editor.org/rfc/rfc9116
+#
+# If you have found a vulnerability in this site, please write to the address
+# below before disclosing it anywhere else. This is a small trade site run by the
+# company itself, not a bug bounty: there is no payout, and there is a person who
+# will read your report and answer it.
+#
+# Please include the URL, the request, and what you were able to reach. Anything
+# touching the private trade catalogue at /collections/private is worth flagging
+# with priority — that gate holds customer-specific pricing.
+#
+# Out of scope: volumetric or denial-of-service testing, and automated scanning
+# heavy enough to affect the site for other visitors. Please do not submit
+# enquiries through the contact forms as a test; they deliver to a live inbox.
+
+Contact: mailto:rishi@vardhman-impex.com
+Expires: 2027-08-01T00:00:00.000Z
+Preferred-Languages: en, hi
+Canonical: https://www.vardhman-impex.com/.well-known/security.txt
