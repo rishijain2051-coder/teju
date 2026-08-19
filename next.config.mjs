@@ -50,6 +50,48 @@ const nextConfig = {
     qualities: [75, 85, 100],
   },
 
+  /*
+   * Cache headers for everything under `public/`.
+   *
+   * Vercel serves static files with `public, max-age=0, must-revalidate` because
+   * their filenames are not content-hashed and it cannot know whether a deploy
+   * changed them. Its edge cache absorbs the origin cost, so this is cheap for us
+   * and not free for the visitor: every one of these is revalidated on every page
+   * view, and four of them are fonts this layout preloads on every route.
+   *
+   * That default is also where the optimiser's `max-age=0` came from. Next sets
+   * `minimumCacheTTL` on its own optimised responses — verified locally, where
+   * /_next/image answers `max-age=2678400` — but the header is derived from the
+   * upstream file, and on Vercel the upstream is a static asset saying zero.
+   *
+   * A year and `immutable` for the fonts. These are the exact bytes `next/font`
+   * produced, lifted out of a build output; the file at a given name is a fixed
+   * artefact, and `immutable` stops even a reload revalidating it.
+   *
+   * Thirty-one days and no `immutable` for the imagery, matching `minimumCacheTTL`
+   * so the browser and the optimiser expire together. Not a year, and deliberately
+   * revalidatable: a photograph *can* be replaced at an existing filename, and
+   * while the convention here is to give a replacement a new name — see the note on
+   * minimumCacheTTL above, and `vi-mark-256.png` — a month is the longest mistake
+   * worth risking on content someone might swap in place.
+   */
+  async headers() {
+    return [
+      {
+        source: '/fonts/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+      {
+        source: '/assets/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=2678400' }],
+      },
+      {
+        source: '/favicon.png',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=2678400' }],
+      },
+    ];
+  },
+
   webpack(config, { dev }) {
     /*
      * The DhiWise component-tagger loader used to run over every .jsx/.tsx file
