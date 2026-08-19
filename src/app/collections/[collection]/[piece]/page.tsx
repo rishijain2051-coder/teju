@@ -257,7 +257,7 @@ export default async function PiecePage({ params }: Params) {
                     Framed carcass, timber brought to 8–10% moisture before it reaches a joint,
                     finished against a retained sample rather than a colour code. Nothing in this
                     piece was subcontracted: it is sawn, joined, finished and packed in{' '}
-                    <Link href="/factory" className="text-clay link-draw tap">
+                    <Link href="/factory" className="text-clay link-draw press">
                       our own works at Boranada
                     </Link>
                     .

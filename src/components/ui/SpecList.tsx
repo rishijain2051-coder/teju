@@ -20,7 +20,7 @@ export default function SpecList({
   className = '',
 }: SpecListProps) {
   const line = invert ? 'border-line-invert' : 'border-line';
-  const label = invert ? 'text-paper/45' : 'text-muted';
+  const label = invert ? 'text-paper/55' : 'text-muted';
   const value = invert ? 'text-paper' : 'text-ink';
 
   if (variant === 'inline') {

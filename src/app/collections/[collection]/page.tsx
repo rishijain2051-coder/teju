@@ -137,7 +137,18 @@ export default async function CollectionPage({ params }: Params) {
         {/* `immediate`, because this is the first fold and the plate in it is the
             destination of the card morph. Left to scroll it entered after the
             photograph had already landed, which is the one thing the morph is
-            meant to avoid. */}
+            meant to avoid.
+
+            It closes after this one section, and everything below gets a plain
+            `<Reveal>`. That split is the whole point: `immediate` is not a hint
+            about the first fold, it reveals every `.rise`, `.veil` and
+            `.wipe-inner` it contains, on mount, wherever they sit. This wrapper
+            used to run to `</main>`, so all five sections were revealed at first
+            paint — measured on /collections/bedroom, 16 of 16 below-fold elements
+            already carried `shown` at scrollY 0 down a 5,588px page, and both
+            `data-reveal-group` staggers were dead because GSAP's `fresh()` filter
+            skips anything already shown. The page next door does it correctly;
+            this is the same shape. */}
         <Reveal immediate>
           {/* Plate and story, side by side. */}
           <section className="shell">
@@ -174,7 +185,9 @@ export default async function CollectionPage({ params }: Params) {
               </div>
             </div>
           </section>
+        </Reveal>
 
+        <Reveal>
           {collection.bespoke ? (
             /* Programme, not a range. A filtered grid of two examples would
                undersell it and imply there is a catalogue to order from. */
@@ -283,11 +296,11 @@ export default async function CollectionPage({ params }: Params) {
               <p className="text-body text-muted max-w-measure mt-6 rise">
                 Timber for this collection is sawn, dried, joined and finished on one floor, and
                 nothing in it is subcontracted.{' '}
-                <Link href="/craft" className="text-clay link-draw tap">
+                <Link href="/craft" className="text-clay link-draw press">
                   The eight stages
                 </Link>{' '}
                 set out what happens at each bench, and{' '}
-                <Link href="/factory" className="text-clay link-draw tap">
+                <Link href="/factory" className="text-clay link-draw press">
                   the works at Boranada
                 </Link>{' '}
                 gives the floor area by area.

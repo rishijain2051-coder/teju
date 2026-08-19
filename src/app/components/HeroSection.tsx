@@ -152,7 +152,7 @@ export default function HeroSection() {
               We reply within two working days. Or call{' '}
               <a
                 href={`tel:${brand.phoneHref}`}
-                className={`numeral tap ${PROSE_LINK}`}
+                className={`numeral press ${PROSE_LINK}`}
                 aria-label={`Call ${brand.name} on ${brand.phone}`}
               >
                 {brand.phone}

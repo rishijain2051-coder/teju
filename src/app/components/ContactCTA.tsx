@@ -58,26 +58,26 @@ export default function ContactCTA() {
           {/* Direct lines, set as a manifest block. */}
           <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-5 mt-14 pt-8 border-t border-line-invert rise">
             <div>
-              <dt className="text-manifest-sm text-paper/45">Email</dt>
+              <dt className="text-manifest-sm text-paper/55">Email</dt>
               <dd className="mt-1.5">
-                <a href={`mailto:${brand.email}`} className="text-body text-paper link-draw tap">
+                <a href={`mailto:${brand.email}`} className="text-body text-paper link-draw press">
                   {brand.email}
                 </a>
               </dd>
             </div>
             <div>
-              <dt className="text-manifest-sm text-paper/45">Telephone</dt>
+              <dt className="text-manifest-sm text-paper/55">Telephone</dt>
               <dd className="mt-1.5">
                 <a
                   href={`tel:${brand.phoneHref}`}
-                  className="text-body text-paper link-draw numeral tap"
+                  className="text-body text-paper link-draw numeral press"
                 >
                   {brand.phone}
                 </a>
               </dd>
             </div>
             <div className="sm:col-span-2">
-              <dt className="text-manifest-sm text-paper/45">Works</dt>
+              <dt className="text-manifest-sm text-paper/55">Works</dt>
               <dd className="text-body text-paper/70 mt-1.5">
                 {brand.address.line1}, {brand.address.line2}
               </dd>

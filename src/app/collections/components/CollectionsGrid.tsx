@@ -37,7 +37,7 @@ export default function CollectionsGrid() {
                 type="button"
                 onClick={() => setActive(category)}
                 aria-pressed={isActive}
-                className={`text-manifest py-2 transition-colors duration-fast ease-out tap ${
+                className={`text-manifest py-2 transition-colors duration-fast ease-out press ${
                   isActive ? 'text-clay' : 'text-muted hover:text-ink'
                 }`}
               >

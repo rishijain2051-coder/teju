@@ -108,7 +108,7 @@ export default function PrivateProgramme() {
                 If a quantity changed on the packing line, the paperwork changes with it.
               </p>
               {certification.fsc.code && (
-                <p className="text-manifest-sm text-timber numeral mt-6 rise">
+                <p className="text-manifest-sm text-sand numeral mt-6 rise">
                   FSC {certification.fsc.code}
                 </p>
               )}
@@ -116,7 +116,7 @@ export default function PrivateProgramme() {
 
             <div className="lg:col-span-6 lg:col-start-7 rise">
               <SpecList rows={DOCUMENTS} invert />
-              <p className="text-note text-paper/60 mt-6">{packingNote}</p>
+              <p className="text-note text-paper/65 mt-6">{packingNote}</p>
             </div>
           </div>
         </div>

@@ -36,7 +36,7 @@ export default function SectionHead({ title, href, linkLabel, invert = false }: 
         <Link
           href={href}
           className={`link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest transition-colors duration-fast ease-out ${
-            invert ? 'text-paper/70 hover:text-timber' : 'text-ink-soft hover:text-clay'
+            invert ? 'text-paper/70 hover:text-sand' : 'text-ink-soft hover:text-clay'
           }`}
         >
           {linkLabel}

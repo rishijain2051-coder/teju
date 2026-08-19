@@ -58,7 +58,7 @@ function Quantity({
           const next = Number(e.target.value.replace(/[^0-9]/g, ''));
           onChange(Number.isFinite(next) ? Math.min(next, 9999) : 0);
         }}
-        className="w-16 bg-transparent border-b border-line-strong py-1.5 text-manifest-sm text-ink numeral text-center placeholder:text-muted/60 focus:border-clay focus:outline-none transition-colors duration-fast ease-out"
+        className="w-16 bg-transparent border-b border-line-strong py-1.5 text-manifest-sm text-ink numeral text-center placeholder:text-muted focus:border-clay focus:outline-none transition-colors duration-fast ease-out"
       />
       <span className="text-manifest-sm text-muted">pcs</span>
     </label>

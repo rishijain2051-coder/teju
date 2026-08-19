@@ -50,7 +50,7 @@ export default function TestimonialsSection() {
                     type="button"
                     onClick={() => setActive(i)}
                     aria-current={i === active}
-                    className="group w-full text-left flex items-baseline gap-4 py-5 border-b border-line tap"
+                    className="group w-full text-left flex items-baseline gap-4 py-5 border-b border-line press"
                   >
                     <span
                       className={`text-manifest-sm numeral transition-colors duration-fast ease-out ${

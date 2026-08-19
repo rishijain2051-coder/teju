@@ -118,7 +118,7 @@ export default function JournalPage() {
                     in the range, so the range is the link that belongs here. */}
                 <p className="text-body text-muted max-w-measure">
                   Every note here started as a question from someone looking at{' '}
-                  <Link href="/collections" className="text-clay link-draw tap">
+                  <Link href="/collections" className="text-clay link-draw press">
                     the collections
                   </Link>
                   . If yours is not answered above, ask it directly.

@@ -133,7 +133,7 @@ export default function AccessCodeEntry() {
                 if (state === 'error') setState('idle');
               }}
               placeholder="Enter your code"
-              className={`w-full bg-transparent border-b py-3.5 mt-1 text-title font-serif font-light text-ink placeholder:text-muted/60 placeholder:font-sans placeholder:text-base focus:outline-none transition-colors duration-fast ease-out ${
+              className={`w-full bg-transparent border-b py-3.5 mt-1 text-title font-serif font-light text-ink placeholder:text-muted placeholder:font-sans placeholder:text-base focus:outline-none transition-colors duration-fast ease-out ${
                 state === 'error'
                   ? 'border-clay'
                   : state === 'granted'
@@ -178,11 +178,11 @@ export default function AccessCodeEntry() {
 
           <p className="text-body text-muted mt-10 rise" style={{ transitionDelay: '420ms' }}>
             No code yet?{' '}
-            <Link href="/collections#access" className="text-clay link-draw tap">
+            <Link href="/collections#access" className="text-clay link-draw press">
               Request trade access
             </Link>
             , or write to{' '}
-            <a href={`mailto:${brand.email}`} className="text-clay link-draw tap">
+            <a href={`mailto:${brand.email}`} className="text-clay link-draw press">
               {brand.email}
             </a>
             .

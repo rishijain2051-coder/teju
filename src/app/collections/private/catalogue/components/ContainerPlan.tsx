@@ -189,19 +189,19 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
             {/* Running totals */}
             <dl className="lg:col-span-5 grid grid-cols-3 gap-x-6">
               <div>
-                <dt className="text-manifest-sm text-paper/45">Designs</dt>
+                <dt className="text-manifest-sm text-paper/55">Designs</dt>
                 <dd className="text-[1.75rem] leading-none font-normal tracking-tight numeral mt-1.5">
                   {selection.rows.length}
                 </dd>
               </div>
               <div>
-                <dt className="text-manifest-sm text-paper/45">Pieces</dt>
+                <dt className="text-manifest-sm text-paper/55">Pieces</dt>
                 <dd className="text-[1.75rem] leading-none font-normal tracking-tight numeral mt-1.5">
                   {selection.units}
                 </dd>
               </div>
               <div>
-                <dt className="text-manifest-sm text-paper/45">Volume</dt>
+                <dt className="text-manifest-sm text-paper/55">Volume</dt>
                 <dd className="text-[1.75rem] leading-none font-normal tracking-tight numeral mt-1.5">
                   {cbm.toFixed(2)}
                   <span className="text-manifest-sm text-timber ml-1.5">CBM</span>
@@ -212,7 +212,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
             {/* Container fill, as a bar rather than a sentence. */}
             <div className="lg:col-span-3">
               <div className="flex items-baseline justify-between gap-4">
-                <p className="text-manifest-sm text-paper/45">40 ft high-cube</p>
+                <p className="text-manifest-sm text-paper/55">40 ft high-cube</p>
                 <p className="text-manifest-sm text-paper numeral">
                   {Math.round(Math.min(forty, 1) * 100)}%
                   {forty > 1 && (
@@ -239,7 +239,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                   style={{ transform: `scaleX(${Math.min(forty, 1)})` }}
                 />
               </div>
-              <p className="text-manifest-sm text-paper/45 mt-2 numeral">
+              <p className="text-manifest-sm text-paper/55 mt-2 numeral">
                 {twenty.toFixed(2)} × 20 ft equivalent
               </p>
             </div>
@@ -249,13 +249,13 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                 full width and the two secondary controls share the row under it. */}
             <div className="lg:col-span-4 flex flex-wrap items-end gap-3">
               <label className="w-full sm:flex-1 sm:min-w-[12rem]">
-                <span className="block text-manifest-sm text-paper/45 mb-1">Your email</span>
+                <span className="block text-manifest-sm text-paper/55 mb-1">Your email</span>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="w-full bg-transparent border-b border-line-invert py-2 text-body text-paper placeholder:text-paper/35 focus:border-timber focus:outline-none transition-colors duration-fast ease-out"
+                  className="w-full bg-transparent border-b border-line-invert py-2 text-body text-paper placeholder:text-paper/55 focus:border-timber focus:outline-none transition-colors duration-fast ease-out"
                 />
               </label>
               <button
@@ -289,7 +289,7 @@ export default function ContainerPlan({ pieces, quantities, onClear }: Container
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="link-draw tap"
+                    className="link-draw press"
                   >
                     Send it on WhatsApp instead
                   </a>

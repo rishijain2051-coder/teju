@@ -10,35 +10,83 @@
    timber and black iron. The site grounds itself in the same materials so the
    page and the product read as one world.
 
+   Every colour is declared once, as space-separated channels, and the written
+   form is derived from it. Both spellings are needed and neither may drift:
+   `var(--paper)` for hand-authored CSS, and the channel form so Tailwind's
+   opacity modifier has somewhere to substitute an alpha into. `text-paper/55`
+   compiles to `rgb(239 233 223 / 0.55)` only if the colour is declared that
+   way; handed a plain `var(--paper)` Tailwind cannot build the utility and
+   emits nothing at all, with no warning.
+
+   That is not hypothetical — it is why this block reads the way it does now.
+   Forty-nine `/NN` utilities across fifteen files were dead, and every element
+   carrying one silently inherited the colour above it instead. Measured on the
+   home page: the manifest strip's `text-paper/45` labels resolved to `--ink`
+   on an `--ink` ground — contrast 1.00, invisible — its fourteen
+   `bg-paper/20` dividers painted nothing, and because Tailwind's preflight
+   owns `::placeholder`, every form field on the site fell back to `gray-400`,
+   a cold #9ca3af at 2.10:1 in a palette that has no other cold grey in it.
+
    Contrast is verified, not assumed. Every text pair below clears WCAG AA on
-   both grounds. Two documented exceptions:
-     · timber-on-teal  (3.51) — display numerals only, never body text
-     · clay-on-teal    (2.71) — never used; on teal, type is paper or timber
+   both grounds, and an alpha step is only as good as the ground under it: on
+   ink, paper/55 is 5.30 while paper/45 is 3.95; on teal, paper/65 is 4.78
+   while paper/60 is 4.32. Those two are the floor for type. Rules and
+   dividers carry no text and may sit lower.
+
+   Two documented exceptions, one of them narrowed:
+     · timber-on-teal  (3.51) — clears AA's 3.0 for large text and fails the
+       4.5 for everything else, so on teal it carries display type only. Below
+       24px the warm accent on that ground is `sand` (5.58). On ink, timber is
+       6.00 and needs no qualification.
+     · clay-on-teal    (2.71) — never used; on teal, type is paper, sand, or
+       the display-sized timber above
    ────────────────────────────────────────────────────────────────────────── */
 
 :root {
+  /*
+   * Channels first: these are the source of every colour on the site, and the
+   * `rgb()` forms below are derived from them, so no value is ever typed twice
+   * and the two spellings cannot drift apart.
+   */
+
   /* Grounds */
-  --paper: #efe9df; /* warm bone — the primary ground */
-  --paper-deep: #e3dacb; /* secondary ground, section alternation */
-  --paper-warm: #f6f2ea; /* lifted surfaces, cards */
+  --paper-rgb: 239 233 223; /* warm bone — the primary ground */
+  --paper-deep-rgb: 227 218 203; /* secondary ground, section alternation */
+  --paper-warm-rgb: 246 242 234; /* lifted surfaces, cards */
 
   /* Ink */
-  --ink: #17130f; /* near-black, warmed — 15.30:1 on paper */
-  --ink-soft: #3a332b; /* 10.30:1 */
-  --muted: #655b4e; /* 5.50:1 on paper, 4.80:1 on paper-deep */
+  --ink-rgb: 23 19 15; /* near-black, warmed — 15.30:1 on paper */
+  --ink-soft-rgb: 58 51 43; /* 10.30:1 */
+  --muted-rgb: 101 91 78; /* 5.50:1 on paper, 4.80:1 on paper-deep */
 
   /* Material accents, straight off the product walls */
-  --clay: #973f24; /* terracotta — the action colour, 5.70:1 */
-  --clay-soft: #c0674a; /* decorative only, never text on teal */
-  --teal: #1b443f; /* deep teal — inverted section ground */
-  --teal-soft: #2e625d;
-  --timber: #b98a52; /* mango tan — display numerals on dark */
-  --sand: #cbb89a;
+  --clay-rgb: 151 63 36; /* terracotta — the action colour, 5.70:1 */
+  --clay-soft-rgb: 192 103 74; /* decorative only, never text on teal */
+  --teal-rgb: 27 68 63; /* deep teal — inverted section ground */
+  --teal-soft-rgb: 46 98 93;
+  --timber-rgb: 185 138 82; /* mango tan — display type on dark; see above */
+  --sand-rgb: 203 184 154; /* the small-type accent on teal, 5.58:1 */
 
   /* Structure */
-  --line: #d6ccbc; /* hairline rules — the editorial skeleton */
-  --line-strong: #b9ac98;
-  --line-invert: rgba(239, 233, 223, 0.18);
+  --line-rgb: 214 204 188; /* hairline rules — the editorial skeleton */
+  --line-strong-rgb: 185 172 152;
+
+  /* The written form, for hand-authored CSS. Derived, never retyped. */
+  --paper: rgb(var(--paper-rgb));
+  --paper-deep: rgb(var(--paper-deep-rgb));
+  --paper-warm: rgb(var(--paper-warm-rgb));
+  --ink: rgb(var(--ink-rgb));
+  --ink-soft: rgb(var(--ink-soft-rgb));
+  --muted: rgb(var(--muted-rgb));
+  --clay: rgb(var(--clay-rgb));
+  --clay-soft: rgb(var(--clay-soft-rgb));
+  --teal: rgb(var(--teal-rgb));
+  --teal-soft: rgb(var(--teal-soft-rgb));
+  --timber: rgb(var(--timber-rgb));
+  --sand: rgb(var(--sand-rgb));
+  --line: rgb(var(--line-rgb));
+  --line-strong: rgb(var(--line-strong-rgb));
+  --line-invert: rgb(var(--paper-rgb) / 0.18);
 
   /* Legacy semantic aliases — kept so every surface stays coherent */
   --background: var(--paper);
@@ -598,31 +646,52 @@
    * Use padding instead wherever controls stack vertically (the footer lists),
    * since expanding outward there would make neighbouring targets overlap.
    *
-   * The press state is here rather than on each control because `.tap` already
-   * marks the set that needs it: things a finger hits. On touch there is no hover,
-   * so before this a tap on a filter tab, a dossier toggle or the planner's Clear
-   * produced no acknowledgement at all. Same 0.97 and same 160ms as `.btn`, so a
-   * press feels identical wherever it lands.
+   * `.press` is that warning made available. The two jobs — acknowledge the press,
+   * and enlarge the target — used to be one class, so every control that wanted
+   * the first was forced to take the second, and the second is only safe when a
+   * control has empty space around it to grow into.
+   *
+   * The catalogue filter is where that bit. Seven tabs in a `flex-wrap` row,
+   * `gap-y-3`; each is 33px tall, which already clears 2.5.8 on its own, and
+   * `.tap` grew them to 60px against a 45px row pitch. Measured at 375px: every
+   * tab's hit area overlapped the one above or below it by 15px, and by up to
+   * 88px across — so a tap aimed at Dining could land on Hospitality. The inline
+   * links in running prose had the same defect in miniature, two adjacent lines
+   * overlapping by 2px, and there 2.5.8 exempts them anyway: a target inside a
+   * sentence is sized by the sentence.
+   *
+   * So: `.press` for anything that is already big enough or is inline in text,
+   * `.tap` only where a small control stands alone. On touch there is no hover, so
+   * before either of these existed a tap on a filter tab, a dossier toggle or the
+   * planner's Clear produced no acknowledgement at all. Same 0.97 and same 160ms
+   * as `.btn`, so a press feels identical wherever it lands.
    */
+  .press,
+  .tap {
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .press:active,
+  .tap:active {
+    transform: scale(0.97);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .press:active,
+    .tap:active {
+      transform: none;
+    }
+  }
+
+  /* Only `.tap` grows, and only `.tap` needs the positioned host to grow inside. */
   .tap {
     position: relative;
-    transition: transform 160ms var(--ease-out);
   }
 
   .tap::before {
     content: '';
     position: absolute;
     inset: -0.85rem -0.4rem;
-  }
-
-  .tap:active {
-    transform: scale(0.97);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tap:active {
-      transform: none;
-    }
   }
 
   /* Link that draws its own underline on approach. */
@@ -844,9 +913,14 @@
 /*
  * The photograph carries the visitor across a navigation: a catalogue card's
  * plate becomes the plate at the top of the page it opens, so two documents
- * read as one object being approached. Driven from `PlateLink`, which starts
- * the transition by hand because the App Router soft-navigates and
- * `@view-transition { navigation: auto }` only fires on real document loads.
+ * read as one object being approached.
+ *
+ * The browser drives it, not us. `PlateLink` is a plain anchor, so these five
+ * links leave the App Router and perform a real document navigation, which is
+ * the only thing `navigation: auto` below fires on. An earlier version called
+ * `document.startViewTransition` by hand around `router.push` and held the page
+ * on the outgoing snapshot for ~870ms against a ~30ms navigation; see PlateLink
+ * for why that could not be tuned out.
  *
  * Card plates and destination plates are both `aspect-[4/3]`, so the morph is
  * position and scale only — no aspect distortion to disguise.

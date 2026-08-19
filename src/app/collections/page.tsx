@@ -50,7 +50,13 @@ export default function CollectionsPage() {
         <Reveal immediate>
           <section className="pb-16 lg:pb-20">
             <div className="shell">
-              <p className="text-manifest-sm text-muted rise">Six collections</p>
+              {/* Counted, not spelled out. The description above interpolates the
+                  same figure precisely so a collection added at /keystatic cannot
+                  leave the page claiming a number it no longer shows — and then
+                  this line sat directly beneath it hardcoding the word "Six". */}
+              <p className="text-manifest-sm text-muted numeral rise">
+                {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
+              </p>
 
               <ul data-reveal-group className="mt-5">
                 {collections.map((collection) => {

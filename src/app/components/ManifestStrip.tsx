@@ -11,7 +11,7 @@ export default function ManifestStrip() {
     <ul className="flex shrink-0 items-center">
       {manifest.map((entry) => (
         <li key={entry.key} className="flex items-center whitespace-nowrap">
-          <span className="text-manifest text-paper/45">{entry.key}</span>
+          <span className="text-manifest text-paper/55">{entry.key}</span>
           <span className="text-manifest text-paper ml-3">{entry.value}</span>
           <span className="mx-8 h-3 w-px bg-paper/20" aria-hidden="true" />
         </li>

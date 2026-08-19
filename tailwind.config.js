@@ -10,28 +10,41 @@ module.exports = {
     extend: {
       colors: {
         // Material palette, drawn from the catalogue photography.
+        //
+        // Every entry is `rgb(var(--x-rgb) / <alpha-value>)`, not `var(--x)`.
+        // Tailwind substitutes `<alpha-value>` with an opacity modifier — so
+        // `text-paper/55` becomes `rgb(239 233 223 / 0.55)` — and with `1` when
+        // there is no modifier, which is byte-identical to the plain colour.
+        // Handed a bare `var(--paper)` it cannot substitute anything, so it
+        // builds no rule and emits nothing: `text-paper/55` compiled to silence
+        // and the element inherited whatever colour sat above it. That cost the
+        // home page's manifest strip its labels (ink on ink, contrast 1.00) and
+        // every form on the site its placeholder colour. See the contrast note
+        // at the top of src/styles/tailwind.css.
         paper: {
-          DEFAULT: 'var(--paper)',
-          deep: 'var(--paper-deep)',
-          warm: 'var(--paper-warm)',
+          DEFAULT: 'rgb(var(--paper-rgb) / <alpha-value>)',
+          deep: 'rgb(var(--paper-deep-rgb) / <alpha-value>)',
+          warm: 'rgb(var(--paper-warm-rgb) / <alpha-value>)',
         },
         ink: {
-          DEFAULT: 'var(--ink)',
-          soft: 'var(--ink-soft)',
+          DEFAULT: 'rgb(var(--ink-rgb) / <alpha-value>)',
+          soft: 'rgb(var(--ink-soft-rgb) / <alpha-value>)',
         },
         clay: {
-          DEFAULT: 'var(--clay)',
-          soft: 'var(--clay-soft)',
+          DEFAULT: 'rgb(var(--clay-rgb) / <alpha-value>)',
+          soft: 'rgb(var(--clay-soft-rgb) / <alpha-value>)',
         },
         teal: {
-          DEFAULT: 'var(--teal)',
-          soft: 'var(--teal-soft)',
+          DEFAULT: 'rgb(var(--teal-rgb) / <alpha-value>)',
+          soft: 'rgb(var(--teal-soft-rgb) / <alpha-value>)',
         },
-        timber: 'var(--timber)',
-        sand: 'var(--sand)',
+        timber: 'rgb(var(--timber-rgb) / <alpha-value>)',
+        sand: 'rgb(var(--sand-rgb) / <alpha-value>)',
         line: {
-          DEFAULT: 'var(--line)',
-          strong: 'var(--line-strong)',
+          DEFAULT: 'rgb(var(--line-rgb) / <alpha-value>)',
+          strong: 'rgb(var(--line-strong-rgb) / <alpha-value>)',
+          // Already carries its own 0.18, so an opacity modifier on top of it
+          // would compound two alphas. Left as a plain var deliberately.
           invert: 'var(--line-invert)',
         },
 
@@ -51,7 +64,7 @@ module.exports = {
           foreground: 'var(--accent-foreground)',
         },
         muted: {
-          DEFAULT: 'var(--muted)',
+          DEFAULT: 'rgb(var(--muted-rgb) / <alpha-value>)',
           foreground: 'var(--muted-foreground)',
         },
         card: {

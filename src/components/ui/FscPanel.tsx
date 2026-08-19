@@ -31,7 +31,15 @@ interface FscPanelProps {
 export default function FscPanel({ variant = 'full', invert = false, placement }: FscPanelProps) {
   const line = invert ? 'border-line-invert' : 'border-line';
   const lead = invert ? 'text-paper/70' : 'text-muted';
-  const accent = invert ? 'text-timber' : 'text-clay';
+  /*
+   * `sand`, not `timber`. The accent lands on `text-manifest` — 13px — and this
+   * panel cannot see the ground it was dropped onto: `invert` is mounted on teal
+   * today and on ink elsewhere. timber reads 3.51 on teal, which fails AA below
+   * 24px, while sand clears it on both (5.58 on teal, 9.56 on ink). A component
+   * that does not know its background has to pick the colour that is safe on
+   * either one.
+   */
+  const accent = invert ? 'text-sand' : 'text-clay';
   const body = invert ? 'text-paper/75' : 'text-ink-soft';
 
   if (variant === 'brief') {

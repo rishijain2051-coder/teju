@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 const designLink = (piece: Piece) => (
-  <Link href={pieceHref(piece)} className="text-clay link-draw tap">
+  <Link href={pieceHref(piece)} className="text-clay link-draw press">
     {piece.name}
   </Link>
 );
@@ -115,11 +115,11 @@ const ONWARD: Record<string, React.ReactNode> = {
   'solid-mango-wood': (
     <>
       The drying this piece turns on is the second of eight stages.{' '}
-      <Link href="/craft" className="text-clay link-draw tap">
+      <Link href="/craft" className="text-clay link-draw press">
         The rest of the sequence
       </Link>{' '}
       is set out bench by bench, and the mango casegoods that come off it run through the{' '}
-      <Link href="/collections/dining" className="text-clay link-draw tap">
+      <Link href="/collections/dining" className="text-clay link-draw press">
         dining range
       </Link>
       {among(['osian-barn-sideboard', 'marwar-parquet-sideboard'])}
@@ -128,15 +128,15 @@ const ONWARD: Record<string, React.ReactNode> = {
   'timber-to-container': (
     <>
       The benches in this account have addresses.{' '}
-      <Link href="/factory" className="text-clay link-draw tap">
+      <Link href="/factory" className="text-clay link-draw press">
         The factory page
       </Link>{' '}
       gives the floor area by area and the same nine weeks as a dated timeline, and{' '}
-      <Link href="/craft" className="text-clay link-draw tap">
+      <Link href="/craft" className="text-clay link-draw press">
         the eight stages
       </Link>{' '}
       describe what happens at each one. Everything in{' '}
-      <Link href="/collections" className="text-clay link-draw tap">
+      <Link href="/collections" className="text-clay link-draw press">
         the collections
       </Link>{' '}
       goes through it.
@@ -146,11 +146,11 @@ const ONWARD: Record<string, React.ReactNode> = {
     <>
       An order book is easier to read against the pieces themselves. The painted, tiled and parquet
       fronts it is moving towards are separate trades in this building —{' '}
-      <Link href="/craft" className="text-clay link-draw tap">
+      <Link href="/craft" className="text-clay link-draw press">
         the carving, parquet and tile benches
       </Link>{' '}
       — and they run across{' '}
-      <Link href="/collections" className="text-clay link-draw tap">
+      <Link href="/collections" className="text-clay link-draw press">
         the collections
       </Link>
       {among(['marwar-parquet-sideboard', 'pichola-tile-cabinet'])}
@@ -158,16 +158,16 @@ const ONWARD: Record<string, React.ReactNode> = {
   ),
   'what-fsc-actually-certifies': (
     <>
-      <Link href="/craft#fsc" className="text-clay link-draw tap">
+      <Link href="/craft#fsc" className="text-clay link-draw press">
         The chain-of-custody panel
       </Link>{' '}
       sets out which claim we hold and the certificate code it travels with, the tagged stacks it
       describes are in{' '}
-      <Link href="/factory" className="text-clay link-draw tap">
+      <Link href="/factory" className="text-clay link-draw press">
         the yard at Boranada
       </Link>
       , and every design in{' '}
-      <Link href="/collections" className="text-clay link-draw tap">
+      <Link href="/collections" className="text-clay link-draw press">
         the collections
       </Link>{' '}
       states the claim it can be supplied under.

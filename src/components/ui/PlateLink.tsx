@@ -56,11 +56,24 @@ export default function PlateLink({ children, href, onClick, ...rest }: PlateLin
    */
   const claim = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
-      document.querySelectorAll<HTMLElement>('[data-plate]').forEach((el) => {
-        el.dataset.plate = 'idle';
-      });
-      const plate = event.currentTarget.querySelector<HTMLElement>('[data-plate]');
-      if (plate) plate.dataset.plate = 'active';
+      /*
+       * Only for a click that actually navigates this document. A middle-click or
+       * a Cmd/Ctrl/Shift click opens the target somewhere else and leaves this page
+       * exactly where it was — but the handler still ran, so it cleared the marker
+       * off the real destination plate and named a card that is not going anywhere.
+       * On a product page, which is itself a morph destination *and* lists related
+       * pieces, opening a related design in a new tab quietly stripped the shared
+       * name from the plate at the top of the page you were still reading.
+       */
+      const elsewhere =
+        event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+      if (!elsewhere) {
+        document.querySelectorAll<HTMLElement>('[data-plate]').forEach((el) => {
+          el.dataset.plate = 'idle';
+        });
+        const plate = event.currentTarget.querySelector<HTMLElement>('[data-plate]');
+        if (plate) plate.dataset.plate = 'active';
+      }
       onClick?.(event);
     },
     [onClick]

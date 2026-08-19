@@ -288,7 +288,7 @@ export default function PrivateCatalogue() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Reference, name, material, finish"
-                  className="w-full bg-transparent border-b border-line py-2 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-fast ease-out"
+                  className="w-full bg-transparent border-b border-line py-2 text-body text-ink placeholder:text-muted focus:border-clay focus:outline-none transition-colors duration-fast ease-out"
                 />
               </label>
 

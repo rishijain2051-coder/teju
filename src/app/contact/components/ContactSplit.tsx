@@ -83,7 +83,7 @@ export default function ContactSplit() {
   };
 
   const field =
-    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-fast ease-out';
+    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted focus:border-clay focus:outline-none transition-colors duration-fast ease-out';
   const label = 'block text-manifest-sm text-muted mb-1';
 
   const plate = img('craft-round-table');
@@ -285,7 +285,7 @@ export default function ContactSplit() {
 
                 <p className="text-note text-muted mt-6 max-w-measure">
                   Sent straight to {brand.email}. We use your details only to reply.{' '}
-                  <Link href="/privacy" className="text-ink link-draw tap">
+                  <Link href="/privacy" className="text-ink link-draw press">
                     How we handle it
                   </Link>
                 </p>

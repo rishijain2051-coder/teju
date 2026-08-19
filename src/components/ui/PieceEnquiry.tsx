@@ -56,7 +56,7 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
   };
 
   const field =
-    'w-full bg-transparent border-b border-line-strong py-2.5 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-fast ease-out';
+    'w-full bg-transparent border-b border-line-strong py-2.5 text-body text-ink placeholder:text-muted focus:border-clay focus:outline-none transition-colors duration-fast ease-out';
   const label = 'block text-manifest-sm text-muted mb-1';
 
   if (state === 'success') {

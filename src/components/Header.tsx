@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import AppLogo from '@/components/ui/AppLogo';
@@ -10,6 +10,14 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  /* Shared by both navs. The mobile panel had no `aria-current` at all, so the
+     page a reader was on was announced identically to the five they were not —
+     on the surface where the whole navigation is that panel. */
+  const isCurrent = (href: string) =>
+    href === '/collections' ? pathname.startsWith('/collections') : pathname === href;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -37,6 +45,58 @@ export default function Header() {
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
+  /*
+   * Focus containment.
+   *
+   * The panel already behaves as a modal in every respect but one: it covers the
+   * viewport opaquely, locks body scroll, and closes on Escape. What it did not do
+   * was hold focus — `inert` takes the panel out of the tab order while it is
+   * closed, but nothing took the page *behind* it out while it is open. Tabbing
+   * past the last nav link walked into a document nobody can see, with the focus
+   * ring somewhere off-panel.
+   *
+   * The ring is [toggle, ...panel] rather than the panel alone, because the control
+   * that closes this lives in the header, outside it — trap the panel by itself and
+   * the close button becomes unreachable by keyboard. In DOM order the toggle comes
+   * first, so this is also the order a reader would tab through anyway; the only
+   * thing added is the wrap at each end.
+   *
+   * Focus returns to the toggle on close, and only if it would otherwise be lost:
+   * on a route change React closes the menu while focus is still on the link that
+   * caused it, which `inert` then drops to `<body>`.
+   */
+  useEffect(() => {
+    const panel = panelRef.current;
+    const toggle = toggleRef.current;
+    if (!menuOpen || !panel || !toggle) return;
+
+    const focusables = () => [
+      toggle,
+      ...panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'),
+    ];
+
+    focusables()[1]?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      const ring = focusables();
+      const at = ring.indexOf(document.activeElement as HTMLElement);
+      if (at === -1) return;
+      const next = e.shiftKey ? at - 1 : at + 1;
+      if (next < 0 || next >= ring.length) {
+        e.preventDefault();
+        ring[e.shiftKey ? ring.length - 1 : 0].focus();
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      const active = document.activeElement;
+      if (active === document.body || active === null || panel.contains(active)) toggle.focus();
+    };
+  }, [menuOpen]);
+
   return (
     <>
       {/* Opaque, not translucent: the masthead crosses a teal section and a
@@ -58,10 +118,7 @@ export default function Header() {
           {/* Nav */}
           <nav className="hidden lg:flex items-center gap-9" aria-label="Primary">
             {nav.map((link) => {
-              const active =
-                link.href === '/collections'
-                  ? pathname.startsWith('/collections')
-                  : pathname === link.href;
+              const active = isCurrent(link.href);
               return (
                 <Link
                   key={link.label}
@@ -94,9 +151,11 @@ export default function Header() {
             </span>
 
             <button
+              ref={toggleRef}
               type="button"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
               onClick={() => setMenuOpen((v) => !v)}
               className="lg:hidden flex flex-col justify-center gap-[5px] w-10 h-10 items-center -mr-2 tap"
             >
@@ -126,7 +185,11 @@ export default function Header() {
         belt-and-braces for the transparent frames.
       */}
       <div
+        ref={panelRef}
         id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
         inert={!menuOpen}
         className={`fixed inset-0 z-40 bg-paper lg:hidden transition-opacity duration-base ease-out ${
           menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -138,6 +201,7 @@ export default function Header() {
               <Link
                 key={link.label}
                 href={link.href}
+                aria-current={isCurrent(link.href) ? 'page' : undefined}
                 className="group flex items-baseline gap-5 py-5 border-b border-line overflow-hidden"
               >
                 <span className="text-manifest-sm text-muted numeral">
@@ -161,11 +225,20 @@ export default function Header() {
             <Link href="/contact" className="btn btn-solid w-full justify-center">
               Enquire now
             </Link>
-            <div className="mt-8 flex flex-col gap-1.5">
-              <a href={`tel:${brand.phoneHref}`} className="text-manifest-sm text-muted numeral">
+            {/* `py-2`, not `.tap`: these two stack, and the outward hit area would
+                have them overlapping. At 12px the line box is 18px, which is under
+                the 24px minimum on the one surface where the whole navigation is
+                thumb-driven — and with `gap-1.5` between them, six pixels apart.
+                Padding lifts each to 34px and keeps them separate, which is what
+                the footer's link columns already do for the same reason. */}
+            <div className="mt-6 flex flex-col">
+              <a
+                href={`tel:${brand.phoneHref}`}
+                className="text-manifest-sm text-muted numeral py-2 press"
+              >
                 {brand.phone}
               </a>
-              <a href={`mailto:${brand.email}`} className="text-manifest-sm text-muted">
+              <a href={`mailto:${brand.email}`} className="text-manifest-sm text-muted py-2 press">
                 {brand.email}
               </a>
             </div>

@@ -200,7 +200,7 @@ export default function FactoryPage() {
                     key={capability.index}
                     className="flex gap-5 lg:gap-8 py-6 border-t border-line-invert rise"
                   >
-                    <span className="text-manifest-sm text-timber numeral shrink-0 pt-1.5">
+                    <span className="text-manifest-sm text-sand numeral shrink-0 pt-1.5">
                       {capability.index}
                     </span>
                     <div>
@@ -216,7 +216,7 @@ export default function FactoryPage() {
               {/* The honest half. Reads better than a seventh capability, and it
                   ends the conversations that were never going to work. */}
               <div className="mt-16 lg:mt-20 pt-8 border-t border-line-invert">
-                <p className="text-manifest text-timber rise">And what we don&apos;t do</p>
+                <p className="text-manifest text-sand rise">And what we don&apos;t do</p>
                 <ul data-reveal-group className="grid lg:grid-cols-2 gap-x-16 mt-6">
                   {notOurWork.map((item) => (
                     <li key={item} className="text-body text-paper/65 py-3 max-w-measure rise">

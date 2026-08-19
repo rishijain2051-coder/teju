@@ -64,8 +64,20 @@ export default function ExclusiveAccess() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
+  /*
+   * Set for the teal ground this panel sits on, which the previous version was
+   * not: it carried `text-ink` and `focus:border-clay`, both light-ground choices
+   * copied from the contact form. Measured on teal, the value a buyer typed was
+   * 1.71:1 — legible in the sense that the pixels differ, and unreadable in every
+   * other sense — and the focus border was clay at 2.71, the one pair the palette
+   * note at the top of tailwind.css says is never used.
+   *
+   * `border-line-strong` stays. It is nominally a light-ground token, but on teal
+   * it reads as a warm hairline at 4.84 and clears the 3:1 a control boundary
+   * needs; `line-invert` at 1.5 would not.
+   */
   const field =
-    'w-full bg-transparent border-b border-line-strong py-3 text-body text-ink placeholder:text-muted/70 focus:border-clay focus:outline-none transition-colors duration-fast ease-out';
+    'w-full bg-transparent border-b border-line-strong py-3 text-body text-paper placeholder:text-paper/65 focus:border-sand focus:outline-none transition-colors duration-fast ease-out';
 
   return (
     <section ref={ref} id="access" className="relative bg-teal text-paper grain py-20 lg:py-32">
@@ -73,7 +85,7 @@ export default function ExclusiveAccess() {
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
           {/* Explanation */}
           <div className="lg:col-span-5">
-            <p className="text-manifest text-timber rise">Trade access</p>
+            <p className="text-manifest text-sand rise">Trade access</p>
             <h2 className="font-serif text-display-sm font-light mt-6 rise">
               The rest of the <span className="italic">catalogue</span>
             </h2>
@@ -92,7 +104,7 @@ export default function ExclusiveAccess() {
                 'First sight of each season’s new work',
               ].map((line, i) => (
                 <li key={line} className="flex gap-5 py-4 border-t border-line-invert">
-                  <span className="text-manifest-sm text-timber numeral">
+                  <span className="text-manifest-sm text-sand numeral">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span className="text-body text-paper/80">{line}</span>
@@ -100,9 +112,9 @@ export default function ExclusiveAccess() {
               ))}
             </ul>
 
-            <p className="text-manifest-sm text-paper/50 mt-8 rise">
+            <p className="text-manifest-sm text-paper/65 mt-8 rise">
               Already verified?{' '}
-              <Link href="/collections/private" className="text-timber link-draw tap">
+              <Link href="/collections/private" className="text-sand link-draw press">
                 Enter your access code
               </Link>
             </p>
@@ -113,11 +125,11 @@ export default function ExclusiveAccess() {
             {state === 'success' ? (
               /* `filter-swap`, not `rise` — mounts on submit; see ContactSplit. */
               <div className="border border-line-invert p-8 lg:p-10 filter-swap">
-                <p className="text-manifest text-timber">Request sent</p>
+                <p className="text-manifest text-sand">Request sent</p>
                 <h3 className="text-title mt-4">We verify each trade account by hand.</h3>
                 <p className="text-body text-paper/70 mt-4">
                   You&apos;ll hear back within two working days. Anything urgent, write to{' '}
-                  <a href={`mailto:${brand.email}`} className="text-timber link-draw tap">
+                  <a href={`mailto:${brand.email}`} className="text-sand link-draw press">
                     {brand.email}
                   </a>
                   .
@@ -127,7 +139,7 @@ export default function ExclusiveAccess() {
               <form onSubmit={handleSubmit} className="relative rise">
                 <div className="grid sm:grid-cols-2 gap-x-8 gap-y-7">
                   <div className="sm:col-span-2">
-                    <label htmlFor="company" className="text-manifest-sm text-paper/55">
+                    <label htmlFor="company" className="text-manifest-sm text-paper/65">
                       Company name
                     </label>
                     <input
@@ -142,7 +154,7 @@ export default function ExclusiveAccess() {
                   </div>
 
                   <div>
-                    <label htmlFor="country" className="text-manifest-sm text-paper/55">
+                    <label htmlFor="country" className="text-manifest-sm text-paper/65">
                       Country
                     </label>
                     <input
@@ -157,7 +169,7 @@ export default function ExclusiveAccess() {
                   </div>
 
                   <div>
-                    <label htmlFor="businessType" className="text-manifest-sm text-paper/55">
+                    <label htmlFor="businessType" className="text-manifest-sm text-paper/65">
                       Business type
                     </label>
                     <select
@@ -180,7 +192,7 @@ export default function ExclusiveAccess() {
                   </div>
 
                   <div>
-                    <label htmlFor="email" className="text-manifest-sm text-paper/55">
+                    <label htmlFor="email" className="text-manifest-sm text-paper/65">
                       Work email
                     </label>
                     <input
@@ -196,7 +208,7 @@ export default function ExclusiveAccess() {
                   </div>
 
                   <div>
-                    <label htmlFor="website" className="text-manifest-sm text-paper/55">
+                    <label htmlFor="website" className="text-manifest-sm text-paper/65">
                       Website
                     </label>
                     <input
@@ -256,12 +268,12 @@ export default function ExclusiveAccess() {
                 </div>
 
                 {state === 'error' && (
-                  <p role="alert" className="text-body text-timber mt-5 max-w-measure">
+                  <p role="alert" className="text-body text-sand mt-5 max-w-measure">
                     {errorMsg}
                   </p>
                 )}
 
-                <p className="text-note text-paper/60 mt-6 max-w-measure">
+                <p className="text-note text-paper/65 mt-6 max-w-measure">
                   We use these details only to verify your business, never a marketing list.
                 </p>
               </form>

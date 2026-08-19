@@ -33,7 +33,7 @@ export default function WhyBrandsSection() {
                 className="object-cover"
               />
             </div>
-            <p className="text-manifest-sm text-paper/50 mt-4 rise">
+            <p className="text-manifest-sm text-paper/65 mt-4 rise">
               Boranada Industrial Area · Jodhpur
             </p>
           </div>
@@ -52,7 +52,7 @@ export default function WhyBrandsSection() {
                   key={capability.index}
                   className="flex gap-5 lg:gap-8 py-6 border-t border-line-invert rise"
                 >
-                  <span className="text-manifest-sm text-timber numeral shrink-0 pt-1.5">
+                  <span className="text-manifest-sm text-sand numeral shrink-0 pt-1.5">
                     {capability.index}
                   </span>
                   <div>
