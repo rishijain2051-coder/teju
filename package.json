@@ -17,7 +17,9 @@
     "content": "node scripts/build-content.mjs",
     "prebuild": "node scripts/build-content.mjs",
     "images": "node scripts/process-images.mjs",
-    "images:check": "node scripts/process-images.mjs --check"
+    "images:check": "node scripts/process-images.mjs --check",
+    "hooks": "node scripts/install-git-hooks.mjs",
+    "prepare": "node scripts/install-git-hooks.mjs"
   },
   "dependencies": {
     "@keystatic/core": "^0.6.5",
