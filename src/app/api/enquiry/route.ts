@@ -3,6 +3,7 @@ import { brand } from '@/lib/site';
 import { isMailConfigured, sendMail } from '@/lib/mail';
 import { clientKey, createRateLimit } from '@/lib/rate-limit';
 import { readJsonBounded, singleLine } from '@/lib/request-guard';
+import { observe } from '@/lib/observe';
 
 /**
  * Enquiry intake for both forms: the contact form and the trade catalogue
@@ -11,6 +12,17 @@ import { readJsonBounded, singleLine } from '@/lib/request-guard';
  * Every field is treated as untrusted text and escaped before it reaches the
  * HTML body — these values come from a public form.
  */
+
+/*
+ * Declared, not inherited. Vercel's default is 10s on Hobby and 15s on Pro, and
+ * the mailer's own ceiling is 25s (see the timeout block in `lib/mail.ts`) — so on
+ * either plan a stalled SMTP provider gets the invocation killed before the mailer
+ * gives up, and the visitor sees an opaque gateway error instead of the 502 below,
+ * which is the one that names the WhatsApp fallback. 30 leaves the mailer room to
+ * fail first and still bounds the request; the two numbers are a pair, so change
+ * them together. Both plans allow at least 60s, so this is within budget.
+ */
+export const maxDuration = 30;
 
 interface Field {
   label: string;
@@ -109,7 +121,7 @@ export async function POST(request: Request) {
   }
 
   if (!isMailConfigured()) {
-    console.error('[enquiry] SMTP is not configured; refusing to accept a lead it cannot deliver');
+    observe('error', 'enquiry.mail_unconfigured');
     return NextResponse.json(
       {
         ok: false,
@@ -164,6 +176,10 @@ export async function POST(request: Request) {
   });
 
   if (!delivered) {
+    /* A lead that reached the site and did not reach the inbox. `sendMail` has
+       already logged why; this is the one that says a sale may have been lost, and
+       it is the line worth alerting on. */
+    observe('error', 'enquiry.send_failed');
     return NextResponse.json(
       {
         ok: false,

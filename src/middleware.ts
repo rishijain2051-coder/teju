@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ACCESS_COOKIE, accessSecretConfigured, verifyAccessToken } from '@/lib/access';
+import { observe } from '@/lib/observe';
 
 /**
  * Guards the trade catalogue.
@@ -71,7 +72,27 @@ export async function middleware(request: NextRequest) {
    * Grants nothing: two fixed words, nothing about the codes, and the redirect
    * still happens either way.
    */
-  response.headers.set('x-vi-gate', accessSecretConfigured() ? 'denied' : 'unavailable');
+  const configured = accessSecretConfigured();
+  response.headers.set('x-vi-gate', configured ? 'denied' : 'unavailable');
+
+  /*
+   * The header above is the diagnosis; this is the alarm. `unavailable` is an
+   * outage — the secret is missing or under 32 characters in the Edge runtime, so
+   * the gate is refusing codes that are correct — and until now the only way to
+   * find out was to curl the endpoint and read a header. It logs on every request
+   * while it lasts, which is loud, and that is the point: it should be.
+   *
+   * A rejected token is a warning and not an error, and only when a token was
+   * actually sent. An empty cookie jar just means somebody typed the URL, which is
+   * ordinary and would bury the signal; a *present* token that fails verification
+   * is expired, tampered with, or signed by a secret that has since changed —
+   * worth counting. Neither line carries the token, the path's query, or an IP.
+   */
+  if (!configured) {
+    observe('error', 'gate.secret_unavailable', { path: request.nextUrl.pathname });
+  } else if (token) {
+    observe('warn', 'gate.token_rejected', { path: request.nextUrl.pathname });
+  }
 
   // Clear the rejected cookie on the way out, so a stale or tampered token does
   // not sit in the browser being re-sent on every request.
