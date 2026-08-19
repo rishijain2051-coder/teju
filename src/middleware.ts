@@ -16,7 +16,36 @@ import { ACCESS_COOKIE, accessSecretConfigured, verifyAccessToken } from '@/lib/
  * over the token's own expiry, so a forged or expired value is rejected and an
  * unset `ACCESS_SECRET` denies everyone rather than admitting everyone.
  */
+/*
+ * Closes the CMS route in production, with a real 404.
+ *
+ * `/keystatic/[[...params]]` already guards itself — `notFound()` when NODE_ENV is
+ * production, because storage is `kind: 'local'` and the editor cannot write to a
+ * deployed filesystem. That guard renders the right page and returns the wrong
+ * status. The route is statically prerendered, so production served the 404 *body*
+ * with **HTTP 200**, titled "Content — Vardhman Impex". That is a soft 404: Google
+ * indexes it as a real page, and a genuine unknown URL on this site correctly
+ * returns 404, so the two disagree.
+ *
+ * Middleware runs ahead of the static response, which is the only place that can
+ * fix the status without making the route dynamic. Bare body on purpose: this is
+ * an admin path that should not be reachable here, and a crawler needs the status,
+ * not the styling. `robots.ts` disallows it as well — belt to this brace.
+ */
 export async function middleware(request: NextRequest) {
+  /*
+   * One branch owning the whole path, and it must return in both cases. Falling
+   * through here is not harmless: the code below is the trade gate, so in
+   * development `/keystatic` answered 307 to /collections/private and the CMS
+   * became unreachable locally. Production never saw it — the 404 returns first —
+   * which is exactly the shape of bug that ships.
+   */
+  if (request.nextUrl.pathname.startsWith('/keystatic')) {
+    return process.env.NODE_ENV === 'production'
+      ? new NextResponse('Not Found', { status: 404 })
+      : NextResponse.next();
+  }
+
   const token = request.cookies.get(ACCESS_COOKIE)?.value;
 
   if (await verifyAccessToken(token)) return NextResponse.next();
@@ -51,5 +80,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/collections/private/catalogue/:path*'],
+  matcher: ['/collections/private/catalogue/:path*', '/keystatic/:path*', '/keystatic'],
 };
