@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { collections, journal, pieceHref, pieces } from '@/lib/site';
+import { SITE_URL } from '@/lib/site-url';
 
 /**
  * Everything publicly reachable. The private catalogue and its access gate are
@@ -14,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   /* 4028, matching `layout.tsx`, `lib/schema.ts` and the dev script. This read
      3000 — Next's own default port, not this project's — so with the env var unset
      every absolute URL below pointed at a port nothing here ever serves. */
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028';
+  const baseUrl = SITE_URL;
   const lastModified = new Date();
 
   return [

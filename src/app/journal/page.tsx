@@ -15,6 +15,8 @@ import { facts, img, journal } from '@/lib/site';
  * articles, so the description and the page cannot get out of step.
  */
 export const metadata: Metadata = {
+  /* Self-referencing canonical — see src/app/page.tsx. */
+  alternates: { canonical: '/journal' },
   title: 'Journal · Notes From the Workshop Floor',
   description: `Notes from the floor at Boranada: how mango behaves, what FSC chain of custody certifies, how a piece reaches a container, and what ${facts.countries} markets are ordering.`,
 };

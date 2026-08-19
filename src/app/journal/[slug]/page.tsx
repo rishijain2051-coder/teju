@@ -52,6 +52,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const description = describe(article);
 
   return {
+    /* From the resolved record, not the incoming param — see src/app/page.tsx. */
+    alternates: { canonical: `/journal/${article.slug}` },
     title: article.title,
     description,
     openGraph: {

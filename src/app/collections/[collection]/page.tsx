@@ -95,6 +95,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!collection) return { title: 'Collections' };
 
   return {
+    /* From the resolved record, not the incoming param — see src/app/page.tsx. */
+    alternates: { canonical: `/collections/${collection.slug}` },
     title: `${collection.name} · ${CATEGORY[collection.name]}`,
     description: describe(collection),
     openGraph: {

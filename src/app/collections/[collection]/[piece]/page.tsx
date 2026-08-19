@@ -84,6 +84,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!piece) return { title: 'Collections' };
 
   return {
+    /* `pieceHref` so one helper owns the URL shape — see src/app/page.tsx. */
+    alternates: { canonical: pieceHref(piece) },
     title: `${piece.name} · ${piece.ref} · ${piece.material}`,
     description: describe(piece, Boolean(findCollection(collectionSlug)?.bespoke)),
     openGraph: {

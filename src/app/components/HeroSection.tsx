@@ -53,22 +53,44 @@ export default function HeroSection() {
 
             {/* Three lines, not two: each word wipes on its own beat, and the
                 delays stay 100ms apart so the cadence reads as a list rather than
-                a sentence being assembled. */}
+                a sentence being assembled.
+
+                Two things here are for the readers who are not looking at it.
+
+                `.wipe` is `display: block`, so the three words are three lines on
+                screen — but there was no whitespace between the spans, and text
+                extraction does not invent any. The accessible name of the site's
+                most important heading was the single token `RawRealRemarkable`, and
+                that is what a screen reader announced and what a crawler read. The
+                `{' '}` separators cost nothing visually: whitespace between two
+                block boxes collapses.
+
+                The `sr-only` clause is there because the three words, spaced or
+                not, say nothing about what this company makes or where. This is a
+                furniture manufacturer whose h1 named no product, no material and no
+                place. Every term below is already the plain subject of this page and
+                of its title — it is the heading finally describing its own document,
+                not a keyword list, and it reads as a sentence when spoken. */}
             <h1 className="font-serif text-mega font-light mt-5 lg:mt-6">
               <span className="wipe">
                 <span className="wipe-inner" style={delay(160)}>
                   Raw
                 </span>
-              </span>
+              </span>{' '}
               <span className="wipe">
                 <span className="wipe-inner" style={delay(260)}>
                   Real
                 </span>
-              </span>
+              </span>{' '}
               <span className="wipe">
                 <span className="wipe-inner italic text-clay" style={delay(360)}>
                   Remarkable
                 </span>
+              </span>
+              <span className="sr-only">
+                {' '}
+                — solid mango and reclaimed hardwood furniture, manufactured and exported from{' '}
+                {brand.origin} since {brand.established}.
               </span>
             </h1>
 

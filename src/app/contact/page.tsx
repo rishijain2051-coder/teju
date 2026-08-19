@@ -16,6 +16,8 @@ import { brand, facts } from '@/lib/site';
  * which is how a buyer actually types the search.
  */
 export const metadata: Metadata = {
+  /* Self-referencing canonical — see src/app/page.tsx. */
+  alternates: { canonical: '/contact' },
   title: { absolute: `Contact ${brand.name} · Mango Wood Furniture Export, Jodhpur` },
   description:
     'Send an enquiry straight to our Boranada works in Jodhpur: ranges, volumes, finishes, ' +

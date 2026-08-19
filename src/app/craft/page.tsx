@@ -18,6 +18,8 @@ import { craftStages, img } from '@/lib/site';
  * retained finish sample, and nothing leaving the building to a subcontractor.
  */
 export const metadata: Metadata = {
+  /* Self-referencing canonical — see src/app/page.tsx. */
+  alternates: { canonical: '/craft' },
   title: 'Craft · How a Piece Is Made, Stage by Stage',
   description:
     'Eight stages, one roof, nothing subcontracted: timber to 8–10% moisture before it meets a joint, framed carcasses, finishes matched to a retained sample.',

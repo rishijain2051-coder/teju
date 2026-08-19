@@ -7,6 +7,8 @@ import PageHeader from '@/components/ui/PageHeader';
 import { brand } from '@/lib/site';
 
 export const metadata: Metadata = {
+  /* Self-referencing canonical — see src/app/page.tsx. */
+  alternates: { canonical: '/privacy' },
   title: 'Privacy',
   description:
     'What Vardhman Impex collects when you enquire, where it goes, what Google Analytics measures, and how to have any of it deleted. Written from the site’s own code.',

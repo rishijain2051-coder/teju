@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import MotionProvider from '@/components/motion/MotionProvider';
+import { SITE_URL as SITE } from '@/lib/site-url';
 import StickyCta from '@/components/ui/StickyCta';
 import JsonLd from '@/components/seo/JsonLd';
 import { organizationSchema } from '@/lib/schema';
@@ -131,8 +132,6 @@ export const viewport: Viewport = {
   initialScale: 1,
   themeColor: '#EFE9DF',
 };
-
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE),

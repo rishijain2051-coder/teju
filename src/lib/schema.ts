@@ -1,4 +1,5 @@
 import { brand, facts, img } from './site';
+import { SITE_URL } from './site-url';
 import type { Piece } from './catalogue';
 import type { Article } from './journal';
 
@@ -17,7 +18,7 @@ import type { Article } from './journal';
 /* Same default as the root layout, deliberately: two different fallbacks would
    put two different hostnames in the same document's metadata and structured
    data on a machine without the variable set. */
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:4028';
+const SITE = SITE_URL;
 
 /**
  * Structured data has to carry absolute URLs, while every href in the codebase is

@@ -20,6 +20,8 @@ import { collections, facts, img, pieces, piecesIn } from '@/lib/site';
  * leave the snippet claiming a number the grid below no longer shows.
  */
 export const metadata: Metadata = {
+  /* Self-referencing canonical — see src/app/page.tsx. */
+  alternates: { canonical: '/collections' },
   title: 'Collections · Sideboards, Cabinets & Chests',
   description: `Sideboards, cabinets, consoles, vitrines and chests in solid mango and reclaimed hardwood, made in Jodhpur. ${collections.length} collections, ${pieces.length} designs shown of ${facts.designs}+.`,
 };

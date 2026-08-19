@@ -29,6 +29,8 @@ import {
  * `facts` so the description cannot drift from the manifest the page renders.
  */
 export const metadata: Metadata = {
+  /* Self-referencing canonical — see src/app/page.tsx. */
+  alternates: { canonical: '/factory' },
   title: `Factory · ${facts.factory} sq.mt at Boranada, Jodhpur`,
   description: `Inside the works at Boranada, Jodhpur: ${facts.factory} sq.mt from timber yard to container bay, ${facts.craftspeople}+ people on our own payroll, ${facts.countries} export markets, 45–60 day lead times.`,
 };

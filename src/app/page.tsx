@@ -24,6 +24,15 @@ import { brand } from '@/lib/site';
  * which is where they decide whether to click.
  */
 export const metadata: Metadata = {
+  /*
+   * Self-referencing canonical. `metadataBase` in the root layout makes this
+   * relative path absolute, so it always names https://www.vardhman-impex.com —
+   * which matters here more than usual: this domain served a Framer site until the
+   * migration, is still indexed under `http://`, and there is a vardhman-impex.co.in
+   * carrying the same name. Left to choose, Google picks its own canonical from
+   * whichever duplicate it likes.
+   */
+  alternates: { canonical: '/' },
   title: {
     absolute: `${brand.name} · Mango & Reclaimed Wood Furniture Manufacturer, Jodhpur`,
   },
