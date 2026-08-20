@@ -922,10 +922,8 @@
  * on the outgoing snapshot for ~870ms against a ~30ms navigation; see PlateLink
  * for why that could not be tuned out.
  *
- * Piece and journal cards match their destination at `aspect-[4/3]`, so those
- * morphs are position and scale only. The collection posters do not: they are
- * 1.71:1 and open into a 4:3 plate, which is what the `object-fit: cover` rule
- * further down exists to absorb.
+ * Card plates and destination plates are both `aspect-[4/3]`, so the morph is
+ * position and scale only — no aspect distortion to disguise.
  */
 @view-transition {
   navigation: auto;
@@ -943,11 +941,10 @@
 /*
  * No crossfade between the two plates.
  *
- * They are the same photograph — but not the same file: source and destination ask
- * srcset for different widths (33vw against 58vw for a piece card; 860px against
- * 58vw for a collection poster), so dissolving one into the other double-exposes a
- * picture over itself at two resolutions, and if the larger one is still decoding
- * the morph lands on a blur. Holding the incoming plate at full
+ * They are the same photograph — but not the same file: the card asks srcset for
+ * a 33vw source and the destination for 58vw, so dissolving one into the other
+ * double-exposes a picture over itself at two resolutions, and if the larger one
+ * is still decoding the morph lands on a blur. Holding the incoming plate at full
  * opacity for the whole travel leaves a single sharp image whose frame changes
  * shape, which is what a photograph moving on a page should look like.
  */
@@ -964,9 +961,9 @@
 /*
  * Both snapshots fill the morphing box and crop rather than letter-box, so a
  * source and destination with different aspect ratios do not squash on the way
- * across — a 1.71:1 collection poster opens into a 4:3 plate by narrowing its
- * crop, which is what the eye expects a photograph to do. Piece cards already
- * match their destination at 4:3 and are unaffected.
+ * across — the 64px square thumbnail on the collections index opens into a 4:3
+ * plate by widening its crop, which is what the eye expects a photograph to do.
+ * Piece cards already match their destination at 4:3 and are unaffected.
  */
 ::view-transition-old(vi-plate),
 ::view-transition-new(vi-plate) {
@@ -1101,170 +1098,6 @@
   animation-name: vi-wipe;
   animation-duration: var(--dur-slow);
   animation-timing-function: var(--ease-out);
-}
-
-/* ── The collections flock ─────────────────────────────────────────────── */
-/*
- * Six posters spawn scattered across the first viewport and converge into the
- * list they belong to.
- *
- * Unlayered, because an unlayered rule outranks a layered one at any specificity
- * and `.rise` and its friends live in `@layer utilities`.
- *
- * At first paint, and with no JavaScript anywhere in it. A CSS animation on
- * server-rendered markup begins the moment the first frame paints; anything driven
- * from an effect cannot start until the bundle has parsed, which on a throttled
- * phone is the ~2s of blank, fully-downloaded page that `.reveal-now` exists to
- * have fixed.
- *
- * For that to be worth anything the landing has to be somewhere the visitor is
- * looking, and the first version of this was not. Measured at 1280x720: the
- * masthead was 607px tall, poster 0's slot began at 641, so 79px of the first row
- * was on screen and its photograph none at all — the flock swarmed the viewport,
- * converged, and every poster flew down past the fold and vanished. The fix is not
- * in this file: /collections now opens with a compact masthead and files its
- * numbers below the list, so the first poster begins near the top of the screen
- * and the flock lands into it in full view. A page whose whole job is showing the
- * range should not spend 607px introducing itself.
- *
- * The trick that makes this one animation rather than six: `--slot` is the
- * poster's index, and `calc(var(--slot) * -100%)` in translateY lifts poster N
- * back up by N of its own heights — which is precisely poster 0's position, the
- * top of the list. Every poster therefore begins life clustered around that one
- * point regardless of where it settles, and the lower four rise up out of frame on
- * their way down to their slots. `--fy` runs -10vh to 62vh, spreading the cloud
- * down from that point into the screen below it.
- *
- * `--scattered` holds the start transform once so the 0% keyframe and nothing else
- * has to restate it. Every var in it carries a fallback, which is not decoration:
- * an invalid `var()` poisons the whole declaration at computed-value time, so a
- * poster that somehow rendered without its inline scatter would resolve
- * `transform` to `none` and — because the animation is `both`-filled and the 0%
- * frame outranks this rule during the delay — would sit still and fade in with no
- * flight at all, silently. The fallbacks make that case degrade to "drops in from
- * directly above" instead of to nothing.
- *
- * `--fx` / `--fy` / `--fr` / `--fs` are the scatter, set inline per poster from a
- * hash of its slug. Deterministic on purpose — see the note in CollectionPosters,
- * where `Math.random()` would be a server/client mismatch on a style attribute.
- *
- * The 46% stop is the drift, derived from those same four properties with `calc`
- * rather than four more variables: a third of the way in the flock is still loose
- * and airborne, so no poster simply travels in a straight line to its slot.
- */
-.poster {
-  --fy-from: calc(var(--slot, 0) * -100% + var(--fy, 0vh));
-  --scattered: translate3d(var(--fx, 0vw), var(--fy-from), 0) rotate(var(--fr, 0deg))
-    scale(var(--fs, 1));
-
-  /*
-   * The defocus, off by default and switched on only where the poster is large
-   * enough to show it.
-   *
-   * `none`, not `blur(0px)`: any non-`none` filter forces the compositor to draw
-   * the subtree into an offscreen render surface and blur it there, and a *changing*
-   * sigma cannot be baked into the raster the way a static one can — so it is a
-   * per-frame GPU pass rather than a one-off. Six of them overlap for ~725ms here.
-   * Estimated on an Adreno 610-class phone that is roughly 11ms of a 16.7ms frame
-   * spent on blur alone.
-   *
-   * And it buys nothing there. `956px` is the breakpoint the plate's own `sizes`
-   * already uses: above it a poster is 860px wide and the blur reads; below it the
-   * poster is the viewport width, ~393px on a phone, and an 8px blur is a softening
-   * you would have to be told about. So the cost lands exactly where the effect
-   * does not. Carried as a variable rather than duplicated keyframes so there is
-   * one timeline to reason about.
-   */
-  --f-spawn: none;
-  --f-drift: none;
-}
-
-@media (min-width: 956px) {
-  .poster {
-    --f-spawn: blur(8px);
-    --f-drift: blur(3px);
-  }
-}
-
-/*
- * `--fx` reaches 40vw, so a scattered poster is off the side of the screen by
- * design — and a transform still counts toward the document's scroll width, so
- * without this the entrance hands the visitor a horizontal scrollbar and the
- * page jerks sideways as it settles.
- *
- * `clip` rather than `hidden`, and one axis rather than both. `hidden` would make
- * this a scroll container, which changes what `position: sticky` means for
- * anything inside it and gives the section its own scrollport; `clip` just clips.
- * And only the x axis, because the lift that starts each poster in the first
- * viewport puts the lower ones thousands of pixels above this section's top edge
- * — clipping y would delete the entire flock on the way in. `clip` does not
- * coerce the other axis to `auto` the way `hidden` does, so `visible` survives.
- */
-.poster-flock {
-  overflow-x: clip;
-  /*
-   * The clip box is the content box, and a focused poster's outline is drawn 3px
-   * outside its own edge — which is the full width of this box — so a bare `clip`
-   * sliced the left and right sides off the focus ring and left a keyboard user
-   * looking at two horizontal lines instead of a rectangle. 6px clears the 2px
-   * outline at its 3px offset. It does not reintroduce a scrollbar: a clip margin
-   * widens the clip rect, it does not create scrollable overflow.
-   */
-  overflow-clip-margin: 6px;
-}
-
-.poster-flock .poster {
-  animation: poster-land 1150ms var(--ease-out) backwards;
-  animation-delay: var(--land-delay, 0ms);
-}
-
-/*
- * `backwards`, not `both`, and that is a measurement rather than a preference.
- *
- * A forwards fill holds the 100% frame for the life of the document, and an
- * animated filter is held as an interpolated *filter list* — so even with the last
- * frame written `filter: none`, the computed value at rest came back `blur(0px)`.
- * Measured, not assumed. A non-`none` filter forces the compositor to keep an
- * offscreen render surface for the element, so all six posters were left
- * permanently promoted with filter indirection, and every later plate hover would
- * have run inside a filtered subtree. That is exactly the standing GPU cost the
- * `.plate img` note above refuses `will-change` for, arrived at by the back door.
- *
- * `backwards` still applies the 0% frame through `--land-delay`, which is what the
- * stagger needs. What it drops is the forwards fill — so once the animation is
- * done the element simply falls back to `.poster`, which declares no transform and
- * no filter at all. Identical pixels, no surface, nothing promoted. The end frame
- * below and the base rule agree on every property, so there is no step at the
- * hand-off.
- *
- * It also settles reduced motion and `scripting: none` without a rule for either.
- * `.poster` declares no transform, filter or opacity of its own, so an unanimated
- * poster is simply in place: the blanket reduced-motion reset collapses the
- * duration and zeroes the delay, and what is left showing is the base style. And
- * nothing here is scripted, so there is no no-JS case to hand anything back for.
- */
-@keyframes poster-land {
-  0% {
-    opacity: 0;
-    filter: var(--f-spawn);
-    transform: var(--scattered);
-  }
-
-  18% {
-    opacity: 1;
-  }
-
-  46% {
-    filter: var(--f-drift);
-    transform: translate3d(calc(var(--fx) * 0.68), calc(var(--fy-from) * 0.72), 0)
-      rotate(calc(var(--fr) * 0.55)) scale(calc(var(--fs) + (1 - var(--fs)) * 0.4));
-  }
-
-  100% {
-    opacity: 1;
-    filter: none;
-    transform: none;
-  }
 }
 
 /*
