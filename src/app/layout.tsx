@@ -208,6 +208,49 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             reference to this node's `@id`. Mounted anywhere less than the layout,
             those references dangle on the pages that make them. */}
         <JsonLd data={organizationSchema()} />
+        {/*
+         * The keyboard bypass for the masthead, and the first focusable thing in
+         * the document.
+         *
+         * `Header` is `position: fixed` and mounted by every page, carrying the
+         * wordmark, five plate links, the phone number and Enquire: eight tab
+         * stops above 1280px and seven between 1024 and 1280 before the first
+         * word of the page — on every route, and again after every navigation,
+         * because a route change puts focus back at the top of the document. The
+         * `<main id="main">` all that tabbing is walking towards has been on
+         * every route from the start. Nothing linked to it, so the id was inert;
+         * this is the only piece that was missing.
+         *
+         * `sr-only` with `focus:not-sr-only`, and not the `left: -9999px` trick.
+         * Off-screen positioning leaves a full-size box in the layout at a
+         * negative offset — something the browser scrolls towards when it takes
+         * focus, and real scrollable overflow the moment the document direction
+         * flips — where `sr-only` collapses the box to 1px and clips it, so there
+         * is nowhere to scroll to. It is also already the one visually-hidden
+         * idiom here (the h1's spoken clause in HeroSection), and one idiom is
+         * better than two that have to stay in agreement.
+         *
+         * `focus:px-7 focus:py-4` restores what `not-sr-only` takes away: along
+         * with width, height and clip it also sets `padding: 0`, at `:focus`
+         * specificity, which outranks `.btn`'s own padding and would otherwise
+         * reveal a filled slab with its label jammed against the border. The two
+         * values are `.btn`'s own 1rem / 1.75rem.
+         *
+         * `z-[60]` because the masthead is `z-50` and renders inside `{children}`
+         * — later in the DOM than this link — so at an equal z-index the header
+         * paints over the control that exists to skip it. `left-gutter` puts it
+         * on the shell's own left edge instead of an arbitrary inset.
+         *
+         * The jump needs no handling: `html` already carries `scroll-behavior:
+         * smooth` and `scroll-padding-top: 5rem`, so the anchor animates and
+         * clears the fixed header by itself.
+         */}
+        <a
+          href="#main"
+          className="btn btn-solid sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-gutter focus:z-[60] focus:px-7 focus:py-4"
+        >
+          Skip to content
+        </a>
         <MotionProvider />
         {children}
         {/* Last in the document on purpose — the bar is `position: sticky`, so
