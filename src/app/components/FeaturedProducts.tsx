@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 import PieceCard from '@/components/ui/PieceCard';
 import SectionHead from '@/components/ui/SectionHead';
 import { useReveal } from '@/components/ui/useReveal';
@@ -37,17 +38,7 @@ export default function FeaturedProducts() {
         <div className="mt-14 sm:hidden rise">
           <Link href="/collections" className="btn btn-ghost w-full justify-center">
             Full catalogue
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <Arrow />
           </Link>
         </div>
       </div>

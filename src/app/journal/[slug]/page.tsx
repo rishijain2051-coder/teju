@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 import PlateLink from '@/components/ui/PlateLink';
 import { delay } from '@/lib/reveal';
 import { notFound } from 'next/navigation';
@@ -315,17 +316,7 @@ export default async function ArticlePage({ params }: Params) {
                   className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-fast ease-out"
                 >
                   All notes
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                  <Arrow />
                 </Link>
               </header>
 

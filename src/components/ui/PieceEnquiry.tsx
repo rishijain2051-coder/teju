@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 import { type Piece } from '@/lib/site';
 import { submitEnquiry, whatsappUrl, type EnquiryField } from '@/lib/enquiry';
 
@@ -163,19 +164,7 @@ export default function PieceEnquiry({ piece }: { piece: Piece }) {
           className="btn btn-solid disabled:opacity-60"
         >
           {state === 'sending' ? 'Sending…' : `Enquire on ${piece.ref}`}
-          {state !== 'sending' && (
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          )}
+          {state !== 'sending' && <Arrow />}
         </button>
 
         <a

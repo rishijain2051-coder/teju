@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 
 interface SectionHeadProps {
   title: React.ReactNode;
@@ -40,17 +41,7 @@ export default function SectionHead({ title, href, linkLabel, invert = false }: 
           }`}
         >
           {linkLabel}
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            aria-hidden="true"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
+          <Arrow />
         </Link>
       )}
     </header>

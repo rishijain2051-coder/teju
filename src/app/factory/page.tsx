@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Arrow from '@/components/ui/Arrow';
 import PageHeader from '@/components/ui/PageHeader';
 import Reveal from '@/components/ui/Reveal';
 import SectionHead from '@/components/ui/SectionHead';
@@ -287,17 +288,7 @@ export default function FactoryPage() {
                   </p>
                   <Link href="/craft#fsc" className="btn btn-ghost mt-8 rise">
                     How the claim is kept intact
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <Arrow />
                   </Link>
                 </div>
                 <div className="lg:col-span-6 lg:col-start-7 rise">
@@ -321,17 +312,7 @@ export default function FactoryPage() {
                   </Link>
                   <Link href="/contact" className="btn btn-solid">
                     Talk to the factory
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <Arrow />
                   </Link>
                 </div>
               </div>

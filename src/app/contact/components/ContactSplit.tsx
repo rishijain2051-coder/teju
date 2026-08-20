@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, img } from '@/lib/site';
@@ -252,19 +253,7 @@ export default function ContactSplit() {
                     className="btn btn-solid disabled:opacity-60"
                   >
                     {state === 'sending' ? 'Sending…' : 'Send enquiry'}
-                    {state !== 'sending' && (
-                      <svg
-                        width="13"
-                        height="13"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.75"
-                        aria-hidden="true"
-                      >
-                        <path d="M5 12h14M12 5l7 7-7 7" />
-                      </svg>
-                    )}
+                    {state !== 'sending' && <Arrow />}
                   </button>
 
                   <a
@@ -329,17 +318,7 @@ export default function ContactSplit() {
                     className="link-arrow tap inline-flex items-center gap-2.5 mt-5 text-manifest text-ink-soft hover:text-clay transition-colors duration-fast ease-out"
                   >
                     Get directions
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      aria-hidden="true"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <Arrow />
                   </a>
 
                   {/* Said out loud rather than discovered on click: this is the one

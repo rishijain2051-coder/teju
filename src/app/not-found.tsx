@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Arrow from '@/components/ui/Arrow';
 import { brand, collections, nav } from '@/lib/site';
 
 /*
@@ -31,17 +32,7 @@ export default function NotFound() {
               <div className="flex flex-wrap gap-3 mt-10">
                 <Link href="/collections" className="btn btn-solid">
                   View the collections
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                  <Arrow />
                 </Link>
                 <Link href="/" className="btn btn-ghost">
                   Back to the front

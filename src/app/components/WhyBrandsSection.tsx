@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { capabilities, img } from '@/lib/site';
@@ -68,17 +69,7 @@ export default function WhyBrandsSection() {
             <div className="border-t border-line-invert pt-8 mt-2 flex flex-wrap gap-3 rise">
               <Link href="/factory" className="btn btn-invert">
                 Inside the factory
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+                <Arrow />
               </Link>
               <Link href="/craft" className="btn btn-invert">
                 How it is made

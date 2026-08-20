@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Arrow from '@/components/ui/Arrow';
 import PageHeader from '@/components/ui/PageHeader';
 import Reveal from '@/components/ui/Reveal';
 import SectionHead from '@/components/ui/SectionHead';
@@ -344,17 +345,7 @@ export default async function CollectionPage({ params }: Params) {
                 </p>
                 <Link href="/collections#access" className="btn btn-solid shrink-0">
                   Request catalogue access
-                  <svg
-                    width="13"
-                    height="13"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.75"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
+                  <Arrow />
                 </Link>
               </div>
             </div>

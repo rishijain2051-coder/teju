@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, img } from '@/lib/site';
@@ -34,17 +35,7 @@ export default function ContactCTA() {
           <div className="flex flex-wrap gap-3 mt-10 rise">
             <Link href="/contact" className="btn btn-invert">
               Send an enquiry
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
+              <Arrow />
             </Link>
             <Link href="/collections#access" className="btn btn-invert">
               Request catalogue access

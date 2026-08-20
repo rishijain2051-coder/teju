@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Arrow from '@/components/ui/Arrow';
 import AppImage from '@/components/ui/AppImage';
 import AppLogo from '@/components/ui/AppLogo';
 import { useReveal } from '@/components/ui/useReveal';
@@ -160,19 +161,7 @@ export default function AccessCodeEntry() {
               className="btn btn-solid mt-8 disabled:opacity-45"
             >
               {state === 'loading' ? 'Checking…' : state === 'granted' ? 'Access granted' : 'Enter'}
-              {state !== 'loading' && state !== 'granted' && (
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  aria-hidden="true"
-                >
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              )}
+              {state !== 'loading' && state !== 'granted' && <Arrow />}
             </button>
           </form>
 
@@ -196,18 +185,7 @@ export default function AccessCodeEntry() {
              that a neighbour could win. */
           className="link-arrow inline-flex items-center gap-2.5 py-2 text-manifest text-muted hover:text-ink transition-colors duration-fast ease-out self-start"
         >
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            aria-hidden="true"
-            style={{ transform: 'rotate(180deg)' }}
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
+          <Arrow back />
           Back to the public collections
         </Link>
       </div>

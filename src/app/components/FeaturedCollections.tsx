@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Arrow from '@/components/ui/Arrow';
 import AppImage from '@/components/ui/AppImage';
 import { useReveal } from '@/components/ui/useReveal';
 import { collections, img } from '@/lib/site';
@@ -43,17 +44,7 @@ export default function FeaturedCollections() {
             className="link-arrow tap hidden sm:inline-flex items-center gap-2.5 text-manifest text-ink-soft hover:text-clay transition-colors duration-fast ease-out"
           >
             All collections
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <Arrow />
           </Link>
         </header>
 
@@ -110,17 +101,7 @@ export default function FeaturedCollections() {
           </p>
           <Link href="/collections#access" className="btn btn-ghost shrink-0">
             Request catalogue access
-            <svg
-              width="13"
-              height="13"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              aria-hidden="true"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <Arrow />
           </Link>
         </div>
       </div>
