@@ -1100,6 +1100,103 @@
   animation-timing-function: var(--ease-out);
 }
 
+/* ── The collections flock ─────────────────────────────────────────────── */
+/*
+ * Six posters spawn scattered across the first viewport and converge into the
+ * list they belong to.
+ *
+ * Unlayered, and a CSS animation rather than GSAP, for the same two reasons the
+ * `.reveal-now` block above is: an unlayered rule outranks a layered one at any
+ * specificity, and an entrance that waits for hydration is an entrance the
+ * visitor watches arrive late. This is the first fold on /collections and a
+ * poster is its LCP element — driving this from JavaScript would put the whole
+ * flock behind the bundle, which on a throttled phone is the ~2s of blank,
+ * fully-downloaded page `.reveal-now` exists to have fixed. Nothing here needs a
+ * client component, so the new /collections ships no extra JavaScript at all.
+ *
+ * The trick that makes this one animation rather than six: `--slot` is the
+ * poster's index, and `calc(var(--slot) * -100%)` in translateY lifts poster N
+ * back up by N of its own heights — which is precisely poster 0's position, the
+ * top of the list. So every poster begins life inside the first viewport no
+ * matter where it settles, and the four that belong below the fold sail down out
+ * of frame on their way there. That departure is the scroll cue: the stack is
+ * visibly still going when it leaves the bottom of the screen.
+ *
+ * `--fx` / `--fy` / `--fr` / `--fs` are the scatter, set inline per poster from a
+ * hash of its slug. Deterministic on purpose — see the note in CollectionPosters,
+ * where `Math.random()` would be a server/client mismatch on a style attribute.
+ *
+ * The 46% stop is the drift, derived from those same four properties with `calc`
+ * rather than four more variables: a third of the way in the flock is still loose
+ * and airborne, so no poster simply travels in a straight line to its slot.
+ *
+ * Reduced motion needs no rule here. The blanket reset collapses the duration and
+ * zeroes the delay, `both` holds the end state, and the posters are already in
+ * place on the first frame — the right answer for an entrance whose entire content
+ * is position and scale.
+ */
+.poster {
+  --fy-from: calc(var(--slot, 0) * -100% + var(--fy, 0vh));
+}
+
+/*
+ * `--fx` reaches 40vw, so a scattered poster is off the side of the screen by
+ * design — and a transform still counts toward the document's scroll width, so
+ * without this the entrance hands the visitor a horizontal scrollbar and the
+ * page jerks sideways as it settles.
+ *
+ * `clip` rather than `hidden`, and one axis rather than both. `hidden` would make
+ * this a scroll container, which changes what `position: sticky` means for
+ * anything inside it and gives the section its own scrollport; `clip` just clips.
+ * And only the x axis, because the lift that starts each poster in the first
+ * viewport puts the lower ones thousands of pixels above this section's top edge
+ * — clipping y would delete the entire flock on the way in. `clip` does not
+ * coerce the other axis to `auto` the way `hidden` does, so `visible` survives.
+ */
+.poster-flock {
+  overflow-x: clip;
+}
+
+.poster-flock .poster {
+  animation: poster-land 1150ms var(--ease-out) both;
+  animation-delay: var(--land-delay, 0ms);
+}
+
+@keyframes poster-land {
+  0% {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translate3d(var(--fx), var(--fy-from), 0) rotate(var(--fr)) scale(var(--fs));
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  46% {
+    filter: blur(3px);
+    transform: translate3d(calc(var(--fx) * 0.68), calc(var(--fy-from) * 0.72), 0)
+      rotate(calc(var(--fr) * 0.55)) scale(calc(var(--fs) + (1 - var(--fs)) * 0.4));
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+/* Scripting has nothing to do with this animation, but a poster must never be
+   left at opacity 0 by it either. */
+@media (scripting: none) {
+  .poster-flock .poster {
+    animation: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
 /*
  * A morph arrival. `<html>` carries `morph-in` from the incoming document before
  * the snapshot is taken (see COMPOSE_FIRST_FOLD in layout.tsx), and the first fold

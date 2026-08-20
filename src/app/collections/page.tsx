@@ -1,14 +1,12 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import PlateLink from '@/components/ui/PlateLink';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PageHeader from '@/components/ui/PageHeader';
-import Reveal from '@/components/ui/Reveal';
-import AppImage from '@/components/ui/AppImage';
+import CollectionPosters from '@/app/collections/components/CollectionPosters';
 import CollectionsGrid from '@/app/collections/components/CollectionsGrid';
 import ExclusiveAccess from '@/app/collections/components/ExclusiveAccess';
-import { collections, facts, img, pieces, piecesIn } from '@/lib/site';
+import { collections, facts, pieces } from '@/lib/site';
 
 /*
  * Nobody searches for "collections", so the title spends its length on the three
@@ -45,81 +43,15 @@ export default function CollectionsPage() {
           meta={META}
         />
 
-        {/* Directory. The filter below scans pieces; this scans collections, so a
-            buyer who knows they want storage does not have to read the grid. */}
-        <Reveal immediate>
-          <section className="pb-16 lg:pb-20">
-            <div className="shell">
-              {/* Counted, not spelled out. The description above interpolates the
-                  same figure precisely so a collection added at /keystatic cannot
-                  leave the page claiming a number it no longer shows — and then
-                  this line sat directly beneath it hardcoding the word "Six". */}
-              <p className="text-manifest-sm text-muted numeral rise">
-                {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
-              </p>
+        {/* The directory, as a flock of posters that lands into a list. The
+            filter below scans pieces; this scans collections, so a buyer who
+            knows they want storage does not have to read the grid.
 
-              <ul data-reveal-group className="mt-5">
-                {collections.map((collection) => {
-                  const plate = img(collection.image);
-                  const shown = piecesIn(collection.name).length;
-                  return (
-                    <li key={collection.slug} className="rise">
-                      <PlateLink
-                        href={collection.href}
-                        className="group flex items-center gap-5 sm:gap-8 py-4 border-t border-line"
-                      >
-                        <span className="text-manifest-sm text-muted numeral shrink-0">
-                          {collection.index}
-                        </span>
-
-                        {/* The square thumbnail opens into the collection page's
-                            4:3 plate. The crop widens rather than the image
-                            squashing — see the morph rules in tailwind.css. */}
-                        <div data-plate="idle" className="plate w-16 h-16 sm:w-20 sm:h-20 shrink-0">
-                          <AppImage
-                            src={plate.src}
-                            alt={plate.alt}
-                            fill
-                            sizes="80px"
-                            placeholder="blur"
-                            blurDataURL={plate.blurDataURL}
-                            className="object-cover"
-                          />
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <h2 className="text-title group-hover:text-clay transition-colors duration-fast ease-out">
-                            {collection.name}
-                          </h2>
-                          <p className="text-body text-muted mt-1 hidden sm:block">
-                            {collection.tagline}
-                          </p>
-                        </div>
-
-                        <span className="text-manifest-sm text-muted shrink-0 text-right">
-                          {collection.bespoke ? collection.range : `${shown} shown`}
-                        </span>
-
-                        <svg
-                          width="13"
-                          height="13"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.75"
-                          aria-hidden="true"
-                          className="shrink-0 text-muted group-hover:text-clay transition-colors duration-fast ease-out"
-                        >
-                          <path d="M5 12h14M12 5l7 7-7 7" />
-                        </svg>
-                      </PlateLink>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </section>
-        </Reveal>
+            No `<Reveal>` around it, and that is the point of it. This is the
+            first fold, and `Reveal` is a client component whose entrance runs
+            after hydration; the posters carry their own CSS animation instead
+            and start at first paint. See CollectionPosters. */}
+        <CollectionPosters />
 
         <CollectionsGrid />
         <ExclusiveAccess />
