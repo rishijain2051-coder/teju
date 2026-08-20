@@ -24,6 +24,20 @@ export const metadata: Metadata = {
   description: `Sideboards, cabinets, consoles, vitrines and chests in solid mango and reclaimed hardwood, made in Jodhpur. ${collections.length} collections, ${pieces.length} designs shown of ${facts.designs}+.`,
 };
 
+/*
+ * Filed after the range rather than in front of it.
+ *
+ * This used to be the masthead's `lead` and `meta`, and together they made that
+ * block 607px tall on a 1280x720 laptop — which put the first collection poster's
+ * slot at 641 and its photograph wholly below the fold, so the entrance the page is
+ * built around landed somewhere nobody could see. A page whose entire job is
+ * showing the range should not spend a screen introducing itself. The words are
+ * unchanged and still on the page; they simply come after the thing they describe.
+ */
+const LEAD =
+  'A working selection from the range: casegoods in solid mango, reclaimed hardwood and iron. ' +
+  'The full catalogue runs deeper, and opens to verified trade buyers.';
+
 const META = [
   { key: 'Catalogue', value: `${facts.designs}+ designs` },
   { key: 'Timber', value: 'Mango, reclaimed, sheesham' },
@@ -36,12 +50,7 @@ export default function CollectionsPage() {
     <>
       <Header />
       <main id="main">
-        <PageHeader
-          eyebrow="The catalogue"
-          title="Everything we make."
-          lead="A working selection from the range: casegoods in solid mango, reclaimed hardwood and iron. The full catalogue runs deeper, and opens to verified trade buyers."
-          meta={META}
-        />
+        <PageHeader eyebrow="The catalogue" title="Everything we make." compact />
 
         {/* The directory, as a flock of posters that lands into a list. The
             filter below scans pieces; this scans collections, so a buyer who
@@ -52,6 +61,22 @@ export default function CollectionsPage() {
             after hydration; the posters carry their own CSS animation instead
             and start at first paint. See CollectionPosters. */}
         <CollectionPosters />
+
+        {/* See LEAD above for why these sit here and not in the masthead. */}
+        <section className="pb-16 lg:pb-24">
+          <div className="shell">
+            <p className="text-lead text-ink-soft max-w-measure">{LEAD}</p>
+
+            <dl className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-5 mt-10 pt-6 border-t border-line">
+              {META.map((entry) => (
+                <div key={entry.key}>
+                  <dt className="text-manifest-sm text-muted">{entry.key}</dt>
+                  <dd className="text-body text-ink mt-1.5 numeral">{entry.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
 
         <CollectionsGrid />
         <ExclusiveAccess />

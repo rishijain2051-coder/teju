@@ -1,24 +1,31 @@
 import React from 'react';
 import PlateLink from '@/components/ui/PlateLink';
 import AppImage from '@/components/ui/AppImage';
+import Arrow from '@/components/ui/Arrow';
 import { collections, img, piecesIn } from '@/lib/site';
 
 /**
  * The collections directory, as a flock of posters that lands into a list.
  *
- * Every collection spawns scattered across the first viewport, drifts, then
- * converges on the slot it belongs to — the four that settle below the fold sail
- * down out of frame on the way, which is the scroll cue. The animation itself is
+ * All six spawn scattered across the first screen, drift, then converge on the
+ * slots they belong to. Only the first slot is on screen, so the rest travel down
+ * and out of frame to reach theirs — which is the scroll cue: the stack is visibly
+ * still going when it leaves the bottom of the viewport. The animation itself is
  * `poster-land` in `src/styles/tailwind.css`; this file supplies the scatter and
- * the markup, and deliberately ships no JavaScript of its own.
+ * the markup.
  *
- * A server component, in other words, and that is the whole design. This is the
- * first fold on /collections and a poster is its LCP element, so an entrance
- * driven from `useEffect` would not begin until the bundle had parsed — the
- * measured ~2s of blank, fully-downloaded page that `.reveal-now` was introduced
- * to fix. A CSS animation on server-rendered markup starts at first paint. The
- * only client code on the row is `PlateLink`, which the old directory already
- * used and which the page already pays for.
+ * A server component, and that is the whole design. The first
+ * poster is this route's LCP element — the masthead above it is deliberately
+ * compact so that it is — so an entrance driven from `useEffect` would not begin
+ * until the bundle had parsed, which is the measured ~2s of blank,
+ * fully-downloaded page that `.reveal-now` was introduced to fix. A CSS animation
+ * on server-rendered markup starts at first paint instead, and `poster-flock` is
+ * in the markup rather than added later, so there is no frame in which the
+ * keyframes are not yet armed.
+ *
+ * This file adds no client code of its own. It is not a client-free row, though:
+ * `PlateLink` is `'use client'` for its morph handler, and so is `AppImage`, both
+ * of which the old directory also used and the page already pays for.
  *
  * It replaces the six-row directory that used to sit here — a 64px square
  * thumbnail per collection, which showed the photography at a size that could not
@@ -87,19 +94,12 @@ const band = (slot: number, n: number, lo: number, hi: number, jitter: number) =
  * back up to that slot, so `--fy` is measured from there rather than from the top
  * of the page.
  *
- * Which is why the vertical band is almost entirely negative. Every poster's
- * spawn position works out to `poster 0's slot + --fy`, and poster 0's slot is not
- * near the top of anything: the masthead above it is 641px on a phone and 797px on
- * a 1440 desktop, so that slot is already four fifths of the way down the first
- * screen. Measured with the band running to +46vh, posters 3, 4 and 5 spawned at
- * document y 849, 968 and 818 against an 812px viewport — half the flock began
- * its life below the fold, and the cloud the visitor actually saw was three
- * posters. Running -72vh to +6vh instead puts all six on screen at both sizes.
- *
- * It does mean the flock crosses the masthead on its way in. That is the intent
- * rather than a side effect — the swarm should own the whole first screen and
- * resolve out of it — and the fixed header sits at z-50 above all of it, so the
- * navigation stays readable throughout.
+ * Which is why the band runs downward. Every poster's spawn position works out to
+ * `poster 0's slot + --fy`, and that slot now sits near the top of the screen
+ * because this route opens with a compact masthead — so the cloud spreads down
+ * from it into the screen below. The band ran the other way while the masthead
+ * was 607px tall, and that was the bug: the cloud formed up over the title and
+ * the whole flock then landed below the fold, where nobody saw it.
  *
  * Stratified, not simply hashed, and that distinction is the difference between
  * this reading as a cloud and reading as a mistake. A hash gives determinism; it
@@ -127,7 +127,7 @@ const SIZE = shuffled(COUNT, 44);
 const scatterFor = (slug: string, at: number): React.CSSProperties =>
   ({
     '--fx': `${band(ACROSS[at], COUNT, -40, 40, seeded(slug, 1)).toFixed(2)}vw`,
-    '--fy': `${band(DOWN[at], COUNT, -72, 6, seeded(slug, 2)).toFixed(2)}vh`,
+    '--fy': `${band(DOWN[at], COUNT, -10, 48, seeded(slug, 2)).toFixed(2)}vh`,
     '--fr': `${band(TURN[at], COUNT, -14, 14, seeded(slug, 3)).toFixed(2)}deg`,
     '--fs': band(SIZE[at], COUNT, 0.54, 0.94, seeded(slug, 4)).toFixed(3),
     '--slot': at,
@@ -140,18 +140,33 @@ const scatterFor = (slug: string, at: number): React.CSSProperties =>
 export default function CollectionPosters() {
   return (
     /*
-     * `poster-flock` gates the animation, so the posters are inert markup until
-     * this class is above them — which keeps the keyframes out of the way of
-     * anything else that ends up using `.poster`.
+     * `poster-flock` gates the keyframes, so `.poster` stays inert markup unless
+     * this class is above it — which keeps the animation away from anything else
+     * that ever adopts the class.
      */
     <section className="poster-flock pb-8 lg:pb-12">
       <div className="shell">
-        {/* Counted, not spelled out. The page description interpolates the same
-            figure so a collection added at /keystatic cannot leave a stale number
-            behind; this line reads from the same array. */}
-        <p className="text-manifest-sm text-muted numeral">
+        {/*
+          An `h2` at manifest size, not a `p`, and not a `SectionHead`.
+          
+          It has to be a heading: without one, the six collection names below took
+          this section's level, and the twenty piece headings in the grid further
+          down then read as belonging to whichever collection came last. Level and
+          type scale are already decoupled across this codebase — the footer's
+          column headings are `h2` at `text-manifest-sm`, `PieceCard`'s name is an
+          `h3` at `text-title` — so this changes the outline and nothing visual.
+
+          And not `SectionHead`, which would render it as display serif and push
+          the first poster's photograph back below the fold, undoing the whole
+          reason `PageHeader` gained its `compact` prop.
+
+          Counted, not spelled out: the page description interpolates the same
+          figure so a collection added at /keystatic cannot leave a stale number
+          behind, and this reads from the same array.
+        */}
+        <h2 className="text-manifest-sm text-muted numeral">
           {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
-        </p>
+        </h2>
 
         {/*
           The spacing between rows is padding *inside* each item, not a gap on the
@@ -177,33 +192,49 @@ export default function CollectionPosters() {
                   className="group block border-t border-line pt-4 press"
                 >
                   <div className="flex items-baseline gap-5 sm:gap-8">
-                    <span className="text-manifest-sm text-muted numeral shrink-0">
+                    {/* `aria-hidden`, because the position is what the list
+                        conveys already, and read aloud it puts a bare numeral in
+                        front of every name in a links rotor. */}
+                    <span
+                      aria-hidden="true"
+                      className="text-manifest-sm text-muted numeral shrink-0"
+                    >
                       {collection.index}
                     </span>
 
-                    <h2 className="text-title flex-1 min-w-0 group-hover:text-clay transition-colors duration-fast ease-out">
+                    {/*
+                      `truncate` is structural here, not cosmetic. Every other item
+                      in this row is `shrink-0`, and the range text is the widest of
+                      them: `.text-manifest-sm` is 12px at 0.15em tracking below
+                      1024px, so the bespoke collection's "To specification" measures
+                      ~144px. At 320px that leaves this heading about 37px for a
+                      103px unbreakable word, and "Hospitality" painted straight over
+                      the range.
+
+                      It has to ellipsise rather than wrap: the `--slot * -100%` lift
+                      is only correct while every row is exactly the same height, so
+                      anything in this row gaining a second line would break the
+                      entrance for every poster below it.
+                    */}
+                    <h3 className="text-title flex-1 min-w-[7ch] truncate group-hover:text-clay transition-colors duration-fast ease-out">
                       {collection.name}
-                    </h2>
+                    </h3>
 
                     {/* The bespoke programme has a range rather than a count:
                         it is specified to drawing, so "2 shown" would imply a
                         catalogue of two to order from. */}
-                    <span className="text-manifest-sm text-muted shrink-0 text-right">
+                    {/* Shrinkable, and it gives way before the name does. With this
+                        `shrink-0` and the name free to collapse, 320px squeezed
+                        "Hospitality" to 24px — "H…" — while "To specification" kept
+                        all 87 of its pixels. The name is the thing being chosen
+                        between; the count is a detail. `truncate` carries
+                        `white-space: nowrap`, so neither can gain a second line and
+                        break the uniform row height the entrance depends on. */}
+                    <span className="text-manifest-sm text-muted min-w-0 truncate text-right">
                       {collection.bespoke ? collection.range : `${shown} shown`}
                     </span>
 
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.75"
-                      aria-hidden="true"
-                      className="shrink-0 text-muted group-hover:text-clay transition-colors duration-fast ease-out"
-                    >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
-                    </svg>
+                    <Arrow className="shrink-0 text-muted group-hover:text-clay transition-colors duration-fast ease-out" />
                   </div>
 
                   {/*
@@ -226,24 +257,47 @@ export default function CollectionPosters() {
                   </p>
 
                   {/*
-                    Capped at 980px rather than filling the shell's 1584. At full
-                    width a 1.71:1 poster is 928px tall on a 1440 screen, which
-                    puts the caption of the next collection two thirds of a screen
-                    below the fold and makes the list feel like six separate
-                    pages. At 980 one poster and the top of the next are in view,
-                    so the stack always visibly continues.
+                    Capped against the viewport's height as well as a fixed
+                    maximum, because the row has to fit the screen it lands on. A
+                    1.71:1 poster filling the shell's 1584 stands 928px tall; even
+                    at 860 the row came to 738, taller than a 1280x720 laptop — so
+                    the poster could never be wholly visible at the moment it
+                    arrived, which is the entire point of the entrance.
+
+                    `105vh` is that constraint solved for width. The plate is
+                    `width / 1.705` tall, so 105vh of width is about 62vh of
+                    height, and the caption and padding above it fit in what is
+                    left. On a 720px screen: 756 wide, 443 tall, row 677. On a
+                    900px screen the 860 cap takes over: 504 tall, row 738. Both
+                    leave the next collection's caption just showing, so the stack
+                    always visibly continues.
                   */}
-                  <div data-plate="idle" className="plate aspect-[2000/1173] mt-5 max-w-[980px]">
+                  <div
+                    data-plate="idle"
+                    className="plate aspect-[2000/1173] mt-5 max-w-[min(860px,105vh)]"
+                  >
+                    {/*
+                      `alt=""`. The photograph is inside a link the collection name
+                      already names, so its seventeen words were appended to that
+                      name — every poster announced as a numeral, a name, a count, a
+                      tagline and then a description of pampas in a vase, which is
+                      thirty-odd words to choose between six links on. And it
+                      describes one styled shot, not the collection: none of it is
+                      information a buyer acts on. The string stays in `imagery.ts`
+                      and stays load-bearing where it is the only text there is —
+                      HeroSection builds a control label out of it.
+                    */}
                     <AppImage
                       src={plate.src}
-                      alt={plate.alt}
+                      alt=""
                       fill
-                      sizes="(min-width: 1076px) 980px, 100vw"
+                      sizes="(min-width: 956px) 860px, 100vw"
                       placeholder="blur"
                       blurDataURL={plate.blurDataURL}
+                      /* No `object-cover` class: AppImage's `fill` branch already
+                         sets `object-fit: cover` inline, which would win anyway. */
                       /* The first poster is the LCP element on this route. */
                       priority={at === 0}
-                      className="object-cover"
                     />
                   </div>
                 </PlateLink>

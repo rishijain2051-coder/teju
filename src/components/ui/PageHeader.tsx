@@ -10,6 +10,14 @@ interface PageHeaderProps {
   lead?: string;
   /** Manifest pairs rendered as a filed-document row beneath the lead. */
   meta?: readonly { key: string; value: string }[];
+  /**
+   * Tightens the masthead where the page's own content has to reach the first
+   * screen. /collections is the case it exists for: at full height this block is
+   * 607px on a 1280x720 laptop, which pushed the first collection poster's slot to
+   * 641 and left its photograph entirely below the fold — so the entrance that
+   * page is built around landed where nobody could see it.
+   */
+  compact?: boolean;
   children?: React.ReactNode;
 }
 
@@ -25,11 +33,23 @@ interface PageHeaderProps {
  * entrance to a CSS animation that starts at first paint instead. `useReveal`
  * stays: it is what tells GSAP this section is already done.
  */
-export default function PageHeader({ eyebrow, title, lead, meta, children }: PageHeaderProps) {
+export default function PageHeader({
+  eyebrow,
+  title,
+  lead,
+  meta,
+  compact = false,
+  children,
+}: PageHeaderProps) {
   const ref = useReveal<HTMLElement>({ immediate: true });
 
   return (
-    <header ref={ref} className="reveal-now pt-32 lg:pt-44 pb-12 lg:pb-16">
+    <header
+      ref={ref}
+      className={`reveal-now ${
+        compact ? 'pt-28 lg:pt-32 pb-6 lg:pb-8' : 'pt-32 lg:pt-44 pb-12 lg:pb-16'
+      }`}
+    >
       <div className="shell">
         <p className="text-manifest text-clay veil">{eyebrow}</p>
 

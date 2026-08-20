@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import PieceCard from '@/components/ui/PieceCard';
+import SectionHead from '@/components/ui/SectionHead';
 import { useReveal } from '@/components/ui/useReveal';
 import { collections, pieces } from '@/lib/site';
 
@@ -23,8 +24,19 @@ export default function CollectionsGrid() {
   return (
     <section ref={ref} className="pb-20 lg:pb-32">
       <div className="shell">
+        {/* This grid had no heading of its own, so its twenty `PieceCard` h3s hung
+            off whatever heading came last on the page — which, once the collections
+            above became a list of six, meant the whole catalogue read as belonging
+            to Occasional. `SectionHead` over a grid of pieces is the house pattern;
+            the collection pages use it three times. */}
+        <SectionHead title="Every design" />
+
         {/* Filter — a row of tabs, not pills */}
-        <div className="flex flex-wrap items-center gap-x-7 gap-y-3 py-5 border-y border-line rise">
+        <div
+          role="group"
+          aria-label="Filter by collection"
+          className="flex flex-wrap items-center gap-x-7 gap-y-3 py-5 mt-10 border-y border-line rise"
+        >
           {CATEGORIES.map((category) => {
             const count =
               category === 'All'
