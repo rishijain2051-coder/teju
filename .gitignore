@@ -9,6 +9,11 @@ node_modules/
 
 # Next.js build output
 .next/
+# Isolated build directories. Running `next build` into `.next` while a dev
+# server is serving from it takes the dev server down, so verification builds
+# get their own DIST_DIR — and those were landing in `git status`, one keystroke
+# away from being swept into a commit by `git add -A`.
+.next-*/
 out/
 
 # Production build

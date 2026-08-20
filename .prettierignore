@@ -1,0 +1,24 @@
+# Mirrors `ignorePatterns` in .eslintrc.json, and it has to.
+#
+# ESLint deliberately skips these; Prettier has no equivalent list, so without
+# this file `npm run format` reaches files nothing should be reformatting. Two of
+# them bite:
+#
+#   src/lib/generated/content.ts  is written by `npm run content`, and CI asserts
+#     the committed output matches a fresh regeneration (`git diff --exit-code`
+#     over src/lib/generated/). Reformatting it produces churn the next
+#     regeneration undoes, and fails that step.
+#   src/styles/fonts.css  is lifted verbatim out of next/font's build output. It
+#     is a generated artefact kept byte-for-byte on purpose, so that the rendered
+#     type, the unicode-range splitting and the metric-adjusted fallbacks are
+#     provably the same bytes the loader produced.
+#
+# Keep this in step with .eslintrc.json if that list ever changes.
+
+node_modules/
+.next/
+out/
+public/
+src/lib/generated/
+src/lib/imagery.ts
+src/styles/fonts.css
