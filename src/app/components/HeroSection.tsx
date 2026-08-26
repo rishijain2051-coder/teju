@@ -29,27 +29,60 @@ const PROSE_LINK =
 export default function HeroSection() {
   const ref = useReveal<HTMLElement>({ immediate: true });
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  /*
+   * Held in state rather than read inside the rotation effect, because the pause
+   * control must not render when there is nothing rotating. Starts false so the
+   * server sends no control and it appears on hydration — no layout shift, the
+   * control is inside an absolutely positioned overlay.
+   */
+  const [motionOk, setMotionOk] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setMotionOk(!mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
 
   /*
    * Keyed on `active`, not mounted once: the interval is re-armed every time the
    * plate changes, so a plate the visitor picked gets the full HOLD rather than
    * whatever was left of a cycle that started before they clicked. With `[]` a
    * click 6.5s into a cycle was overridden 500ms later, mid-crossfade.
+   *
+   * `paused` is WCAG 2.2.2, Level A: anything that moves or auto-updates for more
+   * than five seconds needs a way to stop it. The three plate rules below look
+   * like that mechanism and are not — picking a plate re-arms the timer rather
+   * than stopping it — and they are `hidden lg:flex`, so a phone had no control
+   * at all while the plates turned over indefinitely.
    */
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!motionOk || paused) return;
     const id = setTimeout(() => setActive((i) => (i + 1) % PLATES.length), HOLD);
     return () => clearTimeout(id);
-  }, [active]);
+  }, [active, paused, motionOk]);
 
   return (
     <section ref={ref} className="reveal-now relative grain">
       <div className="grid lg:grid-cols-12 min-h-[100svh]">
         {/* ── Type column ──────────────────────────────────────────────── */}
-        <div className="lg:col-span-7 flex flex-col justify-between pt-24 pb-8 lg:pt-28 lg:pb-10 px-gutter">
+        {/* `pt-20` below `lg`, not `pt-24`. The masthead is 65px, so 80px still
+            clears it, and it gives back the 18px the provenance line costs when
+            it wraps to two on a phone — this hero already runs 1.4x the viewport
+            and every pixel above it is a pixel of photograph. */}
+        <div className="lg:col-span-7 flex flex-col justify-between pt-20 pb-8 lg:pt-28 lg:pb-10 px-gutter">
           <div className="max-w-[46rem]">
+            {/* The company's own name, in `<main>`, at the top.
+                It appeared nowhere in the body of this page: eleven screens in
+                which the only mentions of "Vardhman Impex" were a customer
+                quoting it in a testimonial and the local part of an email
+                address. The two brand statements were both chrome — masthead and
+                footer. This line was already the page's provenance line, so the
+                name is its subject rather than an addition to it. */}
             <p className="text-manifest text-clay veil" style={delay(80)}>
-              Est. {brand.established} · {brand.origin}
+              {brand.name} · Est. {brand.established} · {brand.origin}
             </p>
 
             {/* Three lines, not two: each word wipes on its own beat, and the
@@ -117,8 +150,14 @@ export default function HeroSection() {
                 a 730px-tall phone once the sticky mobile bar takes its 64px. The
                 catalogue request is the deep conversion; WhatsApp is for the buyer
                 who would rather talk than fill in a form. */}
-            <div className="flex flex-wrap gap-3 mt-7 lg:mt-8 rise" style={delay(640)}>
-              <Link href="/collections#access" className="btn btn-solid">
+            {/* `flex-col` below `sm`. Wrapped at content width these stacked at
+                299 and 238px on a 390px phone, left-aligned with a ragged right
+                edge — the same shape of fault as the craft page's close. */}
+            <div
+              className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-7 lg:mt-8 rise"
+              style={delay(640)}
+            >
+              <Link href="/collections#access" className="btn btn-solid justify-center">
                 Request catalogue access
                 <Arrow />
               </Link>
@@ -126,7 +165,7 @@ export default function HeroSection() {
                 href={WHATSAPP}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-ghost"
+                className="btn btn-ghost justify-center"
               >
                 WhatsApp the factory
               </a>
@@ -206,17 +245,53 @@ export default function HeroSection() {
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   placeholder="blur"
                   blurDataURL={plateImg.blurDataURL}
+                  /*
+                   * Centre, and it has to be. `object-position` was tried here to
+                   * lift the furniture into the 98px of plate that a phone shows
+                   * above the sticky bar, and it cannot: the box is 390x523 (0.745)
+                   * against a 0.725 source, so `cover` draws 390x538 and the whole
+                   * vertical travel available is 15px. There is no crop that puts
+                   * the piece in that strip.
+                   *
+                   * The real number is the type column: 669px of copy against 702px
+                   * of usable first screen. Nothing about the image fixes that — see
+                   * the note on the section.
+                   */
                   className={`object-cover drift ${i === active ? 'shown' : ''}`}
                 />
               </div>
             );
           })}
 
-          {/* Caption sits on the plate, bottom-left, like a printed credit. */}
-          <div className="absolute inset-x-0 bottom-0 p-6 lg:p-8 scrim-soft pt-24">
-            <p className="text-manifest-sm text-paper/75 numeral">
+          {/*
+           * Caption sits on the plate, bottom-left, like a printed credit — but on
+           * its own ground now, not on the scrim.
+           *
+           * `text-paper/75` on `scrim-soft` measured 2.25:1 against the default
+           * plate and 3.37:1 against the third, at 10px, where AA wants 4.5. The
+           * scrim is only 16.5% ink this far up the gradient, and the real problem
+           * is worse than any average: the string crosses a hard light/dark
+           * boundary inside one photograph, so "Plate 01" read against a dark
+           * blanket while "/ 03" disappeared into sunlit floor. No single scrim
+           * value fixes a local failure. A chip does — `bg-ink/80` clears 10:1 over
+           * the brightest pixel in any of the three frames.
+           */}
+          <div className="absolute inset-x-0 bottom-0 p-6 lg:p-8 scrim-soft pt-24 flex items-end justify-between gap-3">
+            <p className="text-manifest-sm text-paper numeral bg-ink/80 px-2.5 py-1.5">
               Plate {String(active + 1).padStart(2, '0')} / {String(PLATES.length).padStart(2, '0')}
             </p>
+
+            {motionOk && (
+              <button
+                type="button"
+                onClick={() => setPaused((p) => !p)}
+                aria-pressed={paused}
+                className="text-manifest-sm text-paper bg-ink/80 px-2.5 py-1.5 hover:bg-ink transition-colors duration-fast ease-out shrink-0"
+              >
+                {paused ? 'Play' : 'Pause'}
+                <span className="sr-only"> the plate rotation</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

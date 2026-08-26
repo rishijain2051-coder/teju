@@ -150,9 +150,15 @@ export const metadata: Metadata = {
     'low MOQ furniture export',
   ],
   authors: [{ name: 'Vardhman Impex' }],
+  /*
+   * No `apple` entry. An explicit `metadata.icons.apple` overrides the file
+   * convention, and `src/app/apple-icon.tsx` is now the Apple touch icon: 180x180
+   * and opaque, which is what iOS asks for. This used to point at `/favicon.png`
+   * — 64x64 with an alpha channel — so the home-screen icon was a 2.8x upscale
+   * composited onto black.
+   */
   icons: {
     icon: [{ url: '/favicon.png', type: 'image/png' }],
-    apple: [{ url: '/favicon.png' }],
   },
   openGraph: {
     type: 'website',

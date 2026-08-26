@@ -32,12 +32,14 @@ export default function ContactCTA() {
             come back with honest lead times and a price that holds.
           </p>
 
-          <div className="flex flex-wrap gap-3 mt-10 rise">
-            <Link href="/contact" className="btn btn-invert">
+          {/* `flex-col` below `sm`: at 390px these wrapped to 218 and 274px,
+              left-aligned with a ragged right edge. */}
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mt-10 rise">
+            <Link href="/contact" className="btn btn-invert justify-center">
               Send an enquiry
               <Arrow />
             </Link>
-            <Link href="/collections#access" className="btn btn-invert">
+            <Link href="/collections#access" className="btn btn-invert justify-center">
               Request catalogue access
             </Link>
           </div>

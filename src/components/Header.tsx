@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import AppLogo from '@/components/ui/AppLogo';
+import Wordmark from '@/components/ui/Wordmark';
 import { brand, nav } from '@/lib/site';
 
 export default function Header() {
@@ -108,11 +108,8 @@ export default function Header() {
       >
         <div className="shell-wide flex items-center justify-between h-16 lg:h-20">
           {/* Masthead */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group py-2">
-            <AppLogo size={30} />
-            <span className="font-serif text-[1.15rem] lg:text-[1.35rem] leading-none tracking-tight">
-              Vardhman Impex
-            </span>
+          <Link href="/" className="flex items-center shrink-0 group py-2">
+            <Wordmark />
           </Link>
 
           {/* Nav */}

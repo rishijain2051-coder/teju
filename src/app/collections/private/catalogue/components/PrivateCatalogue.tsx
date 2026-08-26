@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import AppLogo from '@/components/ui/AppLogo';
+import Wordmark from '@/components/ui/Wordmark';
 import { useReveal } from '@/components/ui/useReveal';
 import PrivatePiece, { pieceFields, type PieceState } from './PrivatePiece';
 import ContainerPlan from './ContainerPlan';
@@ -187,11 +187,11 @@ export default function PrivateCatalogue() {
       {/* Private masthead — deliberately distinct from the public one */}
       <header className="sticky top-0 z-40 bg-ink text-paper">
         <div className="shell-wide flex items-center justify-between h-16 lg:h-18 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <AppLogo size={26} className="brightness-0 invert" />
-            <span className="font-serif text-[1.15rem] leading-none tracking-tight">
-              Vardhman Impex
-            </span>
+          {/* No invert filter: the mark is a mask taking `currentColor`, and
+              this masthead is `text-paper`, so it matches the wordmark exactly
+              rather than landing on pure white beside a warm bone name. */}
+          <Link href="/" className="flex items-center">
+            <Wordmark />
           </Link>
 
           <div className="flex items-center gap-6">

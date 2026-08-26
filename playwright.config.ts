@@ -78,6 +78,20 @@ export default defineConfig({
       SMTP_USER: '',
       SMTP_PASS: '',
       MAIL_FROM: '',
+      /*
+       * Blanked for a different reason: this one made the suite flaky.
+       *
+       * `.env.local` carries a real measurement id, `NEXT_PUBLIC_*` is inlined at
+       * build time, so every page in the test build requested
+       * googletagmanager.com. Playwright's default `waitUntil: 'load'` waits for
+       * every subresource, and on a machine that cannot reach Google the gate
+       * tests sat on that request until the 60-second budget ran out — two or
+       * three failures per run, a different two or three each time, all of them
+       * `page.goto` timeouts on pages that render perfectly. A test suite should
+       * not depend on a third party being reachable, and there is nothing here
+       * that analytics is meant to prove.
+       */
+      NEXT_PUBLIC_GA_ID: '',
     },
   },
 });

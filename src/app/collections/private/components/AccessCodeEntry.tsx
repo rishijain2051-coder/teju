@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Arrow from '@/components/ui/Arrow';
 import AppImage from '@/components/ui/AppImage';
-import AppLogo from '@/components/ui/AppLogo';
+import Wordmark from '@/components/ui/Wordmark';
 import { useReveal } from '@/components/ui/useReveal';
 import { brand, facts, img } from '@/lib/site';
 
@@ -93,11 +93,8 @@ export default function AccessCodeEntry() {
     <div ref={ref} className="min-h-screen grid lg:grid-cols-12">
       {/* Gate */}
       <div className="lg:col-span-7 flex flex-col justify-between px-gutter py-10 lg:py-14">
-        <Link href="/" className="inline-flex items-center gap-3 self-start">
-          <AppLogo size={30} />
-          <span className="font-serif text-[1.35rem] leading-none tracking-tight">
-            Vardhman Impex
-          </span>
+        <Link href="/" className="inline-flex items-center self-start">
+          <Wordmark />
         </Link>
 
         <div className="max-w-[34rem] py-16">

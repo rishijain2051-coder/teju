@@ -332,6 +332,61 @@
       'lnum' 1;
   }
 
+  /*
+   * The wordmark. Its own role, because it had none: the company name was typed
+   * by hand in four mastheads as `text-[1.15rem]`, `text-[1.15rem]
+   * lg:text-[1.35rem]` and `text-[1.35rem]` — three sizes for one wordmark, and
+   * the largest hand-typed magic number on the site.
+   *
+   * 22px floor, and that number is the point. The note on `.text-title` above
+   * rules Fraunces out between 22 and 34px and says the serif "appears only where
+   * it is genuinely display-sized" — and then the wordmark sat at 18.4px on a
+   * phone, below even the bottom of the banned range. A logotype is the one place
+   * the rule has to bend, so it bends deliberately: 22px is the floor rather than
+   * something it undershoots by four pixels, and it is set once here instead of
+   * being re-guessed at each masthead.
+   */
+  .text-wordmark {
+    font-family: var(--font-serif);
+    font-size: clamp(1.375rem, 1.28rem + 0.4vw, 1.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  /*
+   * The VI monogram, drawn as a mask so it takes `currentColor`. See Wordmark.tsx
+   * for why it is a mask rather than an image element.
+   *
+   * The two magic numbers are measured off the artwork, not guessed. Ink extents
+   * in `vi-mark-256.png`, at an alpha and luminance threshold that ignores the
+   * antialiased fringe: x 15–240, y 28–220 in a 256 canvas. So
+   *
+   *   - the V's baseline sits at 220/256 = 85.9% of the box, leaving 14.1% below
+   *     it. `vertical-align: -0.158em` (14.1% of 1.12em) drops the box by exactly
+   *     that much, which lands the V's baseline on the wordmark's baseline. The
+   *     old lockup aligned the two boxes' centres with `items-center`, so the V
+   *     hung below the text baseline and the I rose above its cap line.
+   *   - the drawn height is (220-28)/256 = 75% of the box. At 1.12em that is
+   *     0.84em against Fraunces' 0.73em cap height — a mark 1.15x the caps beside
+   *     it. The 30px raster was 1.90x the caps on desktop and 2.23x on a phone,
+   *     which is why the monogram read as the loud half of its own lockup.
+   *
+   * Both are ratios of the em, so the mark tracks the wordmark through the clamp
+   * instead of staying 30px while the name shrinks.
+   */
+  .vi-mark {
+    display: inline-block;
+    width: 1.12em;
+    height: 1.12em;
+    margin-right: 0.42em;
+    vertical-align: -0.158em;
+    background-color: currentColor;
+    -webkit-mask: url('/assets/images/vi-mark-256.png') center / contain no-repeat;
+    mask: url('/assets/images/vi-mark-256.png') center / contain no-repeat;
+  }
+
   .text-lead {
     font-size: clamp(1.0625rem, 1rem + 0.5vw, 1.375rem);
     line-height: 1.6;

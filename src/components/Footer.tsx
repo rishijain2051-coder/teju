@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import AppLogo from '@/components/ui/AppLogo';
+import Wordmark from '@/components/ui/Wordmark';
 import { brand, collections, facts, nav } from '@/lib/site';
 
 const YEAR = new Date().getFullYear();
@@ -12,12 +12,7 @@ export default function Footer() {
         <div className="grid gap-12 lg:gap-8 lg:grid-cols-12">
           {/* Colophon */}
           <div className="lg:col-span-4">
-            <div className="flex items-center gap-3">
-              <AppLogo size={30} />
-              <span className="font-serif text-[1.35rem] leading-none tracking-tight">
-                Vardhman Impex
-              </span>
-            </div>
+            <Wordmark />
             <p className="text-body text-muted mt-5 max-w-[34ch]">
               Furniture manufacturer and exporter. Solid mango and reclaimed timber, made at
               Boranada since {brand.established}.

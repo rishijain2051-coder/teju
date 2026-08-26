@@ -39,7 +39,7 @@ export const alt = `${brand.name} — furniture manufacturer and exporter, Jodhp
    there is no server to fetch from, and the deployment already carries `public/`.
    The 64px favicon rather than the 256px mark: this lands 56px wide and the
    favicon is already the right order of magnitude. `app_logo.png`, which this
-   comment used to warn about at 1.7 MB, is gone — see AppLogo. */
+   comment used to warn about at 1.7 MB, is gone — see Wordmark. */
 const monogram = () => {
   const file = fs.readFileSync(path.join(process.cwd(), 'public', 'favicon.png'));
   return `data:image/png;base64,${file.toString('base64')}`;

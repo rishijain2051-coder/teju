@@ -66,12 +66,14 @@ export default function WhyBrandsSection() {
               ))}
             </ul>
 
-            <div className="border-t border-line-invert pt-8 mt-2 flex flex-wrap gap-3 rise">
-              <Link href="/factory" className="btn btn-invert">
+            {/* `flex-col` below `sm`: at 390px these wrapped to 245 and 184px,
+                left-aligned with a ragged right edge. */}
+            <div className="border-t border-line-invert pt-8 mt-2 flex flex-col sm:flex-row sm:flex-wrap gap-3 rise">
+              <Link href="/factory" className="btn btn-invert justify-center">
                 Inside the factory
                 <Arrow />
               </Link>
-              <Link href="/craft" className="btn btn-invert">
+              <Link href="/craft" className="btn btn-invert justify-center">
                 How it is made
               </Link>
             </div>
