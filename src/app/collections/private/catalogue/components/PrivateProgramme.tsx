@@ -55,7 +55,7 @@ export default function PrivateProgramme() {
         <div className="shell">
           <header className="rule-label rise" style={{ borderColor: 'var(--line-strong)' }}>
             <div className="flex-1">
-              <h2 className="font-serif text-display font-light -mt-2">
+              <h2 className="font-serif text-display-sm font-light -mt-[0.17em]">
                 Private <span className="italic">label</span>
               </h2>
             </div>
@@ -88,7 +88,7 @@ export default function PrivateProgramme() {
         <div className="shell relative z-10">
           <header className="rule-label rise" style={{ borderColor: 'var(--line-invert)' }}>
             <div className="flex-1">
-              <h2 className="font-serif text-display font-light -mt-2">
+              <h2 className="font-serif text-display-sm font-light -mt-[0.17em]">
                 Certification &amp; <span className="italic text-timber">paperwork</span>
               </h2>
             </div>
@@ -100,8 +100,12 @@ export default function PrivateProgramme() {
 
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 mt-16 lg:mt-20 pt-10 border-t border-line-invert">
             <div className="lg:col-span-5">
-              <h3 className="font-serif text-display-sm font-light rise">
-                What ships with the <span className="italic text-timber">container</span>
+              {/* `text-title`: display-sm is the section-heading size now, and
+                  this h3 sits under one. The italic goes with it — there is no DM
+                  Sans italic face — and `text-timber` was already carrying the
+                  emphasis on its own. */}
+              <h3 className="text-title rise">
+                What ships with the <span className="text-timber">container</span>
               </h3>
               <p className="text-body text-paper/70 mt-5 max-w-measure rise">
                 Documents are issued against what was actually loaded rather than what was ordered.

@@ -18,7 +18,7 @@ export default function ContactCTA() {
         <div className="lg:col-span-7 px-gutter py-20 lg:py-32 flex flex-col justify-center">
           <p className="text-manifest text-clay-soft rise">Start a conversation</p>
 
-          <h2 className="font-serif text-display font-light mt-8">
+          <h2 className="font-serif text-display-sm font-light mt-8">
             <span className="wipe">
               <span className="wipe-inner">Let&apos;s build</span>
             </span>

@@ -15,7 +15,7 @@ export default function WhyBrandsSection() {
     <section ref={ref} id="factory" className="relative bg-teal text-paper grain py-20 lg:py-32">
       <div className="shell relative z-10">
         <header className="flex items-baseline gap-5 pt-6 border-t border-line-invert rise">
-          <h2 className="font-serif text-display font-light -mt-2">
+          <h2 className="font-serif text-display-sm font-light -mt-[0.17em]">
             Why brands <span className="italic text-timber">stay</span>
           </h2>
         </header>

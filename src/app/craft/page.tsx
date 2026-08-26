@@ -57,7 +57,17 @@ const MATERIALS = [
 ] as const;
 
 export default function CraftPage() {
-  const opening = img('craft-barn-door');
+  /*
+   * Plated rows alternate sides so the eye travels down the column instead of
+   * tracking one straight edge. The counter runs over plated stages only —
+   * counting over all eight would land 04 and 06 on the same side, because 05
+   * falls between them and the parity would not advance.
+   */
+  let plated = 0;
+  const stages = craftStages.map((stage) => {
+    const plate = stage.image ? img(stage.image) : null;
+    return { ...stage, plate, flip: plate ? plated++ % 2 === 1 : false };
+  });
 
   return (
     <>
@@ -66,32 +76,18 @@ export default function CraftPage() {
         <PageHeader
           eyebrow="The making"
           title="Eight stages, one roof."
-          lead="Nothing here is subcontracted. A board is graded in our own yard, cut on our own saws, framed, carved, finished and packed by people on our own payroll, which is the only reliable way to promise a buyer that the third container matches the first."
+          /* Three sentences, not two. The claim used to arrive as one 38-word
+             sentence with its payoff buried in a trailing relative clause; the
+             promise a buyer is actually being made deserves its own full stop. */
+          lead="Nothing here is subcontracted. A board is graded in our own yard, cut on our own saws, framed, carved, finished and packed by people on our own payroll. That is the only reliable way to promise a buyer that the third container matches the first."
           meta={META}
         />
 
         <Reveal>
-          {/* Opening plate, full width. The craft page earns one big image. */}
-          <section className="shell">
-            <div className="plate aspect-[16/9] lg:aspect-[21/9] rise">
-              <AppImage
-                src={opening.src}
-                alt={opening.alt}
-                fill
-                sizes="100vw"
-                placeholder="blur"
-                blurDataURL={opening.blurDataURL}
-                priority
-                className="object-cover"
-              />
-            </div>
-            <p className="text-note text-muted mt-4 rise">
-              Sliding barn-door cabinet, iron track fitted at the frame bench · Boranada
-            </p>
-          </section>
-
-          {/* The stages. Alternating plates rather than a plate on each: eight
-              images in a column reads as a gallery, and the copy is the point. */}
+          {/* The stages. Five of the eight carry a plate — the ones where a
+              finished piece is evidence for the claim. See `craftStages`: the
+              other three would need photographs of the floor that do not exist
+              yet, and a room set standing in for a kiln is worse than none. */}
           <section className="py-20 lg:py-32">
             <div className="shell">
               <SectionHead
@@ -102,44 +98,100 @@ export default function CraftPage() {
                 }
               />
 
-              <ol data-reveal-group className="mt-12 lg:mt-16">
-                {craftStages.map((stage) => {
-                  const plate = stage.image ? img(stage.image) : null;
-                  return (
-                    <li
-                      key={stage.index}
-                      className="grid lg:grid-cols-12 gap-6 lg:gap-16 py-10 lg:py-14 border-t border-line rise"
-                    >
-                      <div className="lg:col-span-3 flex items-baseline gap-5">
-                        <span className="text-manifest-sm text-clay numeral">{stage.index}</span>
-                        <div>
-                          <h3 className="text-title">{stage.title}</h3>
-                          <p className="text-manifest-sm text-muted mt-1.5">{stage.place}</p>
-                        </div>
-                      </div>
-
-                      <div className={plate ? 'lg:col-span-5' : 'lg:col-span-8'}>
-                        <p className="text-lead text-ink-soft max-w-measure">{stage.detail}</p>
-                      </div>
-
-                      {plate && (
-                        <div className="lg:col-span-4">
-                          <div className="plate aspect-[4/3]">
-                            <AppImage
-                              src={plate.src}
-                              alt={plate.alt}
-                              fill
-                              sizes="(max-width: 1024px) 100vw, 30vw"
-                              placeholder="blur"
-                              blurDataURL={plate.blurDataURL}
-                              className="object-cover"
-                            />
-                          </div>
-                        </div>
-                      )}
+              {/* The whole sequence up front. It reads as a contents line and it
+                  earns its place twice: a buyer sees all eight stages before
+                  committing to the scroll, and sales can link one stage from an
+                  email. Thirteen screens of page on a phone needs a way in. */}
+              <nav aria-label="The eight stages" className="mt-8 lg:mt-10 rise">
+                <ul className="flex flex-wrap gap-x-7 gap-y-0.5">
+                  {stages.map((stage) => (
+                    <li key={stage.index}>
+                      <a
+                        href={`#stage-${stage.index}`}
+                        className="press inline-flex items-baseline gap-2 py-2 text-manifest text-muted hover:text-clay transition-colors duration-fast ease-out"
+                      >
+                        <span className="numeral">{stage.index}</span>
+                        {stage.title}
+                      </a>
                     </li>
-                  );
-                })}
+                  ))}
+                </ul>
+              </nav>
+
+              <ol data-reveal-group className="mt-10 lg:mt-14">
+                {stages.map((stage) => (
+                  <li
+                    key={stage.index}
+                    id={`stage-${stage.index}`}
+                    /* `last:border-b` closes the list. Eight rows each opened by a
+                       rule left the eighth with no bottom edge, so the sequence
+                       ended by running out. `scroll-mt` clears the fixed masthead
+                       when the contents line jumps here. */
+                    className="grid lg:grid-cols-12 gap-6 lg:gap-16 py-10 lg:py-14 border-t border-line last:border-b rise scroll-mt-24 lg:scroll-mt-32"
+                  >
+                    <div className="lg:col-start-1 lg:col-span-3 flex items-baseline gap-5">
+                      {/* `aria-hidden` because the ordered list already carries the
+                          position — without it this reads "list item 4, 04
+                          Joinery". */}
+                      <span aria-hidden="true" className="text-index text-clay">
+                        {stage.index}
+                      </span>
+                      <div>
+                        <h3 className="text-title">{stage.title}</h3>
+                        <p className="text-manifest-sm text-muted mt-1.5">{stage.place}</p>
+                      </div>
+                    </div>
+
+                    {/*
+                     * Five columns whether or not a plate follows. Letting the
+                     * plateless rows spread to eight ran them at 88 characters a
+                     * line against 47 in their neighbours — a 1.7x swing inside
+                     * one list. The empty columns are the alternation.
+                     */}
+                    <div
+                      className={`lg:row-start-1 ${
+                        stage.flip ? 'lg:col-start-8 lg:col-span-5' : 'lg:col-start-4 lg:col-span-5'
+                      }`}
+                    >
+                      <p className="text-lead text-ink-soft max-w-measure">{stage.detail}</p>
+                    </div>
+
+                    {stage.plate && (
+                      /*
+                       * `row-start-1` is load-bearing, not tidiness. Grid's sparse
+                       * auto-placement increments the row cursor whenever a
+                       * definite column-start sits left of where the cursor
+                       * already is — so on a flipped row this plate, at column 4,
+                       * dropped into an implicit second row behind text that had
+                       * just ended at column 13. Rows 04 and 06 measured 588 and
+                       * 623px against 348px siblings.
+                       */
+                      <div
+                        className={`lg:row-start-1 ${
+                          stage.flip
+                            ? 'lg:col-start-4 lg:col-span-4'
+                            : 'lg:col-start-9 lg:col-span-4'
+                        }`}
+                      >
+                        {/* The sources' own ratio, so no plate is cropped. A 4:3
+                            box took 22% off the width of every landscape file and
+                            46% off the height of the two portrait ones — and what
+                            it cropped from the carving shot was the carving. */}
+                        <div className="plate aspect-[2000/1173]">
+                          <AppImage
+                            src={stage.plate.src}
+                            alt={stage.plate.alt}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 30vw"
+                            placeholder="blur"
+                            blurDataURL={stage.plate.blurDataURL}
+                            className="object-cover"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                ))}
               </ol>
             </div>
           </section>
@@ -155,7 +207,16 @@ export default function CraftPage() {
                 }
               />
 
-              <div data-reveal-group className="grid sm:grid-cols-2 gap-x-8 gap-y-2 mt-12 lg:mt-16">
+              {/*
+               * `gap-y-10`, not `gap-y-2`. Each cell's rule is its own heading's
+               * rule, and at 8px it sat 32px below the previous cell's last line
+               * and 25px above its own title — near enough equidistant to belong
+               * to neither. 40px makes that 64/25, and the rule reads as owned.
+               */}
+              <div
+                data-reveal-group
+                className="grid sm:grid-cols-2 gap-x-8 gap-y-10 mt-12 lg:mt-16"
+              >
                 {MATERIALS.map((material) => (
                   <div key={material.name} className="py-6 border-t border-line-strong rise">
                     <h3 className="text-title">{material.name}</h3>
@@ -192,12 +253,22 @@ export default function CraftPage() {
                   The work is easier to judge than to describe. Look at the range, or send us a
                   specification and we will quote it honestly.
                 </p>
-                <div className="flex flex-wrap gap-3 shrink-0">
-                  <Link href="/collections" className="btn btn-ghost">
+                {/*
+                 * The two controls the paragraph above actually offers. The solid
+                 * button used to point at /factory — which the paragraph does not
+                 * promise, which the masthead nav already carries, and which left
+                 * the one thing it does promise with no control at all. Nothing
+                 * inside `<main>` linked to /contact on this page.
+                 *
+                 * `flex-col` below `sm` so both buttons fill the column. Wrapped
+                 * at content width they stacked at 229 and 245px, ragged right.
+                 */}
+                <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+                  <Link href="/collections" className="btn btn-ghost justify-center">
                     See the collections
                   </Link>
-                  <Link href="/factory" className="btn btn-solid">
-                    Inside the factory
+                  <Link href="/contact" className="btn btn-solid justify-center">
+                    Send a specification
                     <Arrow />
                   </Link>
                 </div>

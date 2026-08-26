@@ -62,7 +62,7 @@ export default function JournalPage() {
                     <span className="text-manifest-sm text-muted numeral">{lead.readTime}</span>
                   </div>
                   <div className="lg:col-span-8">
-                    <h2 className="font-serif text-display font-light group-hover:text-clay transition-colors duration-fast ease-out rise">
+                    <h2 className="font-serif text-display-sm font-light group-hover:text-clay transition-colors duration-fast ease-out rise">
                       {lead.title}
                     </h2>
                     <p className="text-lead text-ink-soft mt-4 max-w-measure rise">

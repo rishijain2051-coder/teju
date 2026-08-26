@@ -16,7 +16,7 @@ export default function JournalSection() {
       <div className="shell">
         <header className="rule-label rise">
           <div className="flex-1">
-            <h2 className="font-serif text-display font-light -mt-2">
+            <h2 className="font-serif text-display-sm font-light -mt-[0.17em]">
               From the <span className="italic">workshop</span>
             </h2>
           </div>

@@ -35,7 +35,7 @@ export default function FeaturedCollections() {
       <div className="shell">
         <header className="rule-label rise">
           <div className="flex-1">
-            <h2 className="font-serif text-display font-light -mt-2">
+            <h2 className="font-serif text-display-sm font-light -mt-[0.17em]">
               The <span className="italic">collections</span>
             </h2>
           </div>

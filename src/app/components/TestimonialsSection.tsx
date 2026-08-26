@@ -13,7 +13,7 @@ export default function TestimonialsSection() {
     <section ref={ref} className="py-20 lg:py-32 bg-paper-deep">
       <div className="shell">
         <header className="flex items-baseline gap-5 rise">
-          <h2 className="font-serif text-display font-light">
+          <h2 className="font-serif text-display-sm font-light">
             From the <span className="italic">buyers</span>
           </h2>
         </header>

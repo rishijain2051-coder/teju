@@ -307,6 +307,31 @@
     font-weight: 400;
   }
 
+  /*
+   * The sequence numeral: a position in an ordered set, at the size of the thing
+   * it numbers.
+   *
+   * This role used to borrow `text-manifest-sm`, which put it at 10px on desktop
+   * — the smallest type on the page, level with the dateline beside it, on a page
+   * whose entire organising idea is eight numbered stages. Same clamp as
+   * `text-title` so the numeral and the title share a size and read as one unit,
+   * and the mono face keeps it in the manifest voice rather than making it a
+   * second heading. Positive tracking because these are digits, not words.
+   *
+   * `tabular-nums` is not decoration here: proportional digits set 01 narrower
+   * than 08, so a column of them would not align down the left edge.
+   */
+  .text-index {
+    font-family: var(--font-mono);
+    font-size: clamp(1.25rem, 1.05rem + 0.95vw, 1.75rem);
+    line-height: 1.28;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums lining-nums;
+    font-feature-settings:
+      'tnum' 1,
+      'lnum' 1;
+  }
+
   .text-lead {
     font-size: clamp(1.0625rem, 1rem + 0.5vw, 1.375rem);
     line-height: 1.6;

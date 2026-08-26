@@ -8,6 +8,15 @@ import { type CatalogueKey } from './imagery';
  * week-by-week timeline below are written to be consistent with them — correct
  * any that differ from what the shop floor actually looks like. Both pages read
  * from here, so one edit fixes both.
+ *
+ * IMAGERY IS A KNOWN GAP. Every photograph in the registry is a styled shot of a
+ * finished piece — there is not one frame of the yard, the kiln, a bench or the
+ * spray booth. So a stage's plate can only ever show the *feature* its copy
+ * names: a carved front for Carving, laid strips for Surface work, a finish for
+ * Finishing. Stages whose subject is a process with nothing to point at —
+ * Seasoning, Milling, Inspection — carry no plate rather than borrow a room set
+ * and imply it is the shop floor. Five process photographs would let this page
+ * say what it currently only asserts.
  */
 
 /* ── Craft ───────────────────────────────────────────────────────────────── */
@@ -18,7 +27,11 @@ export interface CraftStage {
   /** Where in the building this happens. Set as the stage's dateline. */
   place: string;
   detail: string;
-  /** Only some stages carry a plate; the page alternates deliberately. */
+  /**
+   * The plate, where a finished piece is real evidence for the claim. Landscape
+   * sources only: the page sets its plates at the sources' native 1.705 so
+   * nothing is cropped, and a portrait file in that box loses 46% of its height.
+   */
   image?: CatalogueKey;
 }
 
@@ -29,7 +42,10 @@ export const craftStages: CraftStage[] = [
     place: 'The yard',
     detail:
       'Plantation mango arrives in the round and is graded before it is bought, not after. Boards with the interlocking grain that carves well are set aside for the carving benches; straight, quiet stock goes to the plain ranges where nothing should distract. Certified stock is stacked and tagged separately from the moment it is unloaded.',
-    image: 'hero-mango-light',
+    /* Multi-tone reclaimed stock — the grain and colour variation the grading
+       paragraph is about. Was `hero-mango-light`: a finished cabinet on a teal
+       wall, and a portrait file cropped to landscape. */
+    image: 'pr-reclaimed-sideboard',
   },
   {
     index: '02',
@@ -51,7 +67,10 @@ export const craftStages: CraftStage[] = [
     place: 'Frame bench',
     detail:
       'Carcasses are framed rather than slab-built: more joints, more time, and the reason a two-metre cabinet arrives with its doors still in line. Everything is dry-fitted and squared before glue goes anywhere near it.',
-    image: 'craft-barn-door',
+    /* A long console — literally the "two-metre cabinet [that] arrives with its
+       doors still in line". Was `craft-barn-door`, which was also the page's
+       opening plate: the same photograph twice, 2,700px apart. */
+    image: 'pr-barn-media',
   },
   {
     index: '05',
@@ -59,7 +78,10 @@ export const craftStages: CraftStage[] = [
     place: 'Chisel benches',
     detail:
       'One piece, one hand, start to finish. Splitting a carved front between two carvers to save a day produces two different depths of cut on the same door, and it is visible from across a room in raking light.',
-    image: 'pr-mandala-carved',
+    /* Carved relief in raking light, so the depth of cut is visible — which is
+       the whole point of the paragraph. `pr-mandala-carved` was the right
+       subject but portrait, and the box cropped away the carving. */
+    image: 'pr-wave-carved',
   },
   {
     index: '06',
@@ -67,7 +89,9 @@ export const craftStages: CraftStage[] = [
     place: 'Parquet and tile',
     detail:
       'Parquet, marquetry and tile are separate trades in this building. A diamond front can run to three hundred laid pieces, sanded afterwards as a single face so the joints disappear. Tiles are painted and fired in Jodhpur, then set into a rebate to finish flush.',
-    image: 'pr-parquet-green',
+    /* Two timber tones, so the individual laid pieces read as separate pieces.
+       The three-hundred-piece claim needs a photograph you can count in. */
+    image: 'pr-checkerboard',
   },
   {
     index: '07',
@@ -75,7 +99,9 @@ export const craftStages: CraftStage[] = [
     place: 'Spray and wax',
     detail:
       'Sand, seal, sand back, colour, cure, wax. Colour is mixed against the signed sample retained at approval rather than against a code, because two batches of timber take the same stain differently and the correction is made by eye at the booth.',
-    image: 'craft-round-table',
+    /* A finish, as the subject rather than the setting. Was
+       `craft-round-table` — a styled side table, for a stage about a booth. */
+    image: 'pr-whitewash-sideboard',
   },
   {
     index: '08',

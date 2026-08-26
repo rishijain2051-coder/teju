@@ -76,8 +76,19 @@ export default function FscPanel({ variant = 'full', invert = false, placement }
       {/* The position */}
       <div className="lg:col-span-5">
         <p className={`text-manifest ${accent} rise`}>Chain of custody</p>
-        <h3 className="font-serif text-display-sm font-light mt-5 rise">
-          Certified <span className="italic">on request</span>, not by default.
+        {/*
+         * `text-title`, not `text-display-sm`. Section headings are display-sm,
+         * so an h3 set there tied with its own parent h2 — and on the craft page
+         * it sat at 68px among twelve sibling h3s at 28px, reading as a section
+         * of its own until you looked for one.
+         *
+         * The emphasis moves from italic to the accent colour with it. There is
+         * no DM Sans italic face on this site (only Fraunces has one, see
+         * `fonts.css`), so an italic span here would be a browser-synthesised
+         * oblique sitting a few centimetres from real Fraunces italics.
+         */}
+        <h3 className="text-title mt-5 rise">
+          Certified <span className={accent}>on request</span>, not by default.
         </h3>
         <p className={`text-body ${body} mt-6 max-w-measure rise`}>{fsc.position}</p>
 

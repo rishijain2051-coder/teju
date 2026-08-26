@@ -307,7 +307,7 @@ export default async function ArticlePage({ params }: Params) {
             <div className="shell">
               <header className="rule-label rise" style={{ borderColor: 'var(--line-strong)' }}>
                 <div className="flex-1">
-                  <h2 className="font-serif text-display-sm font-light -mt-1">
+                  <h2 className="font-serif text-display-sm font-light -mt-[0.17em]">
                     More from the <span className="italic">journal</span>
                   </h2>
                 </div>

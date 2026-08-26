@@ -328,7 +328,11 @@ export default async function CollectionPage({ params }: Params) {
                       className="group flex flex-wrap items-baseline gap-x-6 gap-y-1 py-6 border-t border-line-strong"
                     >
                       <span className="text-manifest-sm text-muted numeral">{entry.index}</span>
-                      <h3 className="font-serif text-display-sm font-light group-hover:text-clay transition-colors duration-fast ease-out">
+                      {/* `text-title`, not `text-display-sm`: display-sm is the
+                          section-heading size, and this h3 sits under one. It also
+                          reads better — a 68px serif word was baseline-aligned in
+                          the same row as a 17px tagline and a 10px range. */}
+                      <h3 className="text-title group-hover:text-clay transition-colors duration-fast ease-out">
                         {entry.name}
                       </h3>
                       <p className="text-body text-muted flex-1 min-w-[16rem]">{entry.tagline}</p>

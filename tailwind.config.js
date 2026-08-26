@@ -94,7 +94,25 @@ module.exports = {
 
       maxWidth: {
         shell: 'var(--shell)',
-        measure: '68ch',
+        /*
+         * 54ch, not 68ch. `ch` is the advance width of "0", and in DM Sans the
+         * digit is far wider than the lowercase average — so 68ch bought about
+         * 100 real characters a line, measured, not estimated. Every long-form
+         * paragraph on the site was running 85 to 100 characters, well past the
+         * 45-to-75 range a reader can track without losing the return sweep, and
+         * the craft page masthead was the worst at 96 to 102.
+         *
+         * 46ch, arrived at by measuring rather than by arithmetic. `ch` resolves
+         * against the first available font in the stack, which is the
+         * metric-adjusted fallback, not DM Sans — so 1ch is 0.684em here, not the
+         * 0.57em of the real digit. 54ch still rendered 82 characters. 46ch puts
+         * the craft masthead at 70 and the stage prose in the low seventies.
+         *
+         * Kept in `ch` rather than `rem` on purpose: it scales with the element's
+         * own font size, so a `text-note` paragraph gets a proportionally
+         * narrower column without a second token.
+         */
+        measure: '46ch',
         '8xl': '1600px',
       },
 
