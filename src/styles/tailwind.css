@@ -367,7 +367,15 @@
    *     it. `vertical-align: -0.158em` (14.1% of 1.12em) drops the box by exactly
    *     that much, which lands the V's baseline on the wordmark's baseline. The
    *     old lockup aligned the two boxes' centres with `items-center`, so the V
-   *     hung below the text baseline and the I rose above its cap line.
+   *     hung below the text baseline instead.
+   *
+   *     THE RAISED I IS THE LOGO. The two letters are the same cap height with
+   *     the I translated 43px up, and that is the mark as drawn — not a fault to
+   *     be corrected. It is worth saying because the artwork invites the mistake:
+   *     the glyphs overlap horizontally by 12px without touching, so they label
+   *     as two clean components and look trivially separable. Dropping the I onto
+   *     the V's baseline is a two-line change and it is the wrong change. Align
+   *     the V and let the I sit where it was put.
    *   - the drawn height is (220-28)/256 = 75% of the box. At 1.12em that is
    *     0.84em against Fraunces' 0.73em cap height — a mark 1.15x the caps beside
    *     it. The 30px raster was 1.90x the caps on desktop and 2.23x on a phone,

@@ -221,7 +221,30 @@ export default function HeroSection() {
         </div>
 
         {/* ── Plate column — bleeds to the right edge ───────────────────── */}
-        <div className="lg:col-span-5 relative min-h-[62vh] lg:min-h-0 bg-paper-deep overflow-hidden">
+        {/*
+         * `34vh` below `lg`, down from `62vh`, and the height is the whole fix.
+         *
+         * At 62vh the plate was 390x523 against a 0.725 source, so `cover` drew
+         * 390x538 and the crop was very nearly the full frame — which put the top
+         * of the photograph in the only part of it a phone ever sees. The type
+         * column is 669px against 702px of usable first screen, so the plate gets
+         * 98px there no matter what, and those 98px were bare wall on all three
+         * plates. `object-position` cannot help at that height: with 15px of
+         * vertical travel the furthest it moves the image is 3px, which was tried
+         * and reverted.
+         *
+         * At 34vh the box is 390x287, the crop is deep, and centre lands on the
+         * piece: the 98px strip carries the lamp and the cabinet top on
+         * mango-light, the starburst marquetry front on starburst, and the chest's
+         * grain on tall-chest. Scroll a flick further and the whole 287px band is
+         * a tight landscape crop of the piece rather than a room shot shrunk to a
+         * phone. It also takes the hero from 1.41x the viewport to 1.13x.
+         *
+         * Desktop is untouched — `lg:min-h-0` hands the height to the grid row
+         * there, where the plate is the full 900px column and centre is already
+         * right.
+         */}
+        <div className="lg:col-span-5 relative min-h-[34vh] lg:min-h-0 bg-paper-deep overflow-hidden">
           {PLATES.map((plate, i) => {
             const plateImg = img(plate);
             return (
